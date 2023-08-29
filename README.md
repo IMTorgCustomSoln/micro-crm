@@ -28,10 +28,10 @@ What it is and what it supports.
 
 ## Test Functionality
 
-* Pinia, localForage (indexDB)
+* Pinia, Pinia-ORM
 * offline-first
 * perform database design
-
+* Bootstrap-vue [support](https://bootstrap-vue.org/vue3) 
 
 
 ## Project Setup
@@ -47,6 +47,8 @@ npm run dev
 ```
 
 ### Compile and Minify for Production
+
+This project builds into a single file: ./dist/index.html using the plugin with command:
 
 ```sh
 npm run build

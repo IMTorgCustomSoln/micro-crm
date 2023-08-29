@@ -1,11 +1,20 @@
-import './assets/main.css'
-
-import { createApp } from 'vue'
+import Vue, { createApp } from '@vue/compat'
 import { createPinia } from 'pinia'
+import { createORM } from 'pinia-orm'
+import {BootstrapVue, BIcon, BootstrapVueIcons} from 'bootstrap-vue';
+
 import App from './App.vue'
 
-const app = createApp(App)
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-vue/dist/bootstrap-vue.css';
 
-app.use(createPinia())
+Vue.use(BootstrapVue)
+Vue.use(BootstrapVueIcons)
+Vue.component('b-icon', BIcon)
+
+
+const app = createApp(App)
+const pinia = createPinia().use(createORM())
+app.use(pinia)
 
 app.mount('#app')
