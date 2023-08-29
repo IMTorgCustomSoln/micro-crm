@@ -19,6 +19,26 @@
         </div>
         <br /><br /><br />
       </div>
+      <div>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Fullname</th>
+              <th>Age</th>
+              <th>Email</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="friend in friend_list">
+              <td>{{ friend.Username }}</td>
+              <td>{{ friend.Fullname }}</td>
+              <td>{{ friend.Age }}</td>
+              <td>{{ friend.Email }}</td>
+            </tr>
+          </tbody>
+  </table>
+      </div>
 </template>
 
 
@@ -28,12 +48,20 @@
   import { createPinia } from "pinia";
   import { createORM } from "pinia-orm";
   import Person from "../stores/Person.js";
-  
+
+  import { useCollect } from 'pinia-orm/dist/helpers' //.. const usePerson =
+
   const pinia = createPinia().use(createORM());
   const usePerson = useRepo(Person, pinia);
 
+  usePerson.all() // sort the record by 'Username' attributes
+
+
   export default {
     name: 'ContactsTable',
+    computed: {
+      friend_list: () => useCollect(usePerson.all()).sortBy('Username')
+    },
     data() {
       return {
         form: {

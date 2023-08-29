@@ -16,6 +16,7 @@
     "bootstrap-vue": "^2.23.1",
     "pinia": "^2.1.4",
     "pinia-orm": "^1.6.7",
+    "pinia-plugin-persistedstate": "^3.2.0",
     "vue": "^3.3.4"
   },
   "devDependencies": {
