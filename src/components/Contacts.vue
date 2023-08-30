@@ -49,7 +49,7 @@
   import { useRepo } from "pinia-orm";
   import { useCollect } from 'pinia-orm/dist/helpers';
   import Person from "../stores/Person.js";
-  import pinia from "../stores/config.js";
+  import { pinia } from "../stores/config.js";
 
   const usePerson = useRepo(Person, pinia);
 
@@ -76,6 +76,7 @@
     },
 
     methods: {
+      /*
       syncData(){
         //TODO: is this needed???
         const savedData = JSON.parse(localStorage.Person).data
@@ -89,7 +90,7 @@
           })
         }
         console.log(usePerson.all());
-      },
+      },*/
       addfriend() {
         usePerson.save({
           Username: this.form.username,
