@@ -21,6 +21,10 @@
 import Navbar from './components/Navbar.vue'
 import ContactsTable from './components/Contacts.vue'
 
+
+
+
+
 </script>
 
 

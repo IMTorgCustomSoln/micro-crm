@@ -16,6 +16,7 @@
           <input v-model="form.email" />
           <br /><br />
           <button @click="addfriend" class="btn-link">Add Friend</button>
+          <button @click="clearAll" class="btn-link">Clear Friends</button>
         </div>
         <br /><br /><br />
       </div>
@@ -44,18 +45,16 @@
 
 
 <script>
+
   import { useRepo } from "pinia-orm";
-  import { createPinia } from "pinia";
-  import { createORM } from "pinia-orm";
+  import { useCollect } from 'pinia-orm/dist/helpers';
   import Person from "../stores/Person.js";
+  import pinia from "../stores/config.js";
 
-  import { useCollect } from 'pinia-orm/dist/helpers' //.. const usePerson =
-
-  const pinia = createPinia().use(createORM());
   const usePerson = useRepo(Person, pinia);
 
-  usePerson.all() // sort the record by 'Username' attributes
 
+ 
 
   export default {
     name: 'ContactsTable',
@@ -72,8 +71,25 @@
         },
       };
     },
+    mounted(){
+      //this.syncData()
+    },
 
     methods: {
+      syncData(){
+        //TODO: is this needed???
+        const savedData = JSON.parse(localStorage.Person).data
+        for(let key in savedData){
+          let item = savedData[key]
+          usePerson.save({
+            Username: item.Username,
+            Fullname: item.Fullname,
+            Age: item.Age,
+            Email: item.Email
+          })
+        }
+        console.log(usePerson.all());
+      },
       addfriend() {
         usePerson.save({
           Username: this.form.username,
@@ -83,6 +99,11 @@
         });
         console.log(usePerson.all());
       },
+      clearAll(){
+        const ids = usePerson.all().map(item => item.id)
+        console.log(ids)
+        usePerson.destroy(ids)
+      }
     },
 };
 </script>
