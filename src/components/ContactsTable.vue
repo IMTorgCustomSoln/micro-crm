@@ -1,41 +1,26 @@
 <template>
-  <div>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-        <div>
-          <label for="">Username</label>
-          <input v-model="form.username" />
-          <label for="">Fullname</label>
-          <input v-model="form.fullname" /> <br />
-          <br />
-          <label for="">Age</label>
-          <input v-model="form.age" />
-          <label for="">Email</label>
-          <input v-model="form.email" />
-          <br /><br />
-          <button @click="addfriend" class="btn-link">Add Friend</button>
-          <button @click="clearAll" class="btn-link">Clear Friends</button>
-        </div>
-        <br /><br /><br />
-      </div>
       <div>
         <table class="table table-striped">
           <thead>
             <tr>
-              <th>Username</th>
               <th>Fullname</th>
-              <th>Age</th>
+              <th>Title</th>
               <th>Email</th>
+              <th>Number</th>
+              <th>Office</th>
+              <th>Firm</th>
+              <th>Projects</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="friend in friend_list">
-              <td>{{ friend.Username }}</td>
-              <td>{{ friend.Fullname }}</td>
-              <td>{{ friend.Age }}</td>
-              <td>{{ friend.Email }}</td>
+            <tr v-for="(contact, key) in contact_list">
+              <td>{{ contact.Fullname }}</td>
+              <td>{{ contact.Title }}</td>
+              <td>{{ contact.Email }}</td>
+              <td>{{ contact.Number }}</td>
+              <td>{{ contact.Office }}</td>
+              <td>{{ contact.Firm }}</td>
+              <td>{{ contact.Projects }}</td>
             </tr>
           </tbody>
   </table>
@@ -45,13 +30,8 @@
 
 
 <script>
-
-  import { useRepo } from "pinia-orm";
   import { useCollect } from 'pinia-orm/dist/helpers';
-  import Person from "../stores/Person.js";
-  import { pinia } from "../stores/config.js";
-
-  const usePerson = useRepo(Person, pinia);
+  import {usePerson} from '../main.js';
 
 
  
@@ -59,20 +39,26 @@
   export default {
     name: 'ContactsTable',
     computed: {
-      friend_list: () => useCollect(usePerson.all()).sortBy('Username')
+      contact_list: () => useCollect(usePerson.all()).sortBy('Fullname')
     },
     data() {
       return {
+        /*
         form: {
           username: "",
           fullname: "",
           age: "",
           email: "",
-        },
+        },*/
       };
     },
+    
     mounted(){
+      for(const contact of testContacts){
+        usePerson.save(contact);
+      }
       //this.syncData()
+      //this.clearAll()
     },
 
     methods: {
@@ -90,8 +76,8 @@
           })
         }
         console.log(usePerson.all());
-      },*/
-      addfriend() {
+      },
+      addcontact() {
         usePerson.save({
           Username: this.form.username,
           Fullname: this.form.fullname,
@@ -99,7 +85,7 @@
           Email: this.form.email,
         });
         console.log(usePerson.all());
-      },
+      },*/
       clearAll(){
         const ids = usePerson.all().map(item => item.id)
         console.log(ids)
@@ -107,4 +93,25 @@
       }
     },
 };
+
+const testContacts = [
+      {
+          Fullname: 'Jane Doe',
+          Title:'Ms',
+          Email:'',
+          Number:'',
+          Office:'',
+          Firm:'',
+          Projects:'',
+        },
+        {
+          Fullname: 'John Smith',
+          Title:'Mr',
+          Email:'',
+          Number:'',
+          Office:'',
+          Firm:'',
+          Projects:'',
+        }
+      ]
 </script>

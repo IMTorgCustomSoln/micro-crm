@@ -19,19 +19,7 @@
 
 <script setup>
 import Navbar from './components/Navbar.vue';
-import ContactsTable from './components/Contacts.vue';
-
-/*
-//TODO: a way to reference store variables because they cannot be destructured
-
-import { storeToRefs } from 'pinia';
-import { useDisplayStore } from './stores/DisplayStore';
-const {viewSelection, viewCount} = storeToRefs(useDisplayStore());
-console.log(viewSelection)
-
-viewCount++
-console.log(viewCount)
-*/
+import ContactsTable from './components/ContactsTable.vue';
 
 import {displayStore} from './main.js'
 

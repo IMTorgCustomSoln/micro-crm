@@ -11,10 +11,13 @@ export default class Person extends Model {
   static fields () {
     return {
       id: this.uid(),
-      Username: this.string(""),
       Fullname: this.string(""),
-      Age: this.string(""),
+      Title: this.string(""),
       Email: this.string(""),
+      Number: this.string(""),
+      Office: this.string(""),
+      Firm: this.string(""),
+      Projects: this.string("")
     }
   }
 }
