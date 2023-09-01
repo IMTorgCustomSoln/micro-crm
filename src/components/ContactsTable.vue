@@ -1,5 +1,5 @@
 <template>
-      <div>
+      <div v-if="setViewSelection=='Contact'">
         <table class="table table-striped">
           <thead>
             <tr>
@@ -13,7 +13,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(contact, key) in contact_list">
+            <tr v-for="(contact, key) in contactList">
               <td>{{ contact.Fullname }}</td>
               <td>{{ contact.Title }}</td>
               <td>{{ contact.Email }}</td>
@@ -23,15 +23,59 @@
               <td>{{ contact.Projects }}</td>
             </tr>
           </tbody>
-  </table>
+        </table>
+      </div>
+
+      <div v-else-if="setViewSelection=='Project'">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Status</th>
+              <th>Category</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Lifecycle</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(project, key) in projectList">
+              <td>{{ project.Name }}</td>
+              <td>{{ project.Status }}</td>
+              <td>{{ project.Category }}</td>
+              <td>{{ project.StartDate }}</td>
+              <td>{{ project.EndDate }}</td>
+              <td>{{ project.Lifecycle }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div v-else-if="setViewSelection=='Lifecycle'">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Steps</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(plan, key) in lifecycleList">
+              <td>{{ plan.Name }}</td>
+              <td>{{ plan.Steps }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 </template>
 
 
 
 <script>
-  import { useCollect } from 'pinia-orm/dist/helpers';
-  import {usePerson} from '../main.js';
+  import {displayStore} from '../main.js';
+  import {useCollect} from 'pinia-orm/dist/helpers';
+  import {usePerson, useProject, useLifecycle} from '../main.js';
+
 
 
  
@@ -39,17 +83,14 @@
   export default {
     name: 'ContactsTable',
     computed: {
-      contact_list: () => useCollect(usePerson.all()).sortBy('Fullname')
+      setViewSelection: () => displayStore.viewSelection,
+      contactList: () => useCollect(usePerson.all()).sortBy('Fullname'),
+      projectList: () => useCollect(useProject.all()).sortBy('Name'),
+      lifecycleList: () => useCollect(useLifecycle.all()).sortBy('Name'),
     },
     data() {
       return {
-        /*
-        form: {
-          username: "",
-          fullname: "",
-          age: "",
-          email: "",
-        },*/
+        viewSelection:''
       };
     },
     
@@ -114,4 +155,25 @@ const testContacts = [
           Projects:'',
         }
       ]
+
+const testProjects = [
+  {
+    name:'',
+    status:'',
+    category:'',
+    startdate:'',
+    enddate:'',
+    lifecycle:''
+  }
+]
+
+const testLifecycle = [
+  {
+    name:'',
+    steps:''
+  }
+]
+
+
+
 </script>
