@@ -4,6 +4,7 @@
    <b-button
         id='btnSaveContinue' 
         v-b-modal="'save-continue-modal'"
+        type="button"
         >Data I/O
     </b-button>
 
@@ -13,12 +14,32 @@
             Save or load current work session
         </template>
         <br>
-        <!-- Explanation TODO:fix-->
+        <!-- Explanation TODO:fix -->
         <div >
             <p>
             Because this is an offline application, the Workspace cannot be automatically saved.  <bold style="font-weight: bold">If you close 
             your browser, all work will be lost.</bold> <br><br> 
             </p>
+            
+            <p>
+            Select a previously saved session file (ie. <code>VDI_ApplicationStateData_v*.*.*.gz'</code>) to continue your work.
+            </p>
+            <b-form name="uploadForm">
+            
+            <label for="uploadAppDataInput" class="custom-file-upload">
+                <b-icon-cloud-arrow-up-fill class="h2 mb-0" variant="success" /> Upload
+            </label><br/>
+            <input id="uploadAppDataInput" 
+                   type="file" 
+                   @change="previewWorkspace"
+                   accept=".gz"
+            />
+            <ul class="no-li-dot">
+                <li><label for="fileName">File: &nbsp</label><output id="fileName">{{ preview.fileName }}</output></li>
+                <li><label for="fileSize">Size: &nbsp</label><output id="fileSize">{{ preview.fileSize }}</output></li>
+            </ul>
+           
+            </b-form>
         </div>
 
         <!-- Control -->
@@ -47,13 +68,19 @@
 </template>
 
 <script>
+import { getFormattedFileSize, getSetDifferenceOfArrays } from '../assets/utils.js'
+
 const ExportAppStateFileName = 'WorkSession.gz'
 
 export default {
     name: "WorkSessionIO",
     data(){
         return{
-            count: 0
+            count: 0,
+            preview:{
+                fileName:'',
+                fileSize:''
+            }
         }
     },
     methods:{
@@ -95,21 +122,33 @@ export default {
                 console.log( "received a new buffer", value.byteLength)
                 buffer += new TextDecoder().decode(value)
             }
-            const object = JSON.parse(buffer)
+            const upload = JSON.parse(buffer)
+            const keysOriginal = Object.keys(localStorage)
+            const keysNew = Object.keys(upload)
+            for(let key of keysOriginal){
+                localStorage.removeItem(key)
+            }
+            for(let key of keysNew){
+                localStorage.setItem(key, upload[key])
+            }
+            const diff = getSetDifferenceOfArrays(keysNew, keysOriginal)
+            console.log(`CHECK: original and new keys should be the same.  The different keys are: ${diff}`)
 
-            this.documentsIndex.documents.length = 0
-            this.managedNotes.topics.length = 0
-            this.managedNotes.notes.length = 0
-
-            Object.assign(this.documentsIndex, object.documentsIndex)
-            Object.assign(this.managedNotes.topics, object.managedNotes.topics)
-            Object.assign(this.managedNotes.notes, object.managedNotes.notes)
-
-            this.$emit('imported-workspace', true)
-            this.disableWorkspaceBtn = true
             this.resetModal()
-            this.btnText = 'Add More Files'
         },
+        previewWorkspace(){
+            // Preview files to upload and process
+            const file = uploadAppDataInput.files[0]
+            const fileSize = getFormattedFileSize(file.size)
+            this.preview = {...this.preview, fileSize: fileSize}
+            this.preview = {...this.preview, fileName: file.name}
+            this.uploadWorkspaceBtn = false
+        },
+        resetModal(){
+            this.preview.fileName = ''
+            this.preview.fileSize = ''
+            this.$bvModal.hide('save-continue-modal')
+        }
     }
 }
 </script>
