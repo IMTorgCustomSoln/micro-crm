@@ -13,12 +13,13 @@
           v-model="selectedItem" 
           v-on:change="changeItem"
           >
-          <b-dropdown-item v-for="option in options" 
-                        :key="option.value" 
-                        :value="option.value"
-                        @click="changeItem(option)"
-                        >
-          {{option.text}}
+          <b-dropdown-item 
+            v-for="option in options" 
+            :key="option.value" 
+            :value="option.value"
+            @click="changeItem(option)"
+            >
+            <router-link :to="{'name':option.path}">{{option.text}}</router-link>
           </b-dropdown-item>        
         </b-nav-item-dropdown>
 
@@ -384,7 +385,7 @@ export default {
     return{
       selectedItem: "-",
       options: [
-        {value: '1', text: 'Lifecycle'},
+        {value: '1', text: 'Lifecycle', path:'About'},
         {value: '2', text: 'Project'},
         {value: '3', text: 'Contact'},
       ],

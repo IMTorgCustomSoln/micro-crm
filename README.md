@@ -29,7 +29,7 @@ What it is and what it supports.
 ## Test Functionality
 
 * Pinia, Pinia-ORM
-* offline-first
+* offline-first pwa
 * perform database design
 * Bootstrap-vue [support](https://bootstrap-vue.org/vue3) 
 
