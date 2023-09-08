@@ -47,8 +47,8 @@
               <td>{{ project.Name }}</td>
               <td>{{ project.Status }}</td>
               <td>{{ project.Category }}</td>
-              <td>{{ project.StartDate }}</td>
-              <td>{{ project.EndDate }}</td>
+              <td>{{ project.StartDate.toDateString() }}</td>
+              <td>{{ project.EndDate.toDateString() }}</td>
               <td>{{ project.Lifecycle }}</td>
             </tr>
           </tbody>
@@ -98,7 +98,6 @@
       contactList: () => useCollect(usePerson.all()).sortBy('Fullname'),
       projectList: () => useCollect(useProject.all()).sortBy('Name'),
       lifecycleList: () => {
-        //const plans = useLifecycle.all().map(item => item.parsedSteps);
         const plans = useLifecycle.with('LifecycleStep').get()
         plans.map(item => {
           item.LifecycleStep = item.LifecycleStep.map(step => {
@@ -111,7 +110,11 @@
         const newPlans = []
         if(plans.length > 0 && projects.length > 0){
           for(let plan of plans){
-            let planCount = groupedPlans.get(plan.Name).length
+            let filtered = groupedPlans.get(plan.Name)
+            let planCount = 0
+            if(filtered){
+              planCount = filtered.length
+            }
             plan.Count = planCount
             newPlans.push(plan)
             }

@@ -14,3 +14,6 @@ export default class Person extends Model {
     }
   }
 }
+
+// Constraints
+//const availableProjects = limit to available names

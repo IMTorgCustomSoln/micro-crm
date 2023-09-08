@@ -2,7 +2,8 @@
 // ProcessData
 export function addDays(date, days){
   //Add n(int) days to a Date and return new Date
-  const resultDate = date.setDate(date.getDate() + days)
+  let resultDate = new Date( JSON.parse(JSON.stringify(date)) )
+  resultDate.setDate(date.getDate() + days)
   return resultDate
 }
 

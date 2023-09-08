@@ -120,8 +120,8 @@ while(i < 3){
         Name: faker.commerce.productName(),
         Status: 'active',
         Category: faker.commerce.product(),
-        Startdate: dtBegin,
-        Enddate: dtEnd,
+        Startdate: new Date(dtBegin),
+        Enddate: new Date(dtEnd),
         Lifecycle: defaultLifecycle.Name
     }
     testProjects.push(project)

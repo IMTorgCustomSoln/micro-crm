@@ -194,11 +194,11 @@
               
                 <b-form-group
                   label="Status:"
-                  label-for="nested-city"
+                  label-for="project-status"
                   label-cols-sm="3"
                   label-align-sm="right"
                 >
-                  <b-form-input id="nested-city" v-model="form.project.status"></b-form-input>
+                  <b-form-select id="project-status" v-model="form.project.status" :options="availableStatusList"/>
                 </b-form-group>
               
                 <b-form-group
@@ -212,20 +212,20 @@
               
                 <b-form-group
                   label="Start Date:"
-                  label-for="nested-country"
+                  label-for="project-startdate"
                   label-cols-sm="3"
                   label-align-sm="right"
-                >
-                  <b-form-input id="nested-country" v-model="form.project.startdate"></b-form-input>
+                  >
+                  <b-form-datepicker id="project-startdate" v-model="form.project.startdate" class="mb-2"></b-form-datepicker>
                 </b-form-group>
               
                 <b-form-group
                   label="End Date:"
-                  label-for="nested-country"
+                  label-for="project-enddate"
                   label-cols-sm="3"
                   label-align-sm="right"
-                >
-                  <b-form-input id="nested-country" v-model="form.project.enddate"></b-form-input>
+                  >
+                  <b-form-datepicker id="project-enddate" v-model="form.project.enddate" class="mb-2"></b-form-datepicker>
                 </b-form-group>
               
                 <b-form-group
@@ -234,7 +234,17 @@
                   label-cols-sm="3"
                   label-align-sm="right"
                 >
-                  <b-form-input id="nested-country" v-model="form.project.lifecycle"></b-form-input>
+                <b-form-select id="mySelect2" v-model="form.project.lifecycle" :options="lifecycleListName"/>
+                <!--
+                  <b-dropdown 
+                    id="dropdown-1" 
+                    text="Dropdown Button" 
+                    class="m-md-2"
+                    v-model="form.project.lifecycle"
+                    v-for="(plan, index) in lifecycleList" :key="plan.id"
+                    >
+                    <b-dropdown-item>{{ plan.Name }}</b-dropdown-item>
+                  </b-dropdown>-->
                 </b-form-group>
               
             </b-form-group>
@@ -314,7 +324,15 @@
                   label-cols-sm="3"
                   label-align-sm="right"
                 >
-                  <b-form-input id="nested-street" v-model="form.lifecycle.step.emailForm"></b-form-input>
+                <b-form-textarea
+                  id="textarea"
+                  v-model="form.lifecycle.step.emailForm"
+                  placeholder="Enter something..."
+                  rows="5"
+                  max-rows="10"
+                ></b-form-textarea>
+                <!--
+                  <b-form-input id="nested-street" v-model="form.lifecycle.step.emailForm"></b-form-input>-->
                 </b-form-group>
                 <b-button @click="addLifecycleStep" v-b-modal.modal-close_visit class="btn-sm m-1" >Add Step</b-button>
 
@@ -337,7 +355,6 @@
 
           <template #modal-footer>
                 <b-button @click="addLifecycle" v-b-modal.modal-close_visit class="btn-sm m-1" >Add Lifecycle</b-button>
-                <!--<b-button @click="processData" v-b-modal.modal-close_visit class="btn-sm m-1" >Process Data</b-button>-->
         </template>
         </b-modal>
   </div>
@@ -345,9 +362,11 @@
 </template>
 
 <script>
+import {useCollect} from 'pinia-orm/dist/helpers';
 import {displayStore} from '../main.js';
 import {usePerson, useProject, useLifecycle} from '../main.js';
 import { LifecycleStep } from '../stores/Lifecycle';
+import {availableStatus} from '../stores/Project';
 
 import WorkSessionIO from './WorkSessionIO.vue';
 
@@ -356,6 +375,10 @@ export default {
   name: 'NavBar',
   components:{
     WorkSessionIO
+  },
+  computed:{
+    availableStatusList: () => availableStatus,
+    lifecycleListName: () => useCollect(useLifecycle.all()).sortBy('Name').map(item => item.Name)
   },
   data(){
     return{
@@ -416,6 +439,7 @@ export default {
           this.form.contact[k] = ''
         })
         console.log(usePerson.all());
+        this.$bvModal.hide('new-contact-modal')
     },
     addProject() {
         useProject.save({
@@ -430,16 +454,18 @@ export default {
           this.form.project[k] = ''
         })
         console.log(useProject.all());
+        this.$bvModal.hide('new-project-modal')
     },
     addLifecycle() {
         useLifecycle.save({
           Name: this.form.lifecycle.name,
-          Steps: this.form.lifecycle.steps
+          LifecycleSteps: this.form.lifecycle.steps
         });
         Object.keys(this.form.lifecycle).forEach( k => {
           this.form.lifecycle[k] = ''
         })
         console.log(useLifecycle.all());
+        this.$bvModal.hide('new-lifecycle-modal')
     },
     addLifecycleStep(){
       const step = new LifecycleStep(
