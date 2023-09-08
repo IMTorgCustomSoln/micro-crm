@@ -1,5 +1,45 @@
 
 // ProcessData
+export function addDays(date, days){
+  //Add n(int) days to a Date and return new Date
+  const resultDate = date.setDate(date.getDate() + days)
+  return resultDate
+}
+
+
+export function randomIntFromInverval(min, max){
+  //Get random integer between two integers
+  return Math.floor(Math.random() * (max - min + 1) + min)
+}
+
+export function groupBy(list, keyGetter) {
+  /**
+   * @description
+   * Takes an Array<V>, and a grouping function,
+   * and returns a Map of the array grouped by the grouping function.
+   *
+   * @param list An array of type V.
+   * @param keyGetter A Function that takes the the Array type V as an input, and returns a value of type K.
+   *                  K is generally intended to be a property key of V.
+   *
+   * @returns Map of the array grouped by the grouping function.
+   */
+  //export function groupBy<K, V>(list: Array<V>, keyGetter: (input: V) => K): Map<K, Array<V>> {
+  //    const map = new Map<K, Array<V>>();
+  const map = new Map();
+  list.forEach((item) => {
+       const key = keyGetter(item);
+       const collection = map.get(key);
+       if (!collection) {
+           map.set(key, [item]);
+       } else {
+           collection.push(item);
+       }
+  });
+  return map;
+}
+
+
 export function getRightSetDifferenceOfArrays(arr1, arr2){
   /*Get items in arr1 that are not in arr2
   */
@@ -14,34 +54,8 @@ export function getSetDifferenceOfArrays(arr1, arr2){
   return difference
 }
 
-export function getEstimatedProcessTime(fileCount, fileSizeInBytes){
-    /* Get the estimated time to process a file, in human-
-    readable minutes or seconds.
-    TODO: this is entirely dependent on platform from which the 
-    function is run.
-    */
-    let formatted = ''
-    let result = ''
-    const {size, file_count} = model.coefs['0.75']    //TODO:add high estimate to this median estimate to give users a better range of values
   
-    if (Number.isInteger(fileCount) && Number.isFinite(fileSizeInBytes)){
-      const log_fileCount = Math.log(fileCount)
-      const log_Size = Math.log(fileSizeInBytes)
-      const log_milliseconds = size * log_fileCount + file_count * log_Size
-      const milliseconds = Math.exp(log_milliseconds)
-  
-      if (Number.isFinite(milliseconds )){
-        result = getFormattedMilliseconds(milliseconds)
-      } else {
-        result = '-1'
-      }
-      return result
-    } else {
-      result = '-1'
-    }
-  }
-  
-  export function getFormattedMilliseconds(milliseconds){
+export function getFormattedMilliseconds(milliseconds){
     let formatted = ''
     if (milliseconds >= 60000){
       const intermediate = milliseconds / 60000 
@@ -197,61 +211,6 @@ export function getEstimatedProcessTime(fileCount, fileSizeInBytes){
       `${approx.toFixed(2)}`
     }
     return output
-  }
-  
-  
-  
-  
-  const getDateFromPythonString = str => {
-    /* Usage:
-    const dt = getDateFromString(value)
-    const formattedDate = dt.toLocaleDateString()
-    return formattedDate;
-    */
-    if (str.length > 10) {
-        const [date, time] = str.split(" ");
-        long_date = `${date}T${time}.000Z`; // reformat string into YYYY-MM-DDTHH:mm:ss.sssZ
-        dt = new Date(long_date)
-    } else {
-        dt = new Date(str)
-    }
-    return dt;
-  };
-  
-  
-  
-  function serializeObject(obj){
-    // implement JSON.stringify serialization
-    JSON.stringify = JSON.stringify || function (obj) {
-        var t = typeof (obj);
-        if (t != "object" || obj === null) {
-            // simple data type
-            if (t == "string") obj = '"'+obj+'"';
-            return String(obj);
-        }
-        else {
-            // recurse array or object
-            var n, v, json = [], arr = (obj && obj.constructor == Array);
-            for (n in obj) {
-                v = obj[n]; t = typeof(v);
-                if (t == "string") v = '"'+v+'"';
-                else if (t == "object" && v !== null) v = JSON.stringify(v);
-                json.push((arr ? "" : '"' + n + '":') + String(v));
-            }
-            return (arr ? "[" : "{") + String(json) + (arr ? "]" : "}");
-        }
-    }
-  }
-  
-  
-  
-  function deserializeObject(str){
-    // implement JSON.parse de-serialization
-    JSON.parse = JSON.parse || function (str) {
-        if (str === "") str = '""';
-        eval("var p=" + str + ";");
-        return p;
-    }
   }
   
   

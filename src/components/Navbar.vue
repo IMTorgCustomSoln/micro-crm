@@ -301,7 +301,15 @@
                   <b-form-input id="nested-street" v-model="form.lifecycle.step.order"></b-form-input>
                 </b-form-group>
                 <b-form-group
-                  label="Email Form:"
+                  label="Placeholder:"
+                  label-for="nested-street"
+                  label-cols-sm="3"
+                  label-align-sm="right"
+                >
+                  <b-form-input id="nested-street" v-model="form.lifecycle.step.placeholder"></b-form-input>
+                </b-form-group>
+                <b-form-group
+                  label="Email Template:"
                   label-for="nested-street"
                   label-cols-sm="3"
                   label-align-sm="right"
@@ -380,6 +388,7 @@ export default {
           step:{
             name:'',
             order:'',
+            placeholder:'',
             emailForm:''
           },
           steps:[]
@@ -436,6 +445,7 @@ export default {
       const step = new LifecycleStep(
         this.form.lifecycle.step.name,
         this.form.lifecycle.step.order,
+        this.form.lifecycle.step.placeholder,
         this.form.lifecycle.step.emailForm,
       )
       this.form.lifecycle.steps.push(step)

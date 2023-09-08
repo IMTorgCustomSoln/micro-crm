@@ -4,7 +4,11 @@ import { createORM } from 'pinia-orm'
 
 export const pinia = createPinia()
 
-pinia.use(createORM())
+pinia.use(createORM(
+  { 
+    model: { withMeta:true } 
+  }
+))
 pinia.use(createPersistedState({
     auto: true,
     storage: localStorage

@@ -3,6 +3,7 @@
         <table class="table table-striped">
           <thead>
             <tr>
+              <th></th>
               <th>Fullname</th>
               <th>Title</th>
               <th>Email</th>
@@ -13,7 +14,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(contact, key) in contactList">
+            <tr v-for="(contact, index) in contactList" :key="contact.id">
+              <td> <b-icon-x-square class="h5 mb-1 destroy" font-scale="0.5" @click="removeContact(contact)" /> {{ index }}</td>
               <td>{{ contact.Fullname }}</td>
               <td>{{ contact.Title }}</td>
               <td>{{ contact.Email }}</td>
@@ -30,6 +32,7 @@
         <table class="table table-striped">
           <thead>
             <tr>
+              <th></th>
               <th>Name</th>
               <th>Status</th>
               <th>Category</th>
@@ -39,7 +42,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(project, key) in projectList">
+            <tr v-for="(project, index) in projectList" :key="project.id">
+              <td> <b-icon-x-square class="h5 mb-1 destroy" font-scale="0.5" @click="removeProject(project)" /> {{ index }}</td>
               <td>{{ project.Name }}</td>
               <td>{{ project.Status }}</td>
               <td>{{ project.Category }}</td>
@@ -55,14 +59,18 @@
         <table class="table table-striped">
           <thead>
             <tr>
+              <th></th>
               <th>Name</th>
+              <th>Project Count</th>
               <th>Steps</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(plan, key) in lifecycleList">
+            <tr v-for="(plan, index) in lifecycleList" :key="plan.id">
+              <td> <b-icon-x-square class="h5 mb-1 destroy" font-scale="0.5" @click="removePlan(plan)" /> {{ index }}</td>
               <td>{{ plan.Name }}</td>
-              <td>{{ plan.Steps }}</td>
+              <td>{{ plan.Count }}</td>
+              <td>{{ plan.LifecycleStep.map(item => item.Name) }}</td>
             </tr>
           </tbody>
         </table>
@@ -75,7 +83,10 @@
   import {displayStore} from '../main.js';
   import {useCollect} from 'pinia-orm/dist/helpers';
   import {usePerson, useProject, useLifecycle} from '../main.js';
+  import {groupBy} from '../assets/utils';
 
+  import {testContacts, testProjects} from '../assets/defaults';
+  import {testLifecycle} from '../stores/Lifecycle.js';
 
 
  
@@ -86,7 +97,29 @@
       setViewSelection: () => displayStore.viewSelection,
       contactList: () => useCollect(usePerson.all()).sortBy('Fullname'),
       projectList: () => useCollect(useProject.all()).sortBy('Name'),
-      lifecycleList: () => useCollect(useLifecycle.all()).sortBy('Name'),
+      lifecycleList: () => {
+        //const plans = useLifecycle.all().map(item => item.parsedSteps);
+        const plans = useLifecycle.with('LifecycleStep').get()
+        plans.map(item => {
+          item.LifecycleStep = item.LifecycleStep.map(step => {
+            return step.parsePlaceholder
+          })
+        })
+        const projects = useCollect(useProject.all()).sortBy('Lifecycle')
+        const groupedPlans = groupBy(projects, prj => prj.Lifecycle)
+        
+        const newPlans = []
+        if(plans.length > 0 && projects.length > 0){
+          for(let plan of plans){
+            let planCount = groupedPlans.get(plan.Name).length
+            plan.Count = planCount
+            newPlans.push(plan)
+            }
+          return newPlans
+        } else {
+          return newPlans
+        }
+      }
     },
     data() {
       return {
@@ -95,8 +128,13 @@
     },
     
     mounted(){
-      for(const contact of testContacts){
-        usePerson.save(contact);
+      const env = true
+      if(env){
+        populateTestData(
+          this.contactList.length,
+          this.projectList.length,
+          this.lifecycleList.length
+        )
       }
       //this.syncData()
       //this.clearAll()
@@ -131,49 +169,57 @@
         const ids = usePerson.all().map(item => item.id)
         console.log(ids)
         usePerson.destroy(ids)
-      }
+      },
+      removeContact(contact){
+        usePerson.destroy(contact.id)
+      },
+      removeProject(project){
+        useProject.destroy(project.id)
+      },
+      removePlan(plan){
+        useLifecycle.destroy(plan.id)
+      },
     },
 };
 
-const testContacts = [
-      {
-          Fullname: 'Jane Doe',
-          Title:'Ms',
-          Email:'',
-          Number:'',
-          Office:'',
-          Firm:'',
-          Projects:'',
-        },
-        {
-          Fullname: 'John Smith',
-          Title:'Mr',
-          Email:'',
-          Number:'',
-          Office:'',
-          Firm:'',
-          Projects:'',
-        }
-      ]
 
-const testProjects = [
-  {
-    name:'',
-    status:'',
-    category:'',
-    startdate:'',
-    enddate:'',
-    lifecycle:''
+
+function populateTestData(contactCount, projectCount, lcplanCount){
+  // Populate tables with test data
+  if(contactCount == 0){
+    for(const contact of testContacts){
+      usePerson.save({
+            Fullname: contact.Fullname,
+            Title: contact.Title,
+            Email: contact.Email,
+            Number: contact.Number,
+            Office: contact.Office,
+            Firm: contact.Firm,
+            Projects: contact.Projects,
+      });
+    }
   }
-]
-
-const testLifecycle = [
-  {
-    name:'',
-    steps:''
+  if(projectCount == 0){
+    for(const project of testProjects){
+      useProject.save({
+          Name: project.Name,
+          Status: project.Status,
+          Category: project.Category,
+          StartDate: project.Startdate,
+          EndDate: project.Enddate,
+          Lifecycle: project.Lifecycle
+        });
+    }
   }
-]
-
+  if(lcplanCount == 0){
+    for(const plan of testLifecycle){
+      useLifecycle.save({
+            Name: plan.Name,
+            LifecycleStep: plan.LifecycleStep
+          });
+    }
+  } 
+}
 
 
 </script>

@@ -8,7 +8,7 @@ import { useRepo } from "pinia-orm";
 import { useDisplayStore } from './stores/DisplayStore';
 import Person from "./stores/Person.js";
 import Project from "./stores/Project.js";
-import {Lifecycle} from "./stores/Lifecycle.js";
+import {Lifecycle, LifecycleStep} from "./stores/Lifecycle.js";
 
 
 import 'bootstrap/dist/css/bootstrap.css';
@@ -30,5 +30,6 @@ export const displayStore = useDisplayStore()
 export const usePerson = useRepo(Person, pinia);
 export const useProject= useRepo(Project, pinia);
 export const useLifecycle = useRepo(Lifecycle, pinia);
+export const useLifecycleStep = useRepo(LifecycleStep, pinia);
 
 app.mount('#app')
