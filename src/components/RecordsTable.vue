@@ -1,4 +1,5 @@
 <template>
+  <!--
       <div v-if="setViewSelection=='Contact'">
         <table class="table table-striped">
           <thead>
@@ -27,6 +28,7 @@
           </tbody>
         </table>
       </div>
+      
 
       <div v-else-if="setViewSelection=='Project'">
         <table class="table table-striped">
@@ -55,6 +57,7 @@
         </table>
       </div>
 
+
       <div v-else-if="setViewSelection=='Lifecycle'">
         <table class="table table-striped">
           <thead>
@@ -74,7 +77,7 @@
             </tr>
           </tbody>
         </table>
-      </div>
+      </div>-->
 </template>
 
 
@@ -92,7 +95,7 @@
  
 
   export default {
-    name: 'ContactsTable',
+    name: 'RecordsTable',
     computed: {
       setViewSelection: () => displayStore.viewSelection,
       contactList: () => useCollect(usePerson.all()).sortBy('Fullname'),
