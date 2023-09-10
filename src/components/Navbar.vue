@@ -3,7 +3,7 @@
   <div>
     <b-navbar type="dark" variant="dark">
       <b-navbar-nav >
-        <b-nav-item >Home</b-nav-item>
+        <b-nav-item >Logo</b-nav-item>
   
         <!-- Navbar dropdowns 
         ref:https://codesandbox.io/s/y31zkqnwkz?file=/App.vue
@@ -23,11 +23,11 @@
         </b-nav-item-dropdown>
 
         <b-nav-form>
-          <div v-if="selectedItem=='Contact'">
-            <ModalContact></ModalContact>
-          </div>
-          <div v-else-if="selectedItem=='Project'">
+          <div v-if="selectedItem=='Project'">
             <ModalProject></ModalProject>
+          </div>
+          <div v-else-if="selectedItem=='Contact'">
+            <ModalContact></ModalContact>
           </div>
           <div v-else-if="selectedItem=='Lifecycle'">
             <ModalLifecycle/>
@@ -69,13 +69,12 @@ export default {
   },
   data(){
     return{
-      selectedItem: "-",
-      options: [
-        {value: '1', text: 'Lifecycle', path:'LifecyclePage'},
-        {value: '2', text: 'Project', path:'ProjectPage'},
-        {value: '3', text: 'Contact', path:'ContactPage'},
-      ]
+      selectedItem: '',
+      options: displayStore.options
     }
+  },
+  mounted(){
+    this.selectedItem = displayStore.viewSelection.text
   },
   methods:{
     changeItem(option){

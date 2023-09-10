@@ -1,11 +1,11 @@
 <template>
     <div>
-        <Navbar/>
+        <NavBar/>
       <main>
         <b-container class="bv-example-row">
             <b-row>
                 <b-col>
-                <component :is="selection"/>
+                <component :is="selectedPath"/>
                 </b-col>
             </b-row>
         </b-container>
@@ -15,16 +15,16 @@
   
 <script>
 import {displayStore} from '@/main.js';
-import Navbar from '@/components/Navbar.vue';
+import NavBar from '@/components/Navbar.vue';
 
 import ContactPage from '@/views/ContactPage.vue';
 import ProjectPage from '@/views/ProjectPage.vue';
 import LifecyclePage from '@/views/LifecyclePage.vue';
 
 export default {
-  name: `LayoutDefault`,
+  name: `App`,
   components:{
-    Navbar,
+    NavBar,
     ContactPage,
     ProjectPage,
     LifecyclePage
@@ -34,7 +34,7 @@ export default {
     };
   },
   computed:{
-      selection: () => {
+      selectedPath: () => {
         return displayStore.viewSelection.path; 
     }
   }

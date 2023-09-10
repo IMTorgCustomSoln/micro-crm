@@ -116,7 +116,7 @@
 <script>
 import {useCollect} from 'pinia-orm/dist/helpers';
 import {displayStore} from '../main.js';
-import {usePerson, useProject, useLifecycle} from '../main.js';
+import {useLifecycle} from '../main.js';
 import { LifecycleStep } from '../stores/Lifecycle';
 import {availableStatus} from '../stores/Project';
 

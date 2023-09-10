@@ -7,7 +7,7 @@
       type="button"
       @click="$bvModal.show('new-contact-modal')"
       >
-      New {{ selectedItem.text }}
+      New Contact
     </b-button>
 
 
@@ -110,19 +110,12 @@
 </template>
 
 <script>
-//import {useCollect} from 'pinia-orm/dist/helpers';
 import {displayStore} from '../main.js';
-import {usePerson, useProject, useLifecycle} from '@/main.js';
-//import { LifecycleStep } from '../stores/Lifecycle';
-//import {availableStatus} from '../stores/Project';
+import {usePerson} from '@/main.js';
 
 
 export default {
   name: 'ModalContact',
-  computed:{
-    //availableStatusList: () => availableStatus,
-    //lifecycleListName: () => useCollect(useLifecycle.all()).sortBy('Name').map(item => item.Name)
-  },
   data(){
     return{
       selectedItem: displayStore.viewSelection,
@@ -139,11 +132,7 @@ export default {
       }
     }
   },
-  methods:{/*
-    changeItem(option){
-      this.selectedItem = displayStore.viewSelection
-      console.log(displayStore)
-    },*/
+  methods:{
     addContact() {
         usePerson.save({
           Fullname: this.form.contact.fullname,

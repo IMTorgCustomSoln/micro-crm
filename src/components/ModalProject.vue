@@ -6,7 +6,7 @@
               class="my-2 my-sm-0" 
               type="button"
               @click="$bvModal.show('new-project-modal')"
-              >New {{ selectedItem.text }}
+              >New Project
             </b-button>
 
     <b-modal 
@@ -94,15 +94,11 @@
 
 <script>
 import {displayStore} from '../main.js';
-import {usePerson, useProject, useLifecycle} from '@/main.js';
+import {useProject} from '@/main.js';
 
 
 export default {
   name: 'ModalProject',
-  computed:{
-    //availableStatusList: () => availableStatus,
-    //lifecycleListName: () => useCollect(useLifecycle.all()).sortBy('Name').map(item => item.Name)
-  },
   data(){
     return{
       selectedItem: displayStore.viewSelection,
@@ -118,11 +114,7 @@ export default {
       }
     }
   },
-  methods:{/*
-    changeItem(option){
-      this.selectedItem = displayStore.viewSelection
-      console.log(displayStore)
-    },*/
+  methods:{
     addProject() {
         useProject.save({
           Name: this.form.project.name,
