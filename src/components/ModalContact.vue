@@ -7,7 +7,7 @@
       type="button"
       @click="$bvModal.show('new-contact-modal')"
       >
-      New {{ selectedItem }}
+      New {{ selectedItem.text }}
     </b-button>
 
 

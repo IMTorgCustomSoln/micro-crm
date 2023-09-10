@@ -14,12 +14,14 @@
           v-on:change="changeItem"
           >
           <b-dropdown-item 
-            v-for="option in options" 
+            v-for="option of options" 
             :key="option.value" 
             :value="option.value"
             @click="changeItem(option)"
-            >
+            > {{ option.text }}
+            <!--
             <router-link :to="{'name':option.path}">{{option.text}}</router-link>
+            <router-view/>-->
           </b-dropdown-item>        
         </b-nav-item-dropdown>
 
@@ -52,6 +54,7 @@
 </template>
 
 <script>
+import {displayStore} from '../main.js';
 import WorkSessionIO from './WorkSessionIO.vue';
 
 import ModalContact from '@/components/ModalContact.vue';
@@ -76,9 +79,9 @@ export default {
     return{
       selectedItem: "-",
       options: [
-        {value: '1', text: 'Lifecycle', path:'Lifecycle'},
-        {value: '2', text: 'Project', path:'Project'},
-        {value: '3', text: 'Contact', path:'Contact'},
+        {value: '1', text: 'Lifecycle', path:'LifecyclePage'},
+        {value: '2', text: 'Project', path:'ProjectPage'},
+        {value: '3', text: 'Contact', path:'ContactPage'},
       ],/*
       form:{
         contact:{
@@ -111,12 +114,12 @@ export default {
       }*/
     }
   },
-  methods:{/*
+  methods:{
     changeItem(option){
       this.selectedItem = option.text
-      displayStore.viewSelection = option.text
-      console.log(displayStore)
-    },
+      displayStore.viewSelection = option
+      console.log(JSON.parse(JSON.stringify(displayStore)) )
+    },/*
     addPerson() {
         usePerson.save({
           Fullname: this.form.contact.fullname,

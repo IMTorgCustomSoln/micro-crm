@@ -6,7 +6,7 @@
               class="my-2 my-sm-0" 
               type="button"
               @click="$bvModal.show('new-project-modal')"
-              >New {{ selectedItem }}
+              >New {{ selectedItem.text }}
             </b-button>
 
     <b-modal 

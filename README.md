@@ -65,3 +65,9 @@ npm run test:unit
 ```sh
 npm run lint
 ```
+
+
+## References
+
+* router views may be useful, but is unnecessary.  Some good explanations of dynamic layouts are the following:
+  - https://markus.oberlehner.net/blog/dynamic-vue-layout-components/
