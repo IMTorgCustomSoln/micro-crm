@@ -5,7 +5,7 @@
         <b-container class="bv-example-row">
             <b-row>
                 <b-col>
-        <component :is="selection"/>
+                <component :is="selection"/>
                 </b-col>
             </b-row>
         </b-container>
@@ -35,7 +35,6 @@ export default {
   },
   computed:{
       selection: () => {
-        console.log(displayStore.viewSelection.path)
         return displayStore.viewSelection.path; 
     }
   }

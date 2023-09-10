@@ -19,9 +19,6 @@
             :value="option.value"
             @click="changeItem(option)"
             > {{ option.text }}
-            <!--
-            <router-link :to="{'name':option.path}">{{option.text}}</router-link>
-            <router-view/>-->
           </b-dropdown-item>        
         </b-nav-item-dropdown>
 
@@ -70,11 +67,6 @@ export default {
     ModalProject,
     ModalLifecycle
   },
-  computed:{/*
-    availableStatusList: () => availableStatus,
-    lifecycleListName: () => useCollect(useLifecycle.all()).sortBy('Name').map(item => item.Name)
-    */
-  },
   data(){
     return{
       selectedItem: "-",
@@ -82,36 +74,7 @@ export default {
         {value: '1', text: 'Lifecycle', path:'LifecyclePage'},
         {value: '2', text: 'Project', path:'ProjectPage'},
         {value: '3', text: 'Contact', path:'ContactPage'},
-      ],/*
-      form:{
-        contact:{
-          fullname:'',
-          title:'',
-          email:'',
-          number:'',
-          office:'',
-          firm:'',
-          projects:''
-        },
-        project:{
-          name:'',
-          status:'',
-          category:'',
-          startdate:'',
-          enddate:'',
-          lifecycle:''
-        },
-        lifecycle:{
-          name:'',
-          step:{
-            name:'',
-            order:'',
-            placeholder:'',
-            emailForm:''
-          },
-          steps:[]
-        }
-      }*/
+      ]
     }
   },
   methods:{
@@ -119,58 +82,7 @@ export default {
       this.selectedItem = option.text
       displayStore.viewSelection = option
       console.log(JSON.parse(JSON.stringify(displayStore)) )
-    },/*
-    addPerson() {
-        usePerson.save({
-          Fullname: this.form.contact.fullname,
-          Title: this.form.contact.title,
-          Email: this.form.contact.email,
-          Number: this.form.contact.number,
-          Office: this.form.contact.office,
-          Firm: this.form.contact.firm,
-          Projects: this.form.contact.projects,
-        });
-        Object.keys(this.form.contact).forEach( k => {
-          this.form.contact[k] = ''
-        })
-        console.log(usePerson.all());
-        this.$bvModal.hide('new-contact-modal')
     },
-    addProject() {
-        useProject.save({
-          Name: this.form.project.name,
-          Status: this.form.project.status,
-          Category: this.form.project.category,
-          StartDate: this.form.project.startdate,
-          EndDate: this.form.project.enddate,
-          Lifecycle: this.form.project.lifecycle
-        });
-        Object.keys(this.form.project).forEach( k => {
-          this.form.project[k] = ''
-        })
-        console.log(useProject.all());
-        this.$bvModal.hide('new-project-modal')
-    },
-    addLifecycle() {
-        useLifecycle.save({
-          Name: this.form.lifecycle.name,
-          LifecycleSteps: this.form.lifecycle.steps
-        });
-        Object.keys(this.form.lifecycle).forEach( k => {
-          this.form.lifecycle[k] = ''
-        })
-        console.log(useLifecycle.all());
-        this.$bvModal.hide('new-lifecycle-modal')
-    },
-    addLifecycleStep(){
-      const step = new LifecycleStep(
-        this.form.lifecycle.step.name,
-        this.form.lifecycle.step.order,
-        this.form.lifecycle.step.placeholder,
-        this.form.lifecycle.step.emailForm,
-      )
-      this.form.lifecycle.steps.push(step)
-    }*/
   }
 }
 </script>
