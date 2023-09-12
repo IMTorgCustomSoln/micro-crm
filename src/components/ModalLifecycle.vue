@@ -12,7 +12,8 @@
 
     <div>
         <b-modal 
-          id="new-lifecycle-modal" 
+          id="new-lifecycle-modal"
+          size="lg" 
           >
         <template #modal-title>
             New Lifecycle
@@ -21,13 +22,14 @@
         <div>
           <b-form>
             <b-card bg-variant="light">
+              <!--
               <b-form-group
                 label-cols-lg="3"
                 label="New Lifecycle"
                 label-size="lg"
                 label-class="font-weight-bold pt-0"
                 class="mb-0"
-              >
+              >-->
                 <b-form-group
                   label="Name:"
                   label-for="nested-street"
@@ -100,7 +102,7 @@
                   {{form.lifecycle.steps}}
                 </b-form-group>
               
-            </b-form-group>
+            <!--</b-form-group>-->
           </b-card>
           </b-form>
           </div>

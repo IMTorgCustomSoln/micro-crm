@@ -1,6 +1,6 @@
 <template>
     <div>
-        <NavBar/>
+        <NavbarTop/>
       <main>
         <b-container class="bv-example-row">
             <b-row>
@@ -15,7 +15,7 @@
   
 <script>
 import {displayStore} from '@/main.js';
-import NavBar from '@/components/Navbar.vue';
+import NavbarTop from '@/components/Navbar.vue';
 
 import ContactPage from '@/views/ContactPage.vue';
 import ProjectPage from '@/views/ProjectPage.vue';
@@ -24,7 +24,7 @@ import LifecyclePage from '@/views/LifecyclePage.vue';
 export default {
   name: `App`,
   components:{
-    NavBar,
+    NavbarTop,
     ContactPage,
     ProjectPage,
     LifecyclePage

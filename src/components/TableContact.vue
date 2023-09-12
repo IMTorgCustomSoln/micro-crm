@@ -31,8 +31,9 @@
   
   
   <script>
+  import {toRaw} from 'vue';
   import {useCollect} from 'pinia-orm/dist/helpers';
-  import {usePerson} from '@/main.js';
+  import {displayStore, usePerson} from '@/main.js';
   import {testContacts} from '@/assets/defaults.js';
 
 
@@ -42,7 +43,14 @@
     name: 'TableContact',
     computed: {
       //setViewSelection: () => displayStore.viewSelection,
-      contactList: () => useCollect(usePerson.all()).sortBy('Fullname'),
+      contactList: () => {
+        const contacts = useCollect(usePerson.all()).sortBy('Fullname')
+        if( !isEmpty(toRaw(displayStore.projectSelection))){
+          return contacts.filter(item => toRaw(item.Projects).includes(displayStore.projectSelection.Name) )
+        } else {
+          return contacts
+        }
+      },
     },
     data() {
       return {
@@ -63,6 +71,15 @@
 };
 
 
+function isEmpty(obj) {
+  for (const prop in obj) {
+    if (Object.hasOwn(obj, prop)) {
+      return false;
+    }
+  }
+
+  return true;
+}
 
 function populateTestData(contactCount){
   // Populate tables with test data

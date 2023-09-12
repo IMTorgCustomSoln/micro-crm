@@ -19,13 +19,14 @@
         <div>
           <b-form>
             <b-card bg-variant="light">
+              <!--
               <b-form-group
                 label-cols-lg="3"
                 label="New Project"
                 label-size="lg"
                 label-class="font-weight-bold pt-0"
                 class="mb-0"
-              >
+              >-->
                 <b-form-group
                   label="Name:"
                   label-for="nested-street"
@@ -77,10 +78,10 @@
                   label-cols-sm="3"
                   label-align-sm="right"
                 >
-                <b-form-select id="mySelect2" v-model="form.project.lifecycle" :options="lifecycleListName"/>
+                <b-form-select id="mySelect2" v-model="form.project.lifecycle" :options="lifecycleList"/>
                 </b-form-group>
               
-            </b-form-group>
+            <!--</b-form-group>-->
           </b-card>
           </b-form>
           </div>
@@ -94,7 +95,8 @@
 
 <script>
 import {displayStore} from '../main.js';
-import {useProject} from '@/main.js';
+import {useProject, useLifecycle} from '@/main.js';
+import { useCollect } from 'pinia-orm/dist/helpers';
 
 
 export default {
@@ -113,6 +115,9 @@ export default {
         },
       }
     }
+  },
+  computed:{
+    lifecycleList: () => useCollect(useLifecycle.all()).sortBy('Name').map(item=>item.Name)
   },
   methods:{
     addProject() {

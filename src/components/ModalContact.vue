@@ -24,13 +24,14 @@
         <div>
           <b-form>
             <b-card bg-variant="light">
+              <!--
               <b-form-group
                 label-cols-lg="3"
-                label="New Contact"
+                label=""
                 label-size="lg"
                 label-class="font-weight-bold pt-0"
                 class="mb-0"
-              >
+              >-->
                 <b-form-group
                   label="Name:"
                   label-for="nested-street"
@@ -86,15 +87,15 @@
                 </b-form-group>
               
                 <b-form-group
-                  label="Projects:"
+                  label="Projects: (multiple allowed)"
                   label-for="nested-country"
                   label-cols-sm="3"
                   label-align-sm="right"
                 >
-                  <b-form-input id="nested-country" v-model="form.contact.projects"></b-form-input>
+                  <b-form-select id="nested-country" multiple v-model="form.contact.projects" :options="projectList"/>
                 </b-form-group>
               
-            </b-form-group>
+            <!--</b-form-group>-->
           </b-card>
           </b-form>
           </div>
@@ -111,7 +112,8 @@
 
 <script>
 import {displayStore} from '../main.js';
-import {usePerson} from '@/main.js';
+import {usePerson, useProject} from '@/main.js';
+import { useCollect } from 'pinia-orm/dist/helpers';
 
 
 export default {
@@ -127,9 +129,14 @@ export default {
           number:'',
           office:'',
           firm:'',
-          projects:''
+          projects:[]
         }
       }
+    }
+  },
+  computed:{
+    projectList(){
+      return useCollect(useProject.all()).sortBy('Name').map(item=>item.Name)
     }
   },
   methods:{

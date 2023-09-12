@@ -90,29 +90,10 @@ export const defaultLifecycle = {
 
 
 
-// Contacts
-export const testContacts = []
-var i = 0;
-while(i < 10){
-    const contact = {
-        Fullname: faker.person.fullName(),
-        Title: faker.person.jobTitle(),
-        Email: faker.internet.email(),
-        Number: faker.phone.number(),
-        Office: faker.commerce.department(),
-        Firm: faker.company.name(),
-        Projects:'',
-      }
-    testContacts.push(contact)
-    i++
-}
-
-
-
 
 // Projects
 export const testProjects = []
-i = 0;
+var i = 0;
 while(i < 3){
     const dtBegin = faker.date.betweens({from: '2020-01-01T00:00:00.000Z', to:'2023-01-01T00:00:00.000Z', count:1})[0]
     const dtEnd = addDays(dtBegin, randomIntFromInverval(100,200))
@@ -125,5 +106,26 @@ while(i < 3){
         Lifecycle: defaultLifecycle.Name
     }
     testProjects.push(project)
+    i++
+}
+
+
+
+
+// Contacts
+export const testContacts = []
+i = 0;
+while(i < 10){
+    const projects = randomIntFromInverval(0, testProjects.length-1) //TODO:add multiple projects
+    const contact = {
+        Fullname: faker.person.fullName(),
+        Title: faker.person.jobTitle(),
+        Email: faker.internet.email(),
+        Number: faker.phone.number(),
+        Office: faker.commerce.department(),
+        Firm: faker.company.name(),
+        Projects: [testProjects[projects].Name],
+      }
+    testContacts.push(contact)
     i++
 }

@@ -10,7 +10,7 @@ export default class Person extends Model {
       Number: this.string(""),
       Office: this.string(""),
       Firm: this.string(""),
-      Projects: this.string("")
+      Projects: this.attr([""])
     }
   }
 }

@@ -4,6 +4,7 @@
     <b-navbar type="dark" variant="dark">
       <b-navbar-nav >
         <b-nav-item >Logo</b-nav-item>
+        <b-nav-item>Prj: {{ displayProjectSelected }}</b-nav-item>
   
         <!-- Navbar dropdowns 
         ref:https://codesandbox.io/s/y31zkqnwkz?file=/App.vue
@@ -60,7 +61,7 @@ import ModalLifecycle from '@/components/ModalLifecycle.vue';
 
 
 export default {
-  name: 'NavBar',
+  name: 'NavbarTop',
   components:{
     WorkSessionIO,
     ModalContact,
@@ -75,6 +76,15 @@ export default {
   },
   mounted(){
     this.selectedItem = displayStore.viewSelection.text
+  },
+  computed:{
+    displayProjectSelected: ()=>{
+      let prj = {}
+      if( displayStore.projectSelection){
+        prj = displayStore.projectSelection.Name
+      }
+      return prj
+    }
   },
   methods:{
     changeItem(option){
