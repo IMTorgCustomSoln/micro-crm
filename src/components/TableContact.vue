@@ -31,7 +31,6 @@
   
   
   <script>
-  import {displayStore} from '@/main.js';
   import {useCollect} from 'pinia-orm/dist/helpers';
   import {usePerson} from '@/main.js';
   import {testContacts} from '@/assets/defaults.js';
