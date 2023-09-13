@@ -14,7 +14,14 @@
         thead-class="tableHead bg-dark text-white"
         @row-selected="selectRow"  
       >
+      <template #cell(actions)="row">
+        <span>
+          <b-btn size="sm" @click="editItem(row)">Edit</b-btn>
+          <b-btn size="sm" @click="deleteItem(row)">Delete</b-btn>
+        </span>
+      </template>
     </b-table>
+    <ModalProject :item="form.project"/>
     </div>
 
 </template>
@@ -25,6 +32,7 @@
 import {displayStore} from '../main.js';
 import {useCollect} from 'pinia-orm/dist/helpers';
 import {usePerson, useProject} from '../main.js';
+import ModalProject from '@/components/ModalProject.vue';
 
 import {testProjects} from '../assets/defaults';
 
@@ -33,10 +41,16 @@ import {testProjects} from '../assets/defaults';
 
 export default {
   name: 'TableProject',
+  components:{
+    ModalProject
+  },
   data() {
     return {
       viewSelection:'',
-      fields: fields
+      fields: fields,
+      form:{
+        project: {}
+      }
     };
   },
   mounted(){
@@ -57,15 +71,22 @@ export default {
       } else {
         displayStore.projectSelection = {}
       }
-      console.log(rows)
     },
-    clearAll(){
+    editItem(item){
+      console.log(item)
+      //this.form.project = item
+      const prj = JSON.parse(JSON.stringify(item)).item
+      Object.assign(this.form.project, prj  )
+      //this.$bvModal.show('new-project-modal')   //TODO:tightly coupled, but no direct dependency
+    },
+    deleteItem(item){
+      const prj = JSON.parse(JSON.stringify(item)).item
+      useProject.destroy(prj.id)
+    },
+    deleteAll(){
       const ids = usePerson.all().map(item => item.id)
       console.log(ids)
       usePerson.destroy(ids)
-    },
-    removeProject(project){
-      useProject.destroy(project.id)
     },
     formatDateAssigned(value) {
       const dt = value.toDateString()
@@ -120,6 +141,9 @@ const fields = [{
         key: 'Lifecycle',
         label: 'Lifecycle',
         sortable: true,
+    }, {
+        key: 'actions',
+        label: 'Actions'
     }]
 
 

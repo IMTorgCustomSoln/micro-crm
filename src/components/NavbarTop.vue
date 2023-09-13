@@ -4,7 +4,6 @@
     <b-navbar type="dark" variant="dark">
       <b-navbar-nav >
         <b-nav-item >Logo</b-nav-item>
-        <b-nav-item>Prj: {{ displayProjectSelected }}</b-nav-item>
   
         <!-- Navbar dropdowns 
         ref:https://codesandbox.io/s/y31zkqnwkz?file=/App.vue
@@ -25,8 +24,18 @@
 
         <b-nav-form>
           <div v-if="selectedItem=='Project'">
-            <ModalProject></ModalProject>
+            <b-button 
+              id='btnNewProject'
+              v-b-modal.new-project-modal
+              size="sm" 
+              class="my-2 my-sm-0" 
+              type="button"
+              @click="$bvModal.show('new-project-modal')"
+              >New Project
+            </b-button>
+            <!--<ModalProject/>-->
           </div>
+
           <div v-else-if="selectedItem=='Contact'">
             <ModalContact></ModalContact>
           </div>
@@ -56,7 +65,7 @@ import {displayStore} from '../main.js';
 import WorkSessionIO from './WorkSessionIO.vue';
 
 import ModalContact from '@/components/ModalContact.vue';
-import ModalProject from '@/components/ModalProject.vue';
+//import ModalProject from '@/components/ModalProject.vue';
 import ModalLifecycle from '@/components/ModalLifecycle.vue';
 
 
@@ -65,7 +74,7 @@ export default {
   components:{
     WorkSessionIO,
     ModalContact,
-    ModalProject,
+    //ModalProject,
     ModalLifecycle
   },
   data(){

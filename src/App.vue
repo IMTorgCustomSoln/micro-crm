@@ -3,6 +3,7 @@
         <NavbarTop/>
       <main>
         <b-container class="bv-example-row">
+          <div><b>Selected:</b> {{ selectedProjects }}</div>
             <b-row>
                 <b-col>
                 <component :is="selectedPath"/>
@@ -15,7 +16,7 @@
   
 <script>
 import {displayStore} from '@/main.js';
-import NavbarTop from '@/components/Navbar.vue';
+import NavbarTop from '@/components/NavbarTop.vue';
 
 import ContactPage from '@/views/ContactPage.vue';
 import ProjectPage from '@/views/ProjectPage.vue';
@@ -36,6 +37,9 @@ export default {
   computed:{
       selectedPath: () => {
         return displayStore.viewSelection.path; 
+    },
+    selectedProjects(){
+      return displayStore.projectSelection.Name
     }
   }
 };
