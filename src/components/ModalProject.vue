@@ -1,14 +1,23 @@
 <template>
+  <b-button 
+    id='btnNewProject'
+    v-b-modal.new-project-modal
+    size="sm" 
+    class="my-2 my-sm-0" 
+    type="button"
+    @click="$bvModal.show(`new-project-modal-${_uid}`)"
+    >{{btnTitle}}
+  </b-button>
 
     <b-modal 
-        id="new-project-modal"
+        :id="`new-project-modal-${_uid}`"
         >
         <!-- 
           TODO: enable multiple instances
           ref: https://stackoverflow.com/questions/65633795/multiple-of-the-same-component-spawning-the-same-modal-on-the-same-page
           :id="`new-project-modal-${_uid}`" -->
         <template #modal-title>
-            New Project
+          {{btnTitle}}
         </template>
         
         <div>
@@ -91,25 +100,26 @@ import { useCollect } from 'pinia-orm/dist/helpers';
 
 export default {
   name: 'ModalProject',
-  props:['item'],
-  watch: { 
-      item: {
-          handler: function(newItem, oldVal) {
-            const prj = JSON.parse(JSON.stringify(this.$props.item))
-            this.form.project.id = prj.id;
-            this.form.project.name = prj.Name;
-            this.form.project.status = prj.Status;
-            this.form.project.category = prj.Category;
-            this.form.project.startdate = prj.StartDate;
-            this.form.project.enddate = prj.EndDate;
-            this.form.project.lifecycle = prj.Lifecycle;
-            this.$bvModal.show('new-project-modal')
-            },
-            deep: true
-          }
+  props:['name','item'],
+  watch: {
+    item: {
+        handler: function(newItem, oldVal) {
+          const prj = JSON.parse(JSON.stringify(this.$props.item))
+          this.form.project.id = prj.id;
+          this.form.project.name = prj.Name;
+          this.form.project.status = prj.Status;
+          this.form.project.category = prj.Category;
+          this.form.project.startdate = prj.StartDate;
+          this.form.project.enddate = prj.EndDate;
+          this.form.project.lifecycle = prj.Lifecycle;
+          //this.$bvModal.show(`new-project-modal-${this._uid}`)
+          },
+          deep: true
+        }
   },
   data(){
     return{
+      btnTitle: 'New Project',
       selectedItem: useDisplayStore.viewSelection,
       form:{
         project:{
@@ -124,7 +134,8 @@ export default {
       }
     }
   },
-  mounted(){
+  created(){
+    this.btnTitle = this.$props.name
     this.initializeFormValues()
   },
   computed:{
@@ -178,9 +189,10 @@ export default {
           this.form.project[k] = ''
         })
         console.log(useProject.all());
-        this.$bvModal.hide('new-project-modal');
+        this.$bvModal.hide(`new-project-modal-${this._uid}`)
+        //this.$bvModal.hide('new-project-modal');
         this.initializeFormValues();
-        //this.$bvModal.hide(`new-project-modal-${_uid}`)
+        
     },
     }
 }

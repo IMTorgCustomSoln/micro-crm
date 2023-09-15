@@ -16,12 +16,12 @@
       >
       <template #cell(actions)="row">
         <span>
-          <b-btn size="sm" @click="editItem(row)">Edit</b-btn>
+          <!--<b-btn size="sm" @click="editItem(row)">Edit</b-btn>-->
+          <ModalProject name="Edit" :item=editItem(row)></ModalProject>
           <b-btn size="sm" @click="deleteItem(row)">Delete</b-btn>
         </span>
       </template>
     </b-table>
-    <ModalProject :item="form.project"/>
     </div>
 
 </template>
@@ -76,8 +76,9 @@ export default {
       console.log(item)
       //this.form.project = item
       const prj = JSON.parse(JSON.stringify(item)).item
-      Object.assign(this.form.project, prj  )
-      this.$bvModal.show('new-project-modal')   //TODO:tightly coupled, but no direct dependency
+      //Object.assign(this.form.project, prj  )
+      return prj
+      //this.$bvModal.show('new-project-modal')   //TODO:tightly coupled, but no direct dependency
     },
     deleteItem(item){
       const prj = JSON.parse(JSON.stringify(item)).item
