@@ -1,14 +1,25 @@
 <template>
+  <b-button 
+    id='btnNewProject'
+    v-b-modal.new-project-modal
+    size="sm" 
+    class="my-2 my-sm-0" 
+    type="button"
+    @click="toggleModal()"
+    >{{ name }}
+  </b-button>
 
+  <div v-if="showModal">
     <b-modal 
-        id="new-project-modal"
+        :ref="`new-project-modal-${_uid}`"
+        
         >
         <!-- 
-          TODO: enable multiple instances
-          ref: https://stackoverflow.com/questions/65633795/multiple-of-the-same-component-spawning-the-same-modal-on-the-same-page
+          TODO: enable multiple instances - NEW ATTEMPT with COMPOSITION
+          ref: https://stackoverflow.com/questions/46791340/multiple-modal-components-with-vue?rq=3
           :id="`new-project-modal-${_uid}`" -->
         <template #modal-title>
-            New Project
+            {{ name }}
         </template>
         
         <div>
@@ -79,6 +90,7 @@
                 <b-button @click="addProject" v-b-modal.modal-close_visit class="btn-sm m-1" >Add / Update Project</b-button>
         </template>
     </b-modal>
+  </div>
 
 </template>
 
@@ -91,7 +103,7 @@ import { useCollect } from 'pinia-orm/dist/helpers';
 
 export default {
   name: 'ModalProject',
-  props:['item'],
+  props:['name','item'],
   watch: { 
       item: {
           handler: function(newItem, oldVal) {
@@ -103,13 +115,14 @@ export default {
             this.form.project.startdate = prj.StartDate;
             this.form.project.enddate = prj.EndDate;
             this.form.project.lifecycle = prj.Lifecycle;
-            this.$bvModal.show('new-project-modal')
+            //this.$bvModal.show('new-project-modal')
             },
             deep: true
           }
   },
   data(){
     return{
+      showModal: false,
       selectedItem: useDisplayStore.viewSelection,
       form:{
         project:{
@@ -141,6 +154,11 @@ export default {
     lifecycleList: () => useCollect(useLifecycle.all()).sortBy('Name').map(item=>item.Name)
   },
   methods:{
+    toggleModal(){
+      //this.$bvModal.toggle(`new-project-modal-${this._uid}`)
+      this.showModal = !this.showModal
+      //this.$refs[`new-project-modal-${this._uid}`].toggle()
+    },
     initializeFormValues(){
       this.form.project.name = ''
       this.form.project.category = useDisplayStore.project.initialCategory
@@ -178,7 +196,8 @@ export default {
           this.form.project[k] = ''
         })
         console.log(useProject.all());
-        this.$bvModal.hide('new-project-modal');
+        this.toggleModal()
+        //this.$bvModal.hide('new-project-modal');
         this.initializeFormValues();
         //this.$bvModal.hide(`new-project-modal-${_uid}`)
     },

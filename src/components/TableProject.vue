@@ -15,13 +15,15 @@
         @row-selected="selectRow"  
       >
       <template #cell(actions)="row">
+        <ProjectActions :item="row"></ProjectActions>
+        <!--
         <span>
           <b-btn size="sm" @click="editItem(row)">Edit</b-btn>
           <b-btn size="sm" @click="deleteItem(row)">Delete</b-btn>
-        </span>
+        </span>-->
       </template>
     </b-table>
-    <ModalProject :item="form.project"/>
+    <!--<ModalProject :item="form.project"/>-->
     </div>
 
 </template>
@@ -32,17 +34,16 @@
 import {useDisplayStore} from '@/main.js';
 import {useCollect} from 'pinia-orm/dist/helpers';
 import {usePerson, useProject} from '@/main.js';
-import ModalProject from '@/components/ModalProject.vue';
+//import ModalProject from '@/components/ModalProject.vue';
+import ProjectActions from '@/components/TableProjectActions.vue';
 
 import {testProjects} from '../assets/defaults';
-
-
 
 
 export default {
   name: 'TableProject',
   components:{
-    ModalProject
+    ProjectActions
   },
   data() {
     return {
@@ -79,10 +80,11 @@ export default {
       Object.assign(this.form.project, prj  )
       this.$bvModal.show('new-project-modal')   //TODO:tightly coupled, but no direct dependency
     },
+    /*
     deleteItem(item){
       const prj = JSON.parse(JSON.stringify(item)).item
       useProject.destroy(prj.id)
-    },
+    },*/
     deleteAll(){
       const ids = usePerson.all().map(item => item.id)
       console.log(ids)
