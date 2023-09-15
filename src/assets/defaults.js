@@ -109,9 +109,6 @@ while(i < 3){
     i++
 }
 
-
-
-
 // Contacts
 export const testContacts = []
 i = 0;
@@ -125,7 +122,44 @@ while(i < 10){
         Office: faker.commerce.department(),
         Firm: faker.company.name(),
         Projects: [testProjects[projects].Name],
-      }
+        Statuses: []
+    }
+    const numberOfInteractions = randomIntFromInverval(1,5)
+    const interactions = []
+    while(i < numberOfInteractions){
+        const interaction = {
+            LifecycleStep: defaultSteps[randomIntFromInverval(0,3)],
+            Datetime: new Date(),
+            Comments: faker.lorem.paragraph(),
+        }
+        interactions.push(interaction)
+        i++
+    }
+    const numberOfUseCases = randomIntFromInverval(0,1)
+    const usecases = []
+    while(i < numberOfUseCases){
+        const usecase = {
+            Role: contact.jobTitle,
+            Use: faker.lorem.sentence,
+            PainPoint: faker.lorem.sentence
+        }
+        usecases.push(usecase)
+        i++
+    }
+    const status = {
+        Person: contact.Fullname,
+        Project: contact.Projects[0],
+        ReferredBy: faker.person.fullName(),
+        CurrentLifecycleStep: defaultSteps[randomIntFromInverval(3,defaultSteps.length-1)],
+        Interactions: interactions,
+        UseCases: usecases
+    }
+    contact.Statuses.push(status)
+
+
     testContacts.push(contact)
     i++
 }
+
+// Contact-Project Status
+

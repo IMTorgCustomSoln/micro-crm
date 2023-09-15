@@ -1,4 +1,8 @@
 import { Model } from 'pinia-orm'
+import { PersonProjectStatus } from '@/stores/PersonProjectStatus';
+
+
+
 export default class Person extends Model {
   static entity = 'Person'
   static fields () {
@@ -10,7 +14,8 @@ export default class Person extends Model {
       Number: this.string(""),
       Office: this.string(""),
       Firm: this.string(""),
-      Projects: this.attr([""])
+      Projects: this.attr([""]),
+      Statuses: this.hasMany(PersonProjectStatus , 'StatusId')
     }
   }
 }

@@ -20,7 +20,6 @@ export default class Project extends Model {
     return {
       Status: StringCast,
       Category: StringCast,
-
       StartDate: DateCast,
       EndDate: DateCast
     }

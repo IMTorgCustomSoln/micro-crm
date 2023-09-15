@@ -3,10 +3,6 @@
     <b-modal 
         id="new-project-modal"
         >
-        <!-- 
-          TODO: enable multiple instances
-          ref: https://stackoverflow.com/questions/65633795/multiple-of-the-same-component-spawning-the-same-modal-on-the-same-page
-          :id="`new-project-modal-${_uid}`" -->
         <template #modal-title>
             New Project
         </template>
@@ -180,7 +176,6 @@ export default {
         console.log(useProject.all());
         this.$bvModal.hide('new-project-modal');
         this.initializeFormValues();
-        //this.$bvModal.hide(`new-project-modal-${_uid}`)
     },
     }
 }

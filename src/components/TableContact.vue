@@ -58,7 +58,7 @@
       };
     },
     mounted(){
-      const env = true
+      const env = useDisplayStore.populateTestData
       if(env){
         populateTestData(this.contactList.length)
       }
