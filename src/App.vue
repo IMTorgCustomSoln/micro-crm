@@ -15,7 +15,7 @@
 </template>
   
 <script>
-import {displayStore} from '@/main.js';
+import {useDisplayStore} from '@/main.js';
 import NavbarTop from '@/components/NavbarTop.vue';
 
 import ContactPage from '@/views/ContactPage.vue';
@@ -36,10 +36,10 @@ export default {
   },
   computed:{
       selectedPath: () => {
-        return displayStore.viewSelection.path; 
+        return useDisplayStore.viewSelection.path; 
     },
     selectedProjects(){
-      return displayStore.projectSelection.Name
+      return useDisplayStore.projectSelection.Name
     }
   }
 };

@@ -29,9 +29,9 @@
 
 
 <script>
-import {displayStore} from '../main.js';
+import {useDisplayStore} from '@/main.js';
 import {useCollect} from 'pinia-orm/dist/helpers';
-import {usePerson, useProject} from '../main.js';
+import {usePerson, useProject} from '@/main.js';
 import ModalProject from '@/components/ModalProject.vue';
 
 import {testProjects} from '../assets/defaults';
@@ -54,22 +54,22 @@ export default {
     };
   },
   mounted(){
-    const env = true
+    const env = useDisplayStore.populateTestData
     if(env){
       populateTestData(this.projectList.length)
     }
   },
   computed: {
-    setViewSelection: () => displayStore.viewSelection,
+    setViewSelection: () => useDisplayStore.viewSelection,
     projectList: () => useCollect(useProject.all()).sortBy('Name')
   },
   methods: {
     selectRow(rows){
       const prj = JSON.parse(JSON.stringify(rows))[0]
       if(prj){
-        displayStore.projectSelection = prj
+        useDisplayStore.projectSelection = prj
       } else {
-        displayStore.projectSelection = {}
+        useDisplayStore.projectSelection = {}
       }
     },
     editItem(item){
@@ -77,7 +77,7 @@ export default {
       //this.form.project = item
       const prj = JSON.parse(JSON.stringify(item)).item
       Object.assign(this.form.project, prj  )
-      //this.$bvModal.show('new-project-modal')   //TODO:tightly coupled, but no direct dependency
+      this.$bvModal.show('new-project-modal')   //TODO:tightly coupled, but no direct dependency
     },
     deleteItem(item){
       const prj = JSON.parse(JSON.stringify(item)).item

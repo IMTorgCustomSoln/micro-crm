@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import {displayStore} from '../main.js';
+import {useDisplayStore} from '@/main.js';
 import WorkSessionIO from './WorkSessionIO.vue';
 
 import ModalContact from '@/components/ModalContact.vue';
@@ -80,17 +80,17 @@ export default {
   data(){
     return{
       selectedItem: '',
-      options: displayStore.options
+      options: useDisplayStore.options
     }
   },
   mounted(){
-    this.selectedItem = displayStore.viewSelection.text
+    this.selectedItem = useDisplayStore.viewSelection.text
   },
   computed:{
     displayProjectSelected: ()=>{
       let prj = {}
-      if( displayStore.projectSelection){
-        prj = displayStore.projectSelection.Name
+      if( useDisplayStore.projectSelection){
+        prj = useDisplayStore.projectSelection.Name
       }
       return prj
     }
@@ -98,8 +98,8 @@ export default {
   methods:{
     changeItem(option){
       this.selectedItem = option.text
-      displayStore.viewSelection = option
-      console.log(JSON.parse(JSON.stringify(displayStore)) )
+      useDisplayStore.viewSelection = option
+      console.log(JSON.parse(JSON.stringify(useDisplayStore)) )
     },
   }
 }

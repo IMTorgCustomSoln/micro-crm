@@ -83,7 +83,7 @@
 
 
 <script>
-  import {displayStore} from '../main.js';
+  import {useDisplayStore} from '../main.js';
   import {useCollect} from 'pinia-orm/dist/helpers';
   import {usePerson, useProject, useLifecycle} from '../main.js';
   import {groupBy} from '../assets/utils';
@@ -97,7 +97,7 @@
   export default {
     name: 'RecordsTable',
     computed: {
-      setViewSelection: () => displayStore.viewSelection,
+      setViewSelection: () => useDisplayStore.viewSelection,
       contactList: () => useCollect(usePerson.all()).sortBy('Fullname'),
       projectList: () => useCollect(useProject.all()).sortBy('Name'),
       lifecycleList: () => {

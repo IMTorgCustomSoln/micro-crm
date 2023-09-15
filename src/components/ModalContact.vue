@@ -111,7 +111,7 @@
 </template>
 
 <script>
-import {displayStore} from '../main.js';
+import {useDisplayStore} from '@/main.js';
 import {usePerson, useProject} from '@/main.js';
 import { useCollect } from 'pinia-orm/dist/helpers';
 
@@ -120,7 +120,7 @@ export default {
   name: 'ModalContact',
   data(){
     return{
-      selectedItem: displayStore.viewSelection,
+      selectedItem: useDisplayStore.viewSelection,
       form:{
         contact:{
           fullname:'',

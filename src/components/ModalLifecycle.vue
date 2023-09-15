@@ -117,17 +117,16 @@
 
 <script>
 import {useCollect} from 'pinia-orm/dist/helpers';
-import {displayStore} from '../main.js';
-import {useLifecycle} from '../main.js';
-import { LifecycleStep } from '../stores/Lifecycle';
-import {availableStatus} from '../stores/Project';
+import {useDisplayStore} from '@/main.js';
+import {useLifecycle} from '@/main.js';
+import {LifecycleStep} from '../stores/Lifecycle';
 
 
 
 export default {
   name: 'ModalLifecycle',
   computed:{
-    availableStatusList: () => availableStatus,
+    availableStatusList: () => useDisplayStore.project.availableStatus,
     lifecycleListName: () => useCollect(useLifecycle.all()).sortBy('Name').map(item => item.Name)
   },
   data(){
@@ -155,8 +154,8 @@ export default {
   methods:{
     changeItem(option){
       this.selectedItem = option.text
-      displayStore.viewSelection = option.text
-      console.log(displayStore)
+      useDisplayStore.viewSelection = option.text
+      console.log(useDisplayStore)
     },
     addLifecycle() {
         useLifecycle.save({

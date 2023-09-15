@@ -64,11 +64,12 @@ export default {
     };
   },
   
-  mounted(){
+  created(){
+    /*
     const env = true
     if(env){
       populateTestData(this.lifecycleList.length)
-    }
+    }*/
   },
   methods: {
     clearAll(){
@@ -83,7 +84,7 @@ export default {
 };
 
 
-
+/*
 function populateTestData(lcplanCount){
   // Populate tables with test data
   if(lcplanCount == 0){
@@ -93,8 +94,8 @@ function populateTestData(lcplanCount){
             LifecycleStep: plan.LifecycleStep
           });
     }
-  } 
-}
+  }
+}*/
 
 
 </script>

@@ -33,7 +33,7 @@
   <script>
   import {toRaw} from 'vue';
   import {useCollect} from 'pinia-orm/dist/helpers';
-  import {displayStore, usePerson} from '@/main.js';
+  import {useDisplayStore, usePerson} from '@/main.js';
   import {testContacts} from '@/assets/defaults.js';
 
 
@@ -45,8 +45,8 @@
       //setViewSelection: () => displayStore.viewSelection,
       contactList: () => {
         const contacts = useCollect(usePerson.all()).sortBy('Fullname')
-        if( !isEmpty(toRaw(displayStore.projectSelection))){
-          return contacts.filter(item => toRaw(item.Projects).includes(displayStore.projectSelection.Name) )
+        if( !isEmpty(toRaw(useDisplayStore.projectSelection))){
+          return contacts.filter(item => toRaw(item.Projects).includes(useDisplayStore.projectSelection.Name) )
         } else {
           return contacts
         }
