@@ -2,7 +2,6 @@ import { Model } from 'pinia-orm'
 import { PersonProjectStatus } from '@/stores/PersonProjectStatus';
 
 
-
 export default class Person extends Model {
   static entity = 'Person'
   static fields () {
@@ -19,6 +18,3 @@ export default class Person extends Model {
     }
   }
 }
-
-// Constraints
-//const availableProjects = limit to available names

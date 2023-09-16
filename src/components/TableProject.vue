@@ -34,9 +34,6 @@ import {useCollect} from 'pinia-orm/dist/helpers';
 import {usePerson, useProject} from '@/main.js';
 import ModalProject from '@/components/ModalProject.vue';
 
-import {testProjects} from '../assets/defaults';
-
-
 
 
 export default {
@@ -52,12 +49,6 @@ export default {
         project: {}
       }
     };
-  },
-  mounted(){
-    const env = useDisplayStore.populateTestData
-    if(env){
-      populateTestData(this.projectList.length)
-    }
   },
   computed: {
     setViewSelection: () => useDisplayStore.viewSelection,
@@ -97,21 +88,7 @@ export default {
 
 
 
-function populateTestData(projectCount){
-// Populate tables with test data
-if(projectCount == 0){
-  for(const project of testProjects){
-    useProject.save({
-        Name: project.Name,
-        Status: project.Status,
-        Category: project.Category,
-        StartDate: project.Startdate,
-        EndDate: project.Enddate,
-        Lifecycle: project.Lifecycle
-      });
-  }
-}
-}
+
 
 
 // Table data items

@@ -126,31 +126,33 @@ while(i < 10){
     }
     const numberOfInteractions = randomIntFromInverval(1,5)
     const interactions = []
-    while(i < numberOfInteractions){
+    let j = 0
+    while(j < numberOfInteractions){
         const interaction = {
-            LifecycleStep: defaultSteps[randomIntFromInverval(0,3)],
+            LifecycleStep: defaultSteps[randomIntFromInverval(0,3)].Name,
             Datetime: new Date(),
             Comments: faker.lorem.paragraph(),
         }
         interactions.push(interaction)
-        i++
+        j++
     }
-    const numberOfUseCases = randomIntFromInverval(0,1)
+    const numberOfUseCases = randomIntFromInverval(2,3)
     const usecases = []
-    while(i < numberOfUseCases){
+    j = 0
+    while(j < numberOfUseCases){
         const usecase = {
-            Role: contact.jobTitle,
-            Use: faker.lorem.sentence,
-            PainPoint: faker.lorem.sentence
+            Role: faker.person.jobTitle(),
+            Use: faker.lorem.sentence(),
+            PainPoint: faker.lorem.sentence()
         }
         usecases.push(usecase)
-        i++
+        j++
     }
     const status = {
         Person: contact.Fullname,
         Project: contact.Projects[0],
         ReferredBy: faker.person.fullName(),
-        CurrentLifecycleStep: defaultSteps[randomIntFromInverval(3,defaultSteps.length-1)],
+        CurrentLifecycleStep: defaultSteps[randomIntFromInverval(3,defaultSteps.length-1)].Name,
         Interactions: interactions,
         UseCases: usecases
     }
@@ -161,5 +163,37 @@ while(i < 10){
     i++
 }
 
-// Contact-Project Status
+
+// Populate
+export function populateProjectTestData(useProject){
+    // Populate tables with test data
+    for(const project of testProjects){
+      useProject.save({
+          Name: project.Name,
+          Status: project.Status,
+          Category: project.Category,
+          StartDate: project.Startdate,
+          EndDate: project.Enddate,
+          Lifecycle: project.Lifecycle
+        });
+    }
+}
+
+export function populateContactTestData(usePerson){
+    // Populate tables with test data
+    for(const contact of testContacts){
+      usePerson.save({
+            Fullname: contact.Fullname,
+            Title: contact.Title,
+            Email: contact.Email,
+            Number: contact.Number,
+            Office: contact.Office,
+            Firm: contact.Firm,
+            Projects: contact.Projects,
+            Statuses: contact.Statuses
+      });
+    }
+  }
+
+
 

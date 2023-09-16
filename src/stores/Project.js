@@ -2,6 +2,7 @@ import { Model } from 'pinia-orm';
 import { StringCast, DateCast } from 'pinia-orm/casts';
 import { useDisplayStore } from '@/main';
 
+
 export default class Project extends Model {
   static entity = 'Project'
   static primaryKey = ['id', 'Name']

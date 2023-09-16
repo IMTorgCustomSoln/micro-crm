@@ -7,9 +7,10 @@ export class UseCase extends Model {
     static fields(){
         return{
             id: this.uid(),
-            Role: this.attr(),
-            Use: this.attr(),
-            PainPoint: this.attr()
+            UseCaseId: this.attr(null),
+            Role: this.string(""),
+            Use: this.string(""),
+            PainPoint: this.string("")
         }
     }
     static casts(){

@@ -11,6 +11,8 @@
               <th>Office</th>
               <th>Firm</th>
               <th>Projects</th>
+              <th>Interactions</th>
+              <th>UseCases</th>
             </tr>
           </thead>
           <tbody>
@@ -23,6 +25,8 @@
               <td>{{ contact.Office }}</td>
               <td>{{ contact.Firm }}</td>
               <td>{{ contact.Projects }}</td>
+              <td>{{ contact.interactions }}</td>
+              <td>{{ contact.usecases }}</td>
             </tr>
           </tbody>
         </table>
@@ -30,44 +34,43 @@
   </template>
   
   
-  <script>
-  import {toRaw} from 'vue';
-  import {useCollect} from 'pinia-orm/dist/helpers';
-  import {useDisplayStore, usePerson} from '@/main.js';
-  import {testContacts} from '@/assets/defaults.js';
+<script>
+import {toRaw} from 'vue';
+import {useCollect} from 'pinia-orm/dist/helpers';
+import {useDisplayStore, usePerson} from '@/main.js';
 
 
- 
+export default{
+  name: 'TableContact',
+  computed: {
+    setViewSelection: () => useDisplayStore.viewSelection,
+    contactList: () => {
+      const contacts = useCollect(usePerson.all()).sortBy('Fullname')
+      const contactsWithInteractions = usePerson.with('Statuses', (query) => {query.with('Interactions')}).get()
+      const contactsWithUseCases = usePerson.with('Statuses', (query) => {query.with('UseCases')}).get()
 
-  export default{
-    name: 'TableContact',
-    computed: {
-      //setViewSelection: () => displayStore.viewSelection,
-      contactList: () => {
-        const contacts = useCollect(usePerson.all()).sortBy('Fullname')
-        if( !isEmpty(toRaw(useDisplayStore.projectSelection))){
-          return contacts.filter(item => toRaw(item.Projects).includes(useDisplayStore.projectSelection.Name) )
-        } else {
-          return contacts
-        }
-      },
-    },
-    data() {
-      return {
-        viewSelection:''
-      };
-    },
-    mounted(){
-      const env = useDisplayStore.populateTestData
-      if(env){
-        populateTestData(this.contactList.length)
+      for(let i = 0; i < contacts.length; i++){
+        contacts[i]['interactions'] = contactsWithInteractions[i]['Statuses'][0]['Interactions'].length
+        contacts[i]['usecases'] = contactsWithUseCases[i]['Statuses'][0]['UseCases'].length
+      }
+
+      if( !isEmpty(toRaw(useDisplayStore.projectSelection))){
+        return contacts.filter(item => toRaw(item.Projects).includes(useDisplayStore.projectSelection.Name) )
+      } else {
+        return contacts
       }
     },
-    methods: {
-      removeContact(contact){
-        usePerson.destroy(contact.id)
-      }
-    },
+  },
+  data() {
+    return {
+      viewSelection:''
+    };
+  },
+  methods: {
+    removeContact(contact){
+      usePerson.destroy(contact.id)
+    }
+  },
 };
 
 
@@ -81,22 +84,7 @@ function isEmpty(obj) {
   return true;
 }
 
-function populateTestData(contactCount){
-  // Populate tables with test data
-  if(contactCount == 0){
-    for(const contact of testContacts){
-      usePerson.save({
-            Fullname: contact.Fullname,
-            Title: contact.Title,
-            Email: contact.Email,
-            Number: contact.Number,
-            Office: contact.Office,
-            Firm: contact.Firm,
-            Projects: contact.Projects,
-      });
-    }
-  }
-}
+
 </script>
   
   
