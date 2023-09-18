@@ -72,7 +72,8 @@ export default {
     },
     deleteItem(item){
       const prj = JSON.parse(JSON.stringify(item)).item
-      useProject.destroy(prj.id)
+      //useProject.destroy(prj.id)
+      useProject.where('id', prj.id).delete()
     },
     deleteAll(){
       const ids = usePerson.all().map(item => item.id)

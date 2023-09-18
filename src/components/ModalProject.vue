@@ -72,7 +72,7 @@
           </div>
 
           <template #modal-footer>
-                <b-button @click="addProject" v-b-modal.modal-close_visit class="btn-sm m-1" >Add / Update Project</b-button>
+                <b-button @click="addProject" v-b-modal.modal-close_visit class="btn-sm m-1" >Add / Update</b-button>
         </template>
     </b-modal>
 

@@ -68,7 +68,7 @@ export default{
   },
   methods: {
     removeContact(contact){
-      usePerson.destroy(contact.id)
+      usePerson.where('id', contact.id).delete()
     }
   },
 };
