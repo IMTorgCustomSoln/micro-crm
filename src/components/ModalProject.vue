@@ -4,10 +4,13 @@
         id="new-project-modal"
         >
         <template #modal-title>
-            New Project
+            Project
         </template>
         
         <div>
+          <div v-if="this.form.error">
+            <span>{{ this.form.error }}</span>
+          </div>
           <b-form>
             <b-card bg-variant="light">
                 <b-form-group
@@ -72,7 +75,11 @@
           </div>
 
           <template #modal-footer>
-                <b-button @click="addProject" v-b-modal.modal-close_visit class="btn-sm m-1" >Add / Update</b-button>
+            <div v-if="isCurrentProject">
+              <b-button @click="cloneProject" v-b-modal.modal-close_visit class="btn-sm m-1" >Clone</b-button>
+            </div>
+            
+            <b-button @click="addProject" v-b-modal.modal-close_visit class="btn-sm m-1" >Add / Update</b-button>
         </template>
     </b-modal>
 
@@ -81,7 +88,7 @@
 <script>
 import { toRaw } from 'vue';
 import {useDisplayStore} from '@/main.js';
-import {useProject, useLifecycle} from '@/main.js';
+import {useProject, useLifecycle, usePerson} from '@/main.js';
 import { useCollect } from 'pinia-orm/dist/helpers';
 
 
@@ -91,7 +98,7 @@ export default {
   watch: { 
       item: {
           handler: function(newItem, oldVal) {
-            const prj = JSON.parse(JSON.stringify(this.$props.item))
+            const prj = JSON.parse(JSON.stringify(this.$props.item));
             this.form.project.id = prj.id;
             this.form.project.name = prj.Name;
             this.form.project.status = prj.Status;
@@ -99,15 +106,21 @@ export default {
             this.form.project.startdate = prj.StartDate;
             this.form.project.enddate = prj.EndDate;
             this.form.project.lifecycle = prj.Lifecycle;
-            this.$bvModal.show('new-project-modal')
+
+            this.originalProjectName = prj.Name;
+            this.isCurrentProject = true;
+            this.$bvModal.show('new-project-modal');
             },
             deep: true
           }
   },
   data(){
     return{
+      isCurrentProject: false,
       selectedItem: useDisplayStore.viewSelection,
+      originalProjectName: '',
       form:{
+        error:'',
         project:{
           id:'',
           name:'',
@@ -116,7 +129,7 @@ export default {
           startdate: '',
           enddate:'',
           lifecycle: ''
-        },
+        }
       }
     }
   },
@@ -144,6 +157,9 @@ export default {
       this.form.project.startdate = useDisplayStore.project.initialStartDate
       this.form.project.enddate = ''
       this.form.project.lifecycle = useDisplayStore.project.initialLifecycle
+
+      this.originalProjectName = ''
+      this.form.error = ''
     },
     addProject() {
       const projectIds = useCollect(useProject.all()).sortBy('id').map(item => item.id)
@@ -177,7 +193,44 @@ export default {
         this.$bvModal.hide('new-project-modal');
         this.initializeFormValues();
     },
+    cloneProject(){
+      this.form.error = ''
+      const contacts = useCollect(usePerson.all()).sortBy('Fullname')
+      const tgtContacts = contacts.filter(item => toRaw(item.Projects).includes(this.originalProjectName) )
+
+      const checkProjectNameExists = useProject.where('Name', this.form.project.name).get()
+      if(checkProjectNameExists.length > 0){
+        this.form.error = 'ERROR: Change project name'
+        return false
+      }
+      this.form.project.id = ''
+      //create new project
+      useProject.save({
+        Name: this.form.project.name,
+        Status: this.form.project.status,
+        Category: this.form.project.category,
+        StartDate: this.form.project.startdate,
+        EndDate: this.form.project.enddate,
+        Lifecycle: this.form.project.lifecycle
+        });
+      //update contacts with new project
+      for(const contact of tgtContacts){
+        const projects = JSON.parse(JSON.stringify(contact.Projects))
+        projects.push(this.form.project.name)
+        usePerson.save({
+          id: contact.id,
+          Projects: projects
+        })
+      }
+      Object.keys(this.form.project).forEach( k => {
+        this.form.project[k] = ''
+      })
+      this.$bvModal.hide('new-project-modal');
+      this.initializeFormValues();
+
+      return true;
     }
+  }
 }
 </script>
 
