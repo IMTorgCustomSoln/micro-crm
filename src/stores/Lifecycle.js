@@ -21,6 +21,7 @@ export class LifecycleStep extends Model {
       id: this.uid(),
       LifecycleId: this.attr(null),
       Name: this.string('').notNullable(),
+      DurationBizDays: this.number(),
       Order: this.number(),
       Placeholder: this.attr([]),
       EmailForm: this.string('')
@@ -35,7 +36,8 @@ export class LifecycleStep extends Model {
     const ph = JSON.parse(this.Placeholder)
     return {
       id: this.id, 
-      Name: this.Name, 
+      Name: this.Name,
+      DurationBizDays: this.DurationBizDays,
       Order: this.Order, 
       Placeholder: ph, 
       EmailForm: this.EmailForm

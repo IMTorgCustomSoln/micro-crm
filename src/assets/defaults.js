@@ -8,13 +8,15 @@ import {addDays, randomIntFromInverval} from './utils.js';
 
 let step_Prospect = {
     Name:'prospect',
+    DurationBizDays: 3,
     Order:0,
     Placeholder:[], 
     EmailForm: ``
 }
 
 let step_Lead = {
-    Name:'lead', 
+    Name:'lead',
+    DurationBizDays: 7, 
     Order:1, 
     Placeholder: [`<CONTACT_NAME>`, `<REFFERAL>`, `<PRODUCT_NAME>`, `<SELLER_NAME>`],
     EmailForm: `
@@ -29,7 +31,8 @@ Respectfully,
 `}
 
 let step_Onboarded =  {
-    Name:'onboarded', 
+    Name:'onboarded',
+    DurationBizDays: 14, 
     Order:2, 
     Placeholder: [`<CONTACT_NAME>`,`<PRODUCT_NAME>`, `<SELLER_NAME>`],
     EmailForm: `
@@ -46,6 +49,7 @@ Respectfully,
 
 let step_Followup = {
     Name: 'followup',
+    DurationBizDays: 7,
     Order: 3, 
     Placeholder: [`<CONTACT_NAME>`,`<PRODUCT_NAME>`, `<SELLER_NAME>`],
     EmailForm:`
@@ -62,6 +66,7 @@ Respectfully,
 
 let step_Intention = {
     Name: 'intention',
+    DurationBizDays: 14,
     Order: 4, 
     Placeholder: [`<CONTACT_NAME>`,`<PRODUCT_NAME>`, `<SELLER_NAME>`],
     EmailForm:`
@@ -130,6 +135,7 @@ while(i < 10){
     while(j < numberOfInteractions){
         const interaction = {
             LifecycleStep: defaultSteps[randomIntFromInverval(0,3)].Name,
+            Participants: [contact.Fullname],
             Datetime: new Date(),
             Comments: faker.lorem.paragraph(),
         }

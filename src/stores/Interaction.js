@@ -1,5 +1,5 @@
 import { Model } from 'pinia-orm';
-import { StringCast, DateCast } from 'pinia-orm/casts';
+import { ArrayCast, StringCast, DateCast } from 'pinia-orm/casts';
 import { useDisplayStore } from '@/main';
 
 
@@ -10,13 +10,14 @@ export class Interaction extends Model {
             id: this.uid(),
             InteractionId: this.attr(null),
             LifecycleStep: this.string(""),
+            Participants: this.attr(),
             Datetime: this.attr(),
             Comments: this.string(""),
         }
     }
     static casts(){
         return {
-          Status: StringCast,
+          Participants: ArrayCast,
           Datetime: DateCast,
           Comments: StringCast
         }
