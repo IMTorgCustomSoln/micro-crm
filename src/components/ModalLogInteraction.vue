@@ -71,7 +71,7 @@
 
 <script>
 import {toRaw} from 'vue';
-import {useDisplayStore} from '@/main';
+import {useDisplayStore, usePerson} from '@/main';
 import {useInteraction, useLifecycle} from '@/main';
 
 
@@ -127,6 +127,19 @@ export default {
             this.form.interaction.comments = ''
         },
         addInteraction(){
+            //TODO: does not work with cloned projects
+            /*TODO: log with person
+            const contactRecordIds = toRaw(this.contacts).map(item => item.id)
+            usePerson.with('id', contactRecordIds).save({
+                Statuses:[
+                    Interactions:{
+                        LifecycleStep: this.lifecycleStep,
+                        Participants: this.participants,
+                        Datetime: this.datetime,
+                        Comments: this.comments,
+                    }
+                ]
+            })*/
             useInteraction.save({
                 LifecycleStep: this.lifecycleStep,
                 Participants: this.participants,
