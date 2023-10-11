@@ -14,7 +14,8 @@ export default class Project extends Model {
       Category: this.string(""),
       StartDate: this.attr(),
       EndDate: this.attr(),
-      Lifecycle: this.string("")
+      Lifecycle: this.string(""),
+      Repos: this.string("")
     }
   }
   static casts(){

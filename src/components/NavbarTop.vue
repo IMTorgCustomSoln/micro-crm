@@ -40,7 +40,16 @@
             <ModalContact></ModalContact>
           </div>
           <div v-else-if="selectedItem=='Lifecycle'">
-            <ModalLifecycle/>
+            <b-button 
+              id='btnNewLifecycle'
+              v-b-modal.new-lifecycle-modal
+              size="sm" 
+              class="my-2 my-sm-0" 
+              type="button"
+              @click="$bvModal.show('new-lifecycle-modal')"
+              >New Lifecycle
+            </b-button>
+            <!--<ModalLifecycle/>-->
           </div>
         </b-nav-form>
       </b-navbar-nav>

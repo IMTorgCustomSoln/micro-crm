@@ -1,5 +1,27 @@
 <template>
 
+<div>
+      <b-table 
+        striped hover small
+        :items="lifecycleList"
+        :fields="fields"
+
+        primary-key='id'
+        responsive="sm" sticky-header="1000px"
+        bordered
+        thead-class="tableHead bg-dark text-white"
+      >
+      <template #cell(actions)="row">
+        <span>
+          <b-btn size="sm" @click="editItem(row)">Edit</b-btn>
+          <b-btn size="sm" @click="deleteItem(row)">Delete</b-btn>
+        </span>
+      </template>
+    </b-table>
+    <ModalLifecycle :item="form.lifecycle"/>
+  </div>
+
+<!--
     <table class="table table-striped">
               <thead>
                 <tr>
@@ -18,6 +40,7 @@
                 </tr>
               </tbody>
             </table>
+          -->
     
 </template>
 
@@ -26,10 +49,14 @@ import {useCollect} from 'pinia-orm/dist/helpers';
 import {usePerson, useProject, useLifecycle} from '../main.js';
 import {groupBy} from '../assets/utils';
 import {testLifecycle} from '../stores/Lifecycle.js';
+import ModalLifecycle from '@/components/ModalLifecycle.vue'
 
 
 export default {
   name: 'TableLifecycle',
+  components:{
+    ModalLifecycle
+  },
   computed: {
     lifecycleList: () => {
       const plans = useLifecycle.with('LifecycleStep').get()
@@ -60,7 +87,12 @@ export default {
   },
   data() {
     return {
-      viewSelection:''
+      lifecycle:'',
+      fields: fields,
+      form:{
+        lifecycle: {}
+      }
+      //viewSelection:''
     };
   },
   
@@ -80,6 +112,22 @@ export default {
     removePlan(plan){
       useLifecycle.destroy(plan.id)
     },
+    editItem(item){
+      console.log(item)
+      //this.form.project = item
+      const lifecycle = JSON.parse(JSON.stringify(item)).item
+      Object.assign(this.form.lifecycle, lifecycle  )
+      this.$bvModal.show('new-lifecycle-modal')   //TODO:tightly coupled, but no direct dependency
+    },
+    deleteItem(item){
+      const lifecycle = JSON.parse(JSON.stringify(item)).item
+      //useProject.destroy(prj.id)
+      useLifecycle.where('id', lifecycle.id).delete()
+    },
+    getFormattedSteps(row){
+      const steps = row.map(item => item.Name)
+      return steps.toString()
+    }
   },
 };
 
@@ -96,6 +144,26 @@ function populateTestData(lcplanCount){
     }
   }
 }*/
+
+
+// Table data items
+const fields = [{
+        key: 'Name',
+        label: 'Name',
+        sortable: true
+    }, {
+        key: 'LifecycleStep',
+        label: 'Lifecycle Steps',
+        formatter: "getFormattedSteps"
+    }, {
+        key: 'Count',
+        label: 'Used by Projects'
+    }, {
+        key: 'actions',
+        label: 'Actions'
+    }]
+
+
 
 
 </script>

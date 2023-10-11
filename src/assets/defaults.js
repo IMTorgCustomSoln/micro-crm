@@ -108,7 +108,8 @@ while(i < 3){
         Category: faker.commerce.product(),
         Startdate: new Date(dtBegin),
         Enddate: new Date(dtEnd),
-        Lifecycle: defaultLifecycle.Name
+        Lifecycle: defaultLifecycle.Name,
+        Repos: faker.internet.url()
     }
     testProjects.push(project)
     i++
@@ -180,7 +181,8 @@ export function populateProjectTestData(useProject){
           Category: project.Category,
           StartDate: project.Startdate,
           EndDate: project.Enddate,
-          Lifecycle: project.Lifecycle
+          Lifecycle: project.Lifecycle,
+          Repos: project.Repos
         });
     }
 }

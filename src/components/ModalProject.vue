@@ -63,11 +63,20 @@
               
                 <b-form-group
                   label="Associated Lifecycle:"
-                  label-for="nested-country"
+                  label-for="lifecycle"
                   label-cols-sm="3"
                   label-align-sm="right"
                 >
                 <b-form-select id="mySelect2" v-model="form.project.lifecycle" :options="lifecycleList"/>
+                </b-form-group>
+
+                <b-form-group
+                  label="Source Repos:"
+                  label-for="repos"
+                  label-cols-sm="3"
+                  label-align-sm="right"
+                >
+                <b-form-input id="repos" v-model="form.project.repos"></b-form-input>
                 </b-form-group>
               
           </b-card>
@@ -106,6 +115,7 @@ export default {
             this.form.project.startdate = prj.StartDate;
             this.form.project.enddate = prj.EndDate;
             this.form.project.lifecycle = prj.Lifecycle;
+            this.form.project.repos = prj.Repos;
 
             this.originalProjectName = prj.Name;
             this.isCurrentProject = true;
@@ -128,13 +138,17 @@ export default {
           status: '',
           startdate: '',
           enddate:'',
-          lifecycle: ''
+          lifecycle: '',
+          repos: ''
         }
       }
     }
   },
   mounted(){
-    this.initializeFormValues()
+    this.$root.$on('bv::modal::hidden', (bvEvent, modalId) => {
+      //console.log('Modal is about to be closed', bvEvent, modalId)
+      this.initializeFormValues()
+    })
   },
   computed:{
     availableCategoryList: () => {
@@ -157,6 +171,7 @@ export default {
       this.form.project.startdate = useDisplayStore.project.initialStartDate
       this.form.project.enddate = ''
       this.form.project.lifecycle = useDisplayStore.project.initialLifecycle
+      this.form.project.repos = ''
 
       this.originalProjectName = ''
       this.form.error = ''
@@ -173,7 +188,8 @@ export default {
           Category: this.form.project.category,
           StartDate: this.form.project.startdate,
           EndDate: this.form.project.enddate,
-          Lifecycle: this.form.project.lifecycle
+          Lifecycle: this.form.project.lifecycle,
+          Repos: this.form.project.repos
         });
       } else {
         //create new
@@ -183,7 +199,8 @@ export default {
           Category: this.form.project.category,
           StartDate: this.form.project.startdate,
           EndDate: this.form.project.enddate,
-          Lifecycle: this.form.project.lifecycle
+          Lifecycle: this.form.project.lifecycle,
+          Repos: this.form.project.repos
           });
         }
         Object.keys(this.form.project).forEach( k => {
@@ -211,7 +228,8 @@ export default {
         Category: this.form.project.category,
         StartDate: this.form.project.startdate,
         EndDate: this.form.project.enddate,
-        Lifecycle: this.form.project.lifecycle
+        Lifecycle: this.form.project.lifecycle,
+        Repos: this.form.project.repos
         });
       //update contacts with new project
       for(const contact of tgtContacts){
