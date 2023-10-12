@@ -3,6 +3,7 @@
     <span>Contacts: {{ this.contactsSelected.length }}    </span>
     <ModalLogInteraction :contacts="contactsSelected"/>
   </div>
+  <div>
   <b-table 
     striped hover small
     selectable
@@ -16,7 +17,15 @@
     thead-class="tableHead bg-dark text-white"
     @row-selected="selectRow"  
     >
+    <template #cell(actions)="row">
+        <span>
+          <b-btn size="sm" @click="editContact(row)">Edit</b-btn>
+          <b-btn size="sm" @click="deleteContact(row)">Delete</b-btn>
+        </span>
+    </template>
   </b-table>
+  <ModalContact :item="form.contact"/>
+  </div>
 
   </template>
   
@@ -26,11 +35,13 @@ import {toRaw} from 'vue';
 import {useCollect} from 'pinia-orm/dist/helpers';
 import {useDisplayStore, usePerson} from '@/main.js';
 import ModalLogInteraction from './ModalLogInteraction.vue';
+import ModalContact from './ModalContact.vue';
 
 
 export default{
   name: 'TableContact',
   components:{
+    ModalContact,
     ModalLogInteraction
   },
   computed: {
@@ -57,6 +68,9 @@ export default{
       viewSelection:'',
       contactsSelected: [],
       fields: fields,
+      form:{
+        contact:{}
+      }
     };
   },
   methods: {
@@ -81,7 +95,13 @@ export default{
         this.contactsSelected.length = 0
       }
     },
-    removeContact(contact){
+    editContact(row){
+      const contact = JSON.parse(JSON.stringify(row)).item
+      Object.assign(this.form.contact, contact)
+      this.$bvModal.show('new-contact-modal')   //TODO:tightly coupled, but no direct dependency
+    },
+    deleteContact(row){
+      const contact = JSON.parse(JSON.stringify(row)).item
       usePerson.where('id', contact.id).delete()
     }
   },

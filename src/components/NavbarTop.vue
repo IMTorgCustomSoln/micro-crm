@@ -37,7 +37,16 @@
           </div>
 
           <div v-else-if="selectedItem=='Contact'">
-            <ModalContact></ModalContact>
+            <b-button 
+              id='btnNewContact'
+              v-b-modal.new-contact-modal
+              size="sm" 
+              class="my-2 my-sm-0" 
+              type="button"
+              @click="$bvModal.show('new-contact-modal')"
+              >
+              New Contact
+            </b-button>
           </div>
           <div v-else-if="selectedItem=='Lifecycle'">
             <b-button 

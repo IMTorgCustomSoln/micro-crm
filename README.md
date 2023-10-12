@@ -67,6 +67,29 @@ npm run lint
 ```
 
 
+## Workflows
+
+* Select Project
+  - Select View > Project
+  - Click on project row
+* CRUD views
+  - Select View > (any)
+  - New (any)
+  - Table column Actions > Edit
+  - Table column Actions > Delete
+* Log Interaction (demo, meeting, etc.)
+  - Select View > Contact
+  - (contacts filtered by selected project) 
+  - Click on each contact row that were in interaction
+  - Click Log Interaction
+  - Rows display as Participants
+  - Type comments
+  - Press Add / Update
+
+* Set Lifecycle Plan
+
+
+
 ## References
 
 * router views may be useful, but is unnecessary.  Some good explanations of dynamic layouts are the following:
