@@ -120,11 +120,11 @@ export default {
     },
     methods:{
         initializeFormValues(){
-            this.form.interaction.interactionId = ''
-            this.form.interaction.lifecycleStep = ''
-            this.form.interaction.participants = []
-            this.form.interaction.datetime = ''
-            this.form.interaction.comments = ''
+            this.form.interaction.interactionId = '';
+            this.form.interaction.lifecycleStep = '';
+            this.form.interaction.datetime = '';
+            this.form.interaction.comments = '';
+            this.form.interaction = {...this.form.interaction, participants: []};
         },
         addInteraction(){
             //TODO: does not work with cloned projects

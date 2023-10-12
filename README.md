@@ -84,9 +84,12 @@ npm run lint
   - Click Log Interaction
   - Rows display as Participants
   - Type comments
-  - Press Add / Update
-
-* Set Lifecycle Plan
+  - Press Add / Update  TODO:<<<<
+* Set / Update Lifecycle Plan
+  - Select View > Lifecycle
+  - Table row 'default', column Action > Edit
+  - Steps table, click on any step
+  - Update Step
 
 
 
