@@ -77,7 +77,8 @@ export default{
     selectRow(rows){
       const contacts = JSON.parse(JSON.stringify(rows))
       const results = []
-      if(useDisplayStore.projectSelection){
+      const selected = toRaw(useDisplayStore.projectSelection)
+      if(!isEmpty(selected)){
         const ids = contacts.map(item => item.id)
         const items = usePerson.where('id', ids).with('Statuses').get()
         for(const item of items){
@@ -130,6 +131,10 @@ const fields = [{
         label: 'Title',
         sortable: true
     }, {
+        key: 'ReferredBy',
+        label: 'Referred By',
+        sortable: true
+    }, {
         key: 'Email',
         label: 'Email',
         sortable: true,
@@ -152,6 +157,10 @@ const fields = [{
     }, {
         key: 'interactions',
         label: 'Interactions',
+        sortable: true,
+    }, {
+        key: 'references',
+        label: 'References',
         sortable: true,
     }, {
         key: 'usecases',

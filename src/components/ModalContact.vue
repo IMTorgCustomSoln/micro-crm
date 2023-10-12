@@ -37,6 +37,18 @@
                 >
                   <b-form-input id="nested-city" v-model="form.contact.title"></b-form-input>
                 </b-form-group>
+
+                <b-form-group
+                  label="Referred to you by:"
+                  label-for="nested-city"
+                  label-cols-sm="3"
+                  label-align-sm="right"
+                >
+                  <b-form-input id="nested-state" v-model="form.contact.referredBy" list="person-list"></b-form-input>
+                  <datalist id="person-list">
+                    <option v-for="person in availablePersonList" :key="person.id">{{ person }}</option>
+                  </datalist>
+                </b-form-group>
               
                 <b-form-group
                   label="Email:"
@@ -113,6 +125,7 @@ export default {
             const contact = JSON.parse(JSON.stringify(this.$props.item));
             this.form.contact.id = contact.id;
             this.form.contact.fullname = contact.Fullname;
+            this.form.contact.referredBy = contact.ReferredBy;
             this.form.contact.title = contact.Title;
             this.form.contact.email = contact.Email;
             this.form.contact.number = contact.Number;
@@ -132,6 +145,7 @@ export default {
         contact:{
           id: '',
           fullname:'',
+          referredBy:'',
           title:'',
           email:'',
           number:'',
@@ -145,12 +159,16 @@ export default {
   computed:{
     projectList(){
       return useCollect(useProject.all()).sortBy('Name').map(item=>item.Name)
-    }
+    },
+    availablePersonList(){
+      return useCollect(usePerson.all()).sortBy('Name').map(item=>item.Fullname)
+    },
   },
   methods:{
     initializeFormValues(){
       this.form.contact.id = '';
       this.form.contact.fullname = '';
+      this.form.contact.referredBy = '';
       this.form.contact.title = '';
       this.form.contact.email = '';
       this.form.contact.number = '';
@@ -166,6 +184,7 @@ export default {
         usePerson.save({
           id: this.form.contact.id,
           Fullname: this.form.contact.fullname,
+          ReferredBy: this.form.contact.referredBy,
           Title: this.form.contact.title,
           Email: this.form.contact.email,
           Number: this.form.contact.number,
@@ -176,6 +195,7 @@ export default {
       }else{
         usePerson.save({
           Fullname: this.form.contact.fullname,
+          ReferredBy: this.form.contact.referredBy,
           Title: this.form.contact.title,
           Email: this.form.contact.email,
           Number: this.form.contact.number,

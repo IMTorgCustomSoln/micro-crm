@@ -89,6 +89,8 @@ npm run lint
   - Select View > Lifecycle
   - Table row 'default', column Action > Edit
   - Steps table, click on any step
+  - Select Placeholders
+  - Write associated email form
   - Update Step
 
 

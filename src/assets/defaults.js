@@ -155,10 +155,18 @@ while(i < 10){
         usecases.push(usecase)
         j++
     }
+
+    let referredBy = ''
+    if(testContacts.length > 2){
+        const chooseFromContacts = randomIntFromInverval(0,testContacts.length-1)
+        referredBy = testContacts[chooseFromContacts]
+    } else {
+        referredBy = ''
+    }
     const status = {
         Person: contact.Fullname,
         Project: contact.Projects[0],
-        ReferredBy: faker.person.fullName(),
+        ReferredBy: referredBy,
         CurrentLifecycleStep: defaultSteps[randomIntFromInverval(3,defaultSteps.length-1)].Name,
         Interactions: interactions,
         UseCases: usecases

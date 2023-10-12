@@ -79,21 +79,22 @@
 </template>
 
 <script>
+import {toRaw} from 'vue';
 import {useDisplayStore} from '@/main.js';
 import WorkSessionIO from './WorkSessionIO.vue';
 
-import ModalContact from '@/components/ModalContact.vue';
+//import ModalContact from '@/components/ModalContact.vue';
 //import ModalProject from '@/components/ModalProject.vue';
-import ModalLifecycle from '@/components/ModalLifecycle.vue';
+//import ModalLifecycle from '@/components/ModalLifecycle.vue';
 
 
 export default {
   name: 'NavbarTop',
   components:{
     WorkSessionIO,
-    ModalContact,
+    //ModalContact,
     //ModalProject,
-    ModalLifecycle
+    //ModalLifecycle
   },
   data(){
     return{
@@ -107,8 +108,9 @@ export default {
   computed:{
     displayProjectSelected: ()=>{
       let prj = {}
-      if( useDisplayStore.projectSelection){
-        prj = useDisplayStore.projectSelection.Name
+      const selected = toRaw(useDisplayStore.projectSelection)
+      if(!isEmpty(selected)){
+        prj = selected.Name
       }
       return prj
     }
