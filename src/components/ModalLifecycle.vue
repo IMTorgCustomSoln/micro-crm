@@ -97,11 +97,13 @@
                 <!--
                   <b-form-input id="nested-street" v-model="form.lifecycle.step.emailForm"></b-form-input>-->
                 </b-form-group>
-                
+                <b-button-group>
                 <b-button @click="addLifecycleStep" v-b-modal.modal-close_visit class="btn-sm m-1" >Add Step</b-button>
                 <div v-if="this.form.lifecycle.step.inSteps">
                   <b-button @click="updateLifecycleStep" v-b-modal.modal-close_visit class="btn-sm m-1" >Update Step</b-button>
+                  <b-button @click="deleteLifecycleStep" v-b-modal.modal-close_visit class="btn-sm m-1" >Delete Step</b-button>
                 </div>
+              </b-button-group>
 
                 </b-form-group>
                 </b-card>
@@ -146,7 +148,7 @@
 <script>
 import {useCollect} from 'pinia-orm/dist/helpers';
 import {useDisplayStore} from '@/main.js';
-import {useLifecycle} from '@/main.js';
+import {useLifecycle, useLifecycleStep} from '@/main.js';
 import {LifecycleStep} from '../stores/Lifecycle';
 
 
@@ -231,7 +233,7 @@ export default {
   },
   methods:{
     initializeStepValues(){
-      this.form.lifecycle.step.inSteps = false
+      this.form.lifecycle.step.inSteps = ''
       this.form.lifecycle.step.id = ''
       this.form.lifecycle.step.name = ''
       this.form.lifecycle.step.order = ''
@@ -339,6 +341,17 @@ export default {
       }else{
         console.log(`ERROR: step ${idx} not currently in current lifecycle steps`)
       }
+    },
+    deleteLifecycleStep(){
+      const stepIds = this.form.lifecycle.steps.map(step => step.id)
+      const idx = stepIds.indexOf(this.form.lifecycle.step.id)
+      if(idx!=-1){
+        this.form.lifecycle.steps.splice(idx, 1)
+        useLifecycleStep.destroy(this.form.lifecycle.step.id)
+        //this.initializeStepValues()
+      }else{
+        console.log(`ERROR: step ${idx} not currently in current lifecycle steps`)
+      }
     }
   }
 }
@@ -346,7 +359,7 @@ export default {
 
 const tableFields = [{
         key: 'order',
-        label: 'Id',
+        label: 'Order',
     }, {
         key: 'name',
         label: 'Name',

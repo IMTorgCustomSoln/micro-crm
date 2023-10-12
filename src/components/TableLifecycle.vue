@@ -103,7 +103,7 @@ export default {
       populateTestData(this.lifecycleList.length)
     }*/
   },
-  methods: {
+  methods: {/*
     clearAll(){
       const ids = usePerson.all().map(item => item.id)
       console.log(ids)
@@ -111,7 +111,7 @@ export default {
     },
     removePlan(plan){
       useLifecycle.destroy(plan.id)
-    },
+    },*/
     editItem(item){
       console.log(item)
       //this.form.project = item
@@ -122,7 +122,18 @@ export default {
     deleteItem(item){
       const lifecycle = JSON.parse(JSON.stringify(item)).item
       //useProject.destroy(prj.id)
-      useLifecycle.where('id', lifecycle.id).delete()
+      let projectsCnt = 0
+      const projects = this.lifecycleList.filter(item => item.id == lifecycle.id)
+      if(projects.length == 1){
+        projectsCnt = projects[0].Count
+        if(projectsCnt == 0){
+          useLifecycle.where('id', lifecycle.id).delete()
+          return true
+        }
+      }
+      alert(`ERROR: A Lifecycle Plan can only be deleted if it is first replaced in all associated Projects\n
+      Plan ${lifecycle.Name} is currently used with ${projectsCnt} Projects.`)
+      return false
     },
     getFormattedSteps(row){
       const steps = row.map(item => item.Name)
