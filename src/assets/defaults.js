@@ -161,12 +161,12 @@ while(i < 10){
         const chooseFromContacts = randomIntFromInverval(0,testContacts.length-1)
         referredBy = testContacts[chooseFromContacts]
     } else {
-        referredBy = ''
+        referredBy = faker.person.fullName()
     }
     const status = {
         Person: contact.Fullname,
         Project: contact.Projects[0],
-        ReferredBy: referredBy,
+        ReferredBy: '',     //TODO:applying referredBy errors
         CurrentLifecycleStep: defaultSteps[randomIntFromInverval(3,defaultSteps.length-1)].Name,
         Interactions: interactions,
         UseCases: usecases

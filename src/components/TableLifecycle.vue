@@ -78,11 +78,14 @@ export default {
           }
           plan.Count = planCount
           newPlans.push(plan)
-          }
-        return newPlans
+        }
       } else {
-        return newPlans
+        newPlans.push(...plans)
       }
+      newPlans.forEach((item, idx, arr)=>{
+        arr[idx].LifecycleStep = sortSteps(arr[idx].LifecycleStep, 'Order')
+      })
+      return newPlans
     }
   },
   data() {
@@ -172,9 +175,13 @@ const fields = [{
     }, {
         key: 'actions',
         label: 'Actions'
-    }]
+    }
+]
 
-
+function sortSteps(arrSteps, key){
+  //Sort array of steps by their order
+  return arrSteps.sort((a,b) => a[key]- b[key])
+}
 
 
 </script>

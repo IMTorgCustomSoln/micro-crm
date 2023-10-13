@@ -78,8 +78,20 @@
                   label-cols-sm="3"
                   label-align-sm="right"
                 >
-                
-                  <b-form-input id="nested-street" v-model="form.lifecycle.step.placeholder"></b-form-input>
+                  <b-form-input id="nested-state" 
+                    v-model="form.lifecycle.step.placeholder" 
+                    list="placeholder-list"
+                    >
+                  </b-form-input>
+                    <b-button @click="addToPlaceholders">Add</b-button>
+                  <datalist id="placeholder-list">
+                    <option v-for="placeholder in availablePlaceholderList" :key="placeholder.id">{{ placeholder }}</option>
+                  </datalist>
+                  <div id="placeholders">
+                    <div v-for="placeholder in placeholdersDisplay" :key="placeholder.id">
+                      <div>{{ placeholder }}</div>
+                    </div>
+                  </div>
                 </b-form-group>
                 <b-form-group
                   label="Email Template:"
@@ -101,6 +113,7 @@
                 <b-button @click="addLifecycleStep" v-b-modal.modal-close_visit class="btn-sm m-1" >Add Step</b-button>
                 <div v-if="this.form.lifecycle.step.inSteps">
                   <b-button @click="updateLifecycleStep" v-b-modal.modal-close_visit class="btn-sm m-1" >Update Step</b-button>
+                  <b-button @click="initializeStepValues" v-b-modal.modal-close_visit class="btn-sm m-1" >Clear Form Data</b-button>
                   <b-button @click="deleteLifecycleStep" v-b-modal.modal-close_visit class="btn-sm m-1" >Delete Step</b-button>
                 </div>
               </b-button-group>
@@ -146,10 +159,13 @@
 </template>
 
 <script>
+import toRaw from 'vue';
 import {useCollect} from 'pinia-orm/dist/helpers';
 import {useDisplayStore} from '@/main.js';
 import {useLifecycle, useLifecycleStep} from '@/main.js';
-import {LifecycleStep} from '../stores/Lifecycle';
+
+import Person from '@/stores/Person';
+import {LifecycleStep} from '@/stores/Lifecycle';
 
 
 
@@ -169,13 +185,13 @@ export default {
                 name: step.Name,
                 order: step.Order,
                 duration: step.DurationBizDays,
-                placeholder: step.Placeholder,
+                placeholders: step.Placeholder,
                 emailForm: step.EmailForm
               }
               newSteps.push(newStep);
             }
             this.form.lifecycle = {...this.form.lifecycle, steps: newSteps};
-
+            //this.initializeStepValues()
             this.$bvModal.show('new-lifecycle-modal');
             },
             deep: true
@@ -201,6 +217,7 @@ export default {
             order:'',
             duration:0,
             placeholder:'',
+            placeholders:[],
             emailForm:''
           },
           steps:[],
@@ -219,6 +236,27 @@ export default {
   computed:{
     availableStatusList: () => useDisplayStore.project.availableStatus,
     lifecycleListName: () => useCollect(useLifecycle.all()).sortBy('Name').map(item => item.Name),
+    availablePlaceholderList: ()=>{
+      const REMOVE = ['id','meta']
+      const obj = new Person()
+      let keys = Object.keys(obj)
+      const resultKeys = []
+      for(const key of keys){
+        const check = REMOVE.every(item => !key.includes(item))
+        if(check){
+          resultKeys.push(key)
+        }
+      }
+      return resultKeys
+    },
+    placeholdersDisplay: ()=>{
+      const result = []
+      for(const place of this.form.lifecycle.placeholders){
+        const html = `<${place.toUpperCase()}>`
+        result. push(html)
+      }
+      return result
+    }
     /*
     checkStepInSteps: () => {
       if(this){
@@ -232,14 +270,19 @@ export default {
     }*/
   },
   methods:{
+    addToPlaceholders(){
+      const place = JSON.parse(JSON.stringify(this.form.lifecycle.step.placeholder))
+      this.form.lifecycle.step.placeholders.push(place)
+    },
     initializeStepValues(){
-      this.form.lifecycle.step.inSteps = ''
-      this.form.lifecycle.step.id = ''
-      this.form.lifecycle.step.name = ''
-      this.form.lifecycle.step.order = ''
-      this.form.lifecycle.step.duration = ''
-      this.form.lifecycle.step.placeholder = ''
-      this.form.lifecycle.step.emailForm = ''
+      this.form.lifecycle.step.inSteps = false
+      this.form.lifecycle.step.id = '';
+      this.form.lifecycle.step.name = '';
+      this.form.lifecycle.step.order = '';
+      this.form.lifecycle.step.duration = '';
+      this.form.lifecycle.step.placeholder = '';
+      this.form.lifecycle.step = {...this.form.lifecycle.step, placeholders: []};
+      this.form.lifecycle.step.emailForm = '';
     },
     initializeFormValues(){
       this.form.error = ''
@@ -251,12 +294,12 @@ export default {
     },
     editStep(row){
       this.form.lifecycle.step.inSteps = true
-
       this.form.lifecycle.step.id = row.id
       this.form.lifecycle.step.name = row.name
       this.form.lifecycle.step.order = row.order
       this.form.lifecycle.step.duration = row.duration
-      this.form.lifecycle.step.placeholder = row.placeholder
+      this.form.lifecycle.step.placeholder = '';
+      this.form.lifecycle.step = {...this.form.lifecycle.step, placeholders: row.placeholders};
       this.form.lifecycle.step.emailForm = row.emailForm
     },
     /*
@@ -275,7 +318,7 @@ export default {
             Name: step.name,
             DurationBizDays: parseInt(step.duration),
             Order: parseInt(step.order),
-            Placeholder: [step.placeholder],
+            Placeholder: step.placeholders,
             EmailForm: step.emailForm
             }
           LifecycleSteps.push(newStep)
@@ -307,7 +350,7 @@ export default {
         Name: this.form.lifecycle.step.name,
         Order: parseInt(this.form.lifecycle.step.order),
         DurationBizDays: parseInt(this.form.lifecycle.step.duration),
-        Placeholder: [this.form.lifecycle.step.placeholder],
+        Placeholder: this.form.lifecycle.step.placeholders,
         EmailForm: this.form.lifecycle.step.emailForm,
       })
       const step = {
@@ -318,8 +361,11 @@ export default {
         placeholder: Step.Placeholder, 
         emailForm: Step.EmailForm
       }
-      this.form.lifecycle.steps.push(JSON.parse(JSON.stringify(step)) )
-      //this.initializeStepValues()
+      const arrSteps = JSON.parse(JSON.stringify(this.form.lifecycle.steps))
+      const sortedArray = sortSteps(arrSteps, 'order')
+      const orderedArray = addStepToArray(sortedArray, step )
+      this.form.lifecycle = {...this.form.lifecycle, steps: orderedArray}
+      this.initializeStepValues()
     },
     updateLifecycleStep(){
       const stepIds = this.form.lifecycle.steps.map(step => step.id)
@@ -329,8 +375,10 @@ export default {
         this.form.lifecycle.steps[idx].order = this.form.lifecycle.step.order
         this.form.lifecycle.steps[idx].duration = this.form.lifecycle.step.duration
         this.form.lifecycle.steps[idx].placeholder = this.form.lifecycle.step.placeholder
+        this.form.lifecycle.steps[idx] = {...this.form.lifecycle.step[idx], placeholders: this.form.lifecycle.step.placeholders}
         this.form.lifecycle.steps[idx].emailForm = this.form.lifecycle.step.emailForm
         
+        /*
         this.form.lifecycle.step.inSteps = ''
         this.form.lifecycle.step.id = ''
         this.form.lifecycle.step.name = ''
@@ -338,6 +386,8 @@ export default {
         this.form.lifecycle.step.duration = ''
         this.form.lifecycle.step.placeholder = ''
         this.form.lifecycle.step.emailForm = ''
+        */
+       this.initializeStepValues()
       }else{
         console.log(`ERROR: step ${idx} not currently in current lifecycle steps`)
       }
@@ -370,7 +420,39 @@ const tableFields = [{
         key: 'emailForm',
         label: 'Email Form'
     }, 
-  ]
+]
+
+
+
+function sortSteps(arrSteps, key){
+  //Sort array of steps by their order
+  return arrSteps.sort((a,b) => a[key]- b[key])
+}
+
+
+function addStepToArray(arrSteps, step){
+  //add step to correct location
+  let result = []
+  if(arrSteps.length <= step.order){
+    step.order = arrSteps.length
+    arrSteps.push(step)
+    result = arrSteps
+  } else if (arrSteps.length > step.order & step.order == 0){
+    result.push(step)
+    result.push(...arrSteps)
+  } else {
+    result = arrSteps.slice(0, step.order)
+    result.push(step)
+    const last = arrSteps.slice(step.order, arrSteps.length+1)
+    result.push(...last)
+  }
+  //reorder remaining steps
+  result.forEach(function(part, index, theArray) {
+    theArray[index].order = index;
+  })
+  return result
+}
+
 
 
 </script>
