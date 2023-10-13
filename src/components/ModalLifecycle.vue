@@ -88,7 +88,7 @@
                     <option v-for="placeholder in availablePlaceholderList" :key="placeholder.id">{{ placeholder }}</option>
                   </datalist>
                   <div id="placeholders">
-                    <div v-for="placeholder in placeholdersDisplay" :key="placeholder.id">
+                    <div v-for="placeholder in this.form.lifecycle.displayPlaceholders" :key="placeholder.id">
                       <div>{{ placeholder }}</div>
                     </div>
                   </div>
@@ -191,20 +191,14 @@ export default {
               newSteps.push(newStep);
             }
             this.form.lifecycle = {...this.form.lifecycle, steps: newSteps};
-            //this.initializeStepValues()
+            this.initializeStepValues()
             this.$bvModal.show('new-lifecycle-modal');
             },
             deep: true
           }
   },
   data(){
-    return{/*
-      selectedItem: "-",
-      options: [
-        {value: '1', text: 'Lifecycle', path:'Lifecycle'},
-        {value: '2', text: 'Project', path:'Project'},
-        {value: '3', text: 'Contact', path:'Contact'},
-      ],*/
+    return{
       form:{
         error:'',
         lifecycle:{
@@ -221,7 +215,8 @@ export default {
             emailForm:''
           },
           steps:[],
-          //displaySteps:[],
+          displaySteps:[],
+          displayPlaceholders:[],
           displayStepsTableFields: tableFields
         }
       }
@@ -248,31 +243,26 @@ export default {
         }
       }
       return resultKeys
-    },
+    },/*
     placeholdersDisplay: ()=>{
       const result = []
       for(const place of this.form.lifecycle.placeholders){
         const html = `<${place.toUpperCase()}>`
-        result. push(html)
+        result.push(html)
       }
       return result
-    }
-    /*
-    checkStepInSteps: () => {
-      if(this){
-        const stepIds = this.form.lifecycle.steps.map(step => step.id)
-        const idx = stepIds.indexOf(this.form.lifecycle.step.id)
-        return idx == -1 ? false : true
-      }
-      else{
-        return false
-      }
     }*/
   },
   methods:{
     addToPlaceholders(){
       const place = JSON.parse(JSON.stringify(this.form.lifecycle.step.placeholder))
-      this.form.lifecycle.step.placeholders.push(place)
+      const placeholders = JSON.parse(JSON.stringify(this.form.lifecycle.step.placeholders))
+      if(place!='' && !placeholders.includes(place)){
+        this.form.lifecycle.step.placeholders.push(place)
+        const html = `<${place.toUpperCase()}>`
+        this.form.lifecycle.displayPlaceholders.push(html)
+      }
+      this.form.lifecycle.step.placeholder = ''
     },
     initializeStepValues(){
       this.form.lifecycle.step.inSteps = false
@@ -283,6 +273,7 @@ export default {
       this.form.lifecycle.step.placeholder = '';
       this.form.lifecycle.step = {...this.form.lifecycle.step, placeholders: []};
       this.form.lifecycle.step.emailForm = '';
+      this.form.lifecycle = {...this.form.lifecycle, displayPlaceholders: []};
     },
     initializeFormValues(){
       this.form.error = ''
@@ -301,13 +292,13 @@ export default {
       this.form.lifecycle.step.placeholder = '';
       this.form.lifecycle.step = {...this.form.lifecycle.step, placeholders: row.placeholders};
       this.form.lifecycle.step.emailForm = row.emailForm
-    },
-    /*
-    changeItem(option){
-      this.selectedItem = option.text
-      useDisplayStore.viewSelection = option.text
-      console.log(useDisplayStore)
-    },*/
+
+      this.form.lifecycle = {...this.form.lifecycle, displayPlaceholders: []};
+      for(const place of row.placeholders){
+        const html = `${place.toUpperCase()}`
+        this.form.lifecycle.displayPlaceholders.push(html)
+      }
+    },/*
     addLifecycle(){
       //prepare data
       const LifecycleSteps = []
@@ -377,16 +368,6 @@ export default {
         this.form.lifecycle.steps[idx].placeholder = this.form.lifecycle.step.placeholder
         this.form.lifecycle.steps[idx] = {...this.form.lifecycle.step[idx], placeholders: this.form.lifecycle.step.placeholders}
         this.form.lifecycle.steps[idx].emailForm = this.form.lifecycle.step.emailForm
-        
-        /*
-        this.form.lifecycle.step.inSteps = ''
-        this.form.lifecycle.step.id = ''
-        this.form.lifecycle.step.name = ''
-        this.form.lifecycle.step.order = ''
-        this.form.lifecycle.step.duration = ''
-        this.form.lifecycle.step.placeholder = ''
-        this.form.lifecycle.step.emailForm = ''
-        */
        this.initializeStepValues()
       }else{
         console.log(`ERROR: step ${idx} not currently in current lifecycle steps`)
@@ -402,7 +383,7 @@ export default {
       }else{
         console.log(`ERROR: step ${idx} not currently in current lifecycle steps`)
       }
-    }
+    }*/
   }
 }
 
