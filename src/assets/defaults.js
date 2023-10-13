@@ -18,7 +18,7 @@ let step_Lead = {
     Name:'lead',
     DurationBizDays: 7, 
     Order:1, 
-    Placeholder: [`<CONTACT_NAME>`, `<REFFERAL>`, `<PRODUCT_NAME>`, `<SELLER_NAME>`],
+    Placeholder: [`<CONTACT_NAME>`, `<CONTACT_REFFERAL>`, `<PRODUCT_NAME>`, `<SELLER_NAME>`],
     EmailForm: `
 <CONTACT_NAME>,
 

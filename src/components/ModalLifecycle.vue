@@ -165,6 +165,7 @@ import {useDisplayStore} from '@/main.js';
 import {useLifecycle, useLifecycleStep} from '@/main.js';
 
 import Person from '@/stores/Person';
+import Project from '@/stores/Project';
 import {LifecycleStep} from '@/stores/Lifecycle';
 
 
@@ -233,25 +234,23 @@ export default {
     lifecycleListName: () => useCollect(useLifecycle.all()).sortBy('Name').map(item => item.Name),
     availablePlaceholderList: ()=>{
       const REMOVE = ['id','meta']
-      const obj = new Person()
-      let keys = Object.keys(obj)
+      const person = {type:'Contact', obj: new Person()}
+      const project = {type:'Product', obj: new Project()}
+      const objects = [person, project]
+
       const resultKeys = []
-      for(const key of keys){
-        const check = REMOVE.every(item => !key.includes(item))
-        if(check){
-          resultKeys.push(key)
+      for(let {type, obj} of objects){
+        let attrs = Object.keys(obj)
+        for(const attr of attrs){
+          const check = REMOVE.every(item => !attr.includes(item))
+          if(check){
+            const name = `${type}_${attr}`.toUpperCase()
+            resultKeys.push(name)
+          }
         }
       }
       return resultKeys
-    },/*
-    placeholdersDisplay: ()=>{
-      const result = []
-      for(const place of this.form.lifecycle.placeholders){
-        const html = `<${place.toUpperCase()}>`
-        result.push(html)
-      }
-      return result
-    }*/
+    }
   },
   methods:{
     addToPlaceholders(){
@@ -298,7 +297,7 @@ export default {
         const html = `${place.toUpperCase()}`
         this.form.lifecycle.displayPlaceholders.push(html)
       }
-    },/*
+    },
     addLifecycle(){
       //prepare data
       const LifecycleSteps = []
@@ -366,7 +365,7 @@ export default {
         this.form.lifecycle.steps[idx].order = this.form.lifecycle.step.order
         this.form.lifecycle.steps[idx].duration = this.form.lifecycle.step.duration
         this.form.lifecycle.steps[idx].placeholder = this.form.lifecycle.step.placeholder
-        this.form.lifecycle.steps[idx] = {...this.form.lifecycle.step[idx], placeholders: this.form.lifecycle.step.placeholders}
+        this.form.lifecycle.steps[idx] = {...this.form.lifecycle.steps[idx], placeholders: this.form.lifecycle.step.placeholders}
         this.form.lifecycle.steps[idx].emailForm = this.form.lifecycle.step.emailForm
        this.initializeStepValues()
       }else{
@@ -378,12 +377,14 @@ export default {
       const idx = stepIds.indexOf(this.form.lifecycle.step.id)
       if(idx!=-1){
         this.form.lifecycle.steps.splice(idx, 1)
+        const newSteps = sortSteps(this.form.lifecycle.steps, 'order')
+        this.form.lifecycle = {...this.form.lifecycle, steps: newSteps}
         useLifecycleStep.destroy(this.form.lifecycle.step.id)
-        //this.initializeStepValues()
+        this.initializeStepValues()
       }else{
         console.log(`ERROR: step ${idx} not currently in current lifecycle steps`)
       }
-    }*/
+    }
   }
 }
 
@@ -407,7 +408,11 @@ const tableFields = [{
 
 function sortSteps(arrSteps, key){
   //Sort array of steps by their order
-  return arrSteps.sort((a,b) => a[key]- b[key])
+  const newArray = arrSteps.sort((a,b) => a[key]- b[key])
+  newArray.forEach((part,idx,arr)=>{
+    arr[idx][key] = idx
+  })
+  return newArray
 }
 
 
