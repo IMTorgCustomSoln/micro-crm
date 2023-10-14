@@ -89,7 +89,7 @@
                   </datalist>
                   <div id="placeholders">
                     <div v-for="placeholder in this.form.lifecycle.displayPlaceholders" :key="placeholder.id">
-                      <div>{{ placeholder }}</div>
+                      <b-button @click="addPlaceholderToText($event)" class="btn-sm m-1">{{ placeholder }}</b-button>
                     </div>
                   </div>
                 </b-form-group>
@@ -101,6 +101,7 @@
                 >
                 <b-form-textarea
                   id="textarea"
+                  ref="ta"
                   v-model="form.lifecycle.step.emailForm"
                   placeholder="Enter something..."
                   rows="5"
@@ -264,6 +265,12 @@ export default {
         this.form.lifecycle.displayPlaceholders.push(html)
       }
       this.form.lifecycle.step.placeholder = ''
+    },
+    addPlaceholderToText(event){
+      const innerText = event.target.innerText
+      const pos1 = this.$refs.ta.$el.selectionStart
+      const newText = this.form.lifecycle.step.emailForm.substring(0,pos1) + innerText + this.form.lifecycle.step.emailForm.substring(pos1)
+      this.form.lifecycle.step.emailForm = newText
     },
     initializeStepValues(){
       this.form.lifecycle.step.inSteps = false
