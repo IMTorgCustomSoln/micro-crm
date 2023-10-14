@@ -112,10 +112,12 @@
                 </b-form-group>
                 <b-button-group>
                 <b-button @click="addLifecycleStep" v-b-modal.modal-close_visit class="btn-sm m-1" >Add Step</b-button>
+                <b-button @click="initializeStepValues" v-b-modal.modal-close_visit class="btn-sm m-1" >Clear Form Data</b-button>
                 <div v-if="this.form.lifecycle.step.inSteps">
                   <b-button @click="updateLifecycleStep" v-b-modal.modal-close_visit class="btn-sm m-1" >Update Step</b-button>
-                  <b-button @click="initializeStepValues" v-b-modal.modal-close_visit class="btn-sm m-1" >Clear Form Data</b-button>
+                  <!--
                   <b-button @click="deleteLifecycleStep" v-b-modal.modal-close_visit class="btn-sm m-1" >Delete Step</b-button>
+                  -->
                 </div>
               </b-button-group>
 
@@ -142,6 +144,11 @@
                       thead-class="tableHead bg-dark text-white"
                       @row-clicked="editStep" 
                     >
+                    <template #cell(actions)="row">
+                      <span>
+                        <b-btn size="sm" @click="deleteItem(row)">Delete</b-btn>
+                      </span>
+                    </template>
                   </b-table>
 
                 </b-form-group>
@@ -357,7 +364,7 @@ export default {
         name: Step.Name, 
         order: Step.Order, 
         duration: Step.DurationBizDays, 
-        placeholder: Step.Placeholder, 
+        placeholders: JSON.parse(Step.Placeholder), 
         emailForm: Step.EmailForm
       }
       const arrSteps = JSON.parse(JSON.stringify(this.form.lifecycle.steps))
@@ -380,7 +387,7 @@ export default {
       }else{
         console.log(`ERROR: step ${idx} not currently in current lifecycle steps`)
       }
-    },
+    },/*
     deleteLifecycleStep(){
       const stepIds = this.form.lifecycle.steps.map(step => step.id)
       const idx = stepIds.indexOf(this.form.lifecycle.step.id)
@@ -389,6 +396,20 @@ export default {
         const newSteps = sortSteps(this.form.lifecycle.steps, 'order')
         this.form.lifecycle = {...this.form.lifecycle, steps: newSteps}
         useLifecycleStep.destroy(this.form.lifecycle.step.id)
+        this.initializeStepValues()
+      }else{
+        console.log(`ERROR: step ${idx} not currently in current lifecycle steps`)
+      }
+    },*/
+    deleteItem(row){
+      const step = JSON.parse(JSON.stringify(row))['item']
+      const stepIds = this.form.lifecycle.steps.map(step => step.id)
+      const idx = stepIds.indexOf(step.id)
+      if(idx!=-1){
+        this.form.lifecycle.steps.splice(idx, 1)
+        const newSteps = sortSteps(this.form.lifecycle.steps, 'order')
+        this.form.lifecycle = {...this.form.lifecycle, steps: newSteps}
+        useLifecycleStep.destroy(step.id)
         this.initializeStepValues()
       }else{
         console.log(`ERROR: step ${idx} not currently in current lifecycle steps`)
@@ -410,7 +431,10 @@ const tableFields = [{
     }, {
         key: 'emailForm',
         label: 'Email Form'
-    }, 
+    }, {
+        key: 'actions',
+        label: 'Actions'
+    }
 ]
 
 
