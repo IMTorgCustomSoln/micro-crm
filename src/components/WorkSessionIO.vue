@@ -2,7 +2,9 @@
 <template>
    <!-- Open modal button -->
    <b-button
-        id='btnSaveContinue' 
+        id='btnSaveContinue'
+        size="sm" 
+        class="my-2 my-sm-0" 
         v-b-modal="'save-continue-modal'"
         type="button"
         >Data I/O

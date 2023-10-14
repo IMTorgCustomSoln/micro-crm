@@ -32,9 +32,33 @@
 </template>
 
 <script>
+import {useAccount} from '@/main';
+import { useCollect } from 'pinia-orm/dist/helpers';
 
-export default{
-
+export default {
+    name: 'ModalAccount',
+    data(){
+        return{
+            form:{
+                error:'',
+                account: {
+                    name:''
+                }
+            }
+        }
+    },
+    mounted(){
+      this.$root.$on('bv::modal::show', (bvEvent, modalId) => {
+        //console.log('Modal is about to be closed', bvEvent, modalId)
+        let account = useCollect(useAccount.all()).sortBy('Fullname')[0]
+        this.form.account.name = account.Fullname
+      })
+    },
+    methods:{
+        addAccount(){
+            return true
+        }
+    }
 }
 
 

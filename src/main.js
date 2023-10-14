@@ -29,6 +29,7 @@ export const useDisplayStore = DisplayStore()
 
 
 //table init
+import Account from '@/stores/Account.js';
 import Person from "@/stores/Person.js";
 import Project from "@/stores/Project.js";
 import {Lifecycle, LifecycleStep} from "@/stores/Lifecycle.js";
@@ -36,6 +37,7 @@ import {PersonProjectStatus} from '@/stores/PersonProjectStatus';
 import {Interaction} from '@/stores/Interaction';
 import {UseCase} from '@/stores/UseCase';
 
+export const useAccount = useRepo(Account, pinia);
 export const usePerson = useRepo(Person, pinia);
 export const useProject= useRepo(Project, pinia);
 export const useLifecycle = useRepo(Lifecycle, pinia);
@@ -58,8 +60,12 @@ if(useDisplayStore.populateDefault){
 
 
 //load test data
-import {populateProjectTestData, populateContactTestData} from '@/assets/defaults.js';
+import {populateAccountTestData,
+        populateProjectTestData, 
+        populateContactTestData,
+    } from '@/assets/defaults.js';
 if(useDisplayStore.populateTestData){
+    populateAccountTestData(useAccount)
     populateProjectTestData(useProject)
     populateContactTestData(usePerson)
 }

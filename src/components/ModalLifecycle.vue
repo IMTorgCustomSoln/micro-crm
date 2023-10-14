@@ -164,6 +164,7 @@ import {useCollect} from 'pinia-orm/dist/helpers';
 import {useDisplayStore} from '@/main.js';
 import {useLifecycle, useLifecycleStep} from '@/main.js';
 
+import Account from '@/stores/Account';
 import Person from '@/stores/Person';
 import Project from '@/stores/Project';
 import {LifecycleStep} from '@/stores/Lifecycle';
@@ -234,9 +235,10 @@ export default {
     lifecycleListName: () => useCollect(useLifecycle.all()).sortBy('Name').map(item => item.Name),
     availablePlaceholderList: ()=>{
       const REMOVE = ['id','meta']
+      const account = {type:'Account', obj: new Account()}
       const person = {type:'Contact', obj: new Person()}
       const project = {type:'Product', obj: new Project()}
-      const objects = [person, project]
+      const objects = [account, person, project]
 
       const resultKeys = []
       for(let {type, obj} of objects){
