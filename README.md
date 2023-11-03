@@ -5,7 +5,7 @@
 What it is and what it supports.
 
 
-## Functionality
+## Use Case
 
 * manage user data, including
   - status in pipeline
@@ -89,9 +89,22 @@ npm run lint
   - Select View > Lifecycle
   - Table row 'default', column Action > Edit
   - Steps table, click on any step
-  - Select Placeholders
-  - Write associated email form
+  - Select Placeholders > Add
+  - Write associated email form and add Placeholder at cursor position
   - Update Step
+  - Add / Update Lifecycle
+* HOW DOES projec-person-status table fit in???
+* View Next Steps table
+  - time since past due
+* Prepare many individual emails
+  - all within same step
+* View all previous events,interactions in a timeline
+* View use cases + pain point
+* View contacts, referrals by firm hierarchy
+* View Reports
+  - project accomplishmnents
+  - ...
+
 
 
 
@@ -99,3 +112,26 @@ npm run lint
 
 * router views may be useful, but is unnecessary.  Some good explanations of dynamic layouts are the following:
   - https://markus.oberlehner.net/blog/dynamic-vue-layout-components/
+
+
+## TODO
+
+_Current_
+
+* TypeError: Converting circular structure to JSON
+* if project is selected, then that row should still be highlighted after returning from another page
+* Lifecycle view, table col Steps: space between items in array
+* ModalLifecycle: style 'Steps:' table
+* Contacts Table
+  - populate Log Interaction, wiht only one row selected
+  - before project selection, remove ReferredBy
+  - after project selection, should show PersonProjStatus (need new table)
+
+_New_
+
+* ProjectsView, if project selected, 'Log Event' button shows
+* event reports
+  - project summary for selected time period: events grouped by project
+  - timesheet: hours of events, with project rows and column days
+* user reports
+  - next step
