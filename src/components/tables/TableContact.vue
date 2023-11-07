@@ -34,8 +34,8 @@
 import {toRaw} from 'vue';
 import {useCollect} from 'pinia-orm/dist/helpers';
 import {useDisplayStore, usePerson} from '@/main.js';
-import ModalLogInteraction from './ModalLogInteraction.vue';
-import ModalContact from './ModalContact.vue';
+import ModalLogInteraction from '@/components/modals/ModalLogInteraction.vue';
+import ModalContact from '@/components/modals/ModalContact.vue';
 
 
 export default{
@@ -45,6 +45,13 @@ export default{
     ModalLogInteraction
   },
   computed: {
+    getTableFields: () => {
+      if(useDisplayStore.projectSelection){
+        Object.assign(this.fields, fieldsWithProject)
+      } else {
+        Object.assign(this.fields, fieldsWithOutProject)
+      }
+    },
     setViewSelection: () => useDisplayStore.viewSelection,
     contactList: () => {
       const contacts = useCollect(usePerson.all()).sortBy('Fullname')
@@ -67,7 +74,7 @@ export default{
     return {
       viewSelection:'',
       contactsSelected: [],
-      fields: fields,
+      fields: null,
       form:{
         contact:{}
       }
@@ -122,7 +129,7 @@ function isEmpty(obj) {
 
 
 // Table data items
-const fields = [{
+const fieldsWithProject = [{
         key: 'Fullname',
         label: 'Fullname',
         sortable: true
@@ -133,6 +140,52 @@ const fields = [{
     }, {
         key: 'ReferredBy',
         label: 'Referred By',
+        sortable: true
+    }, {
+        key: 'Email',
+        label: 'Email',
+        sortable: true,
+    }, {
+        key: 'Number',
+        label: 'Number',
+        sortable: true,
+    }, {
+        key: 'Office',
+        label: 'Office',
+        sortable: true,
+    }, {
+        key: 'Firm',
+        label: 'Firm',
+        sortable: true,
+    }, {
+        key: 'Projects',
+        label: 'Projects',
+        sortable: true,
+    }, {
+        key: 'interactions',
+        label: 'Interactions',
+        sortable: true,
+    }, {
+        key: 'references',
+        label: 'References',
+        sortable: true,
+    }, {
+        key: 'usecases',
+        label: 'UseCases',
+        sortable: true,
+    }, {
+        key: 'actions',
+        label: 'Actions'
+    }]
+
+
+const fieldsWithOutProject = [{
+        key: 'Fullname',
+        label: 'Fullname',
+        sortable: true
+    }, {
+        key: 'Title',
+        label: 'Title',
         sortable: true
     }, {
         key: 'Email',

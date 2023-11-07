@@ -46,10 +46,10 @@
 
 <script>
 import {useCollect} from 'pinia-orm/dist/helpers';
-import {usePerson, useProject, useLifecycle} from '../main.js';
-import {groupBy} from '../assets/utils';
-import {testLifecycle} from '../stores/Lifecycle.js';
-import ModalLifecycle from '@/components/ModalLifecycle.vue'
+import {usePerson, useProject, useLifecycle} from '@/main.js';
+import {groupBy} from '@/assets/utils';
+import {testLifecycle} from '@/stores/Lifecycle.js';
+import ModalLifecycle from '@/components/modals/ModalLifecycle.vue'
 
 
 export default {
@@ -139,7 +139,7 @@ export default {
       return false
     },
     getFormattedSteps(row){
-      const steps = row.map(item => item.Name)
+      const steps = row.map(item => ` ${item.Name}`)
       return steps.toString()
     }
   },

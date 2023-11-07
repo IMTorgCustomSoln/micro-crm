@@ -95,10 +95,11 @@
 
 <script>
 import {toRaw} from 'vue';
+import {isEmpty} from '@/assets/utils.js';
 import {useDisplayStore} from '@/main.js';
 import WorkSessionIO from './WorkSessionIO.vue';
 
-import ModalAccount from '@/components/ModalAccount.vue'
+import ModalAccount from '@/components/modals/ModalAccount.vue'
 //import ModalContact from '@/components/ModalContact.vue';
 //import ModalProject from '@/components/ModalProject.vue';
 //import ModalLifecycle from '@/components/ModalLifecycle.vue';
@@ -116,7 +117,7 @@ export default {
   data(){
     return{
       selectedItem: '',
-      options: useDisplayStore.options
+      options: useDisplayStore.options.slice(0,3)
     }
   },
   mounted(){
@@ -135,7 +136,8 @@ export default {
   methods:{
     changeItem(option){
       this.selectedItem = option.text
-      useDisplayStore.viewSelection = option
+      //useDisplayStore.viewSelection = option
+      Object.assign(useDisplayStore.viewSelection, option)
       console.log(JSON.parse(JSON.stringify(useDisplayStore)) )
     },
   }

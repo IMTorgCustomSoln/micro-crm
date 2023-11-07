@@ -4,7 +4,7 @@
   
   
 <script>
-import TableLifecycle from '@/components/TableLifecycle.vue'
+import TableLifecycle from '@/components/tables/TableLifecycle.vue'
 
 export default {
   name:'LifecyclePage',

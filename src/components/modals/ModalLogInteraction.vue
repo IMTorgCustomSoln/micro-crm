@@ -100,7 +100,9 @@ export default {
                     const names = contactRecords.map(item => item.Fullname)
                     Object.assign(this.form.interaction.participants, names)
                 }
-            }
+            },
+            deep: true,
+            immediate: true
         }
     },
     data(){

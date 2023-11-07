@@ -4,7 +4,7 @@
   
   
 <script>
-import TableContact from '@/components/TableContact.vue'
+import TableContact from '@/components/tables/TableContact.vue'
 
 export default {
   name:'ContactPage',

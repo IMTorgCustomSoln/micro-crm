@@ -114,24 +114,67 @@ npm run lint
   - https://markus.oberlehner.net/blog/dynamic-vue-layout-components/
 
 
+
 ## TODO
 
-_Current_
+* diagram: Customer Lifecycle with Feedback-Response Loop
+
+
+_Minor_
 
 * TypeError: Converting circular structure to JSON
-* if project is selected, then that row should still be highlighted after returning from another page
-* Lifecycle view, table col Steps: space between items in array
+* ~~if project is selected, then that row should still be highlighted after returning from another page~~
+* ~~Lifecycle view, table col Steps: space between items in array~~
+* add selected checkmark to tables, [ref](https://stackoverflow.com/questions/66669105/how-do-i-get-the-indices-of-current-selected-rows-in-bootstrap-vues-table-when)
 * ModalLifecycle: style 'Steps:' table
 * Contacts Table
-  - populate Log Interaction, wiht only one row selected
-  - before project selection, remove ReferredBy
+  - ~~populate Log Interaction, with only one row selected~~
+  - ~~before project selection, remove ReferredBy~~
   - after project selection, should show PersonProjStatus (need new table)
+
 
 _New_
 
-* ProjectsView, if project selected, 'Log Event' button shows
-* event reports
-  - project summary for selected time period: events grouped by project
-  - timesheet: hours of events, with project rows and column days
-* user reports
-  - next step
+* If project selected, 'Log Event' and 'New Feedback' buttons show (shown on all views)
+* Feedback
+  - if no contact selected, fill-in with Account info
+* Event 
+  - if Type 'Dev' then possible to choose Feedback that addresses it
+
+* Left side-bar reports
+  - ~~setup~~
+* General
+  - Project is selectable (or not - show all) within each page.  Independent of Main Selection
+  - Sections: ??? history, current, future
+* Report, Projects
+  - Previous Events Summary: for selected time period: events grouped by project, filterable by Type (Discussion, Development, ...)
+  - Project Feedback: list of all feedback, filterable by Type (UseCase, Feature Request, Issue, ...) => ?export to trello
+  - Project Timesheet: hours of events, with project rows and column days
+  - Contact Next Steps: lists next step sorted by
+    + time elapsed since deadline
+    + title (importance)
+  - Contacts, Org View
+    + based on simple model of org structure populated from titles / positions
+    + need a modal to describe org structure model, or load org structure
+    + select lines connecting referrals, order / timeline, etc.
+    
+* Data I/O
+  - in 'Account', turn-on 'Admin' mode (the following are only available in Admin)
+  - in Data I/O, add 'Clear' all data 
+  - in Data I/O, add populate with 'Demo' data
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+END

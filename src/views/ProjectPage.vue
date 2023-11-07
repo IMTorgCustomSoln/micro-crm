@@ -4,7 +4,7 @@
   
   
 <script>
-import TableProject from '@/components/TableProject.vue'
+import TableProject from '@/components/tables/TableProject.vue'
 
 export default {
   name:'ProjectPage',

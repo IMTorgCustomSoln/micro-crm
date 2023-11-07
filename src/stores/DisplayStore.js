@@ -9,9 +9,14 @@ const DisplayStore = defineStore('display',{
             viewCount: 0,
             viewSelection: {value: '1', text: 'Project', path:'ProjectPage'},
             options:[
+                //NavbarTop.vue
                 {value: '1', text: 'Project', path:'ProjectPage'},
                 {value: '2', text: 'Contact', path:'ContactPage'},
                 {value: '3', text: 'Lifecycle', path:'LifecyclePage'},
+
+                //Sidebar.vue
+                {value: '4', text: 'Event Summary', path:'EventReport'}
+
               ],
             projectSelection: {},
 

@@ -2,6 +2,7 @@
     <div>
         <NavbarTop/>
       <main>
+        <SideBar/>
         <b-container class="bv-example-row">
           <div><b>Selected:</b> {{ selectedProjects }}</div>
             <b-row>
@@ -17,6 +18,7 @@
 <script>
 import {useDisplayStore} from '@/main.js';
 import NavbarTop from '@/components/NavbarTop.vue';
+import SideBar from '@/components/Sidebar.vue';
 
 import ContactPage from '@/views/ContactPage.vue';
 import ProjectPage from '@/views/ProjectPage.vue';
@@ -26,17 +28,19 @@ export default {
   name: `App`,
   components:{
     NavbarTop,
+    SideBar,
+
     ContactPage,
     ProjectPage,
-    LifecyclePage
+    LifecyclePage,
   },
   data() {
     return {
     };
   },
   computed:{
-      selectedPath: () => {
-        return useDisplayStore.viewSelection.path; 
+    selectedPath: () => {
+      return useDisplayStore.viewSelection.path; 
     },
     selectedProjects(){
       return useDisplayStore.projectSelection.Name

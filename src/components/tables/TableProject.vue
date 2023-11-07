@@ -1,7 +1,8 @@
 <template>
     
     <div>
-      <b-table 
+      <b-table
+        ref="prjTable" 
         striped hover small
         selectable
         select-mode="single"
@@ -29,10 +30,11 @@
 
 
 <script>
+import {toRaw, ref} from 'vue';
 import {useDisplayStore} from '@/main.js';
 import {useCollect} from 'pinia-orm/dist/helpers';
 import {usePerson, useProject} from '@/main.js';
-import ModalProject from '@/components/ModalProject.vue';
+import ModalProject from '@/components/modals/ModalProject.vue';
 
 
 
@@ -49,6 +51,11 @@ export default {
         project: {}
       }
     };
+  },
+  mounted() {
+    const itemIds = this.$refs.prjTable.items.map(item => item.id)
+    const index = itemIds.indexOf(useDisplayStore.projectSelection.id)
+    this.$refs.prjTable.selectRow(index)
   },
   computed: {
     setViewSelection: () => useDisplayStore.viewSelection,
