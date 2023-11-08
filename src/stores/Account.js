@@ -1,6 +1,6 @@
 import { Model } from 'pinia-orm'
 
-export default class Account extends Model {
+export class Account extends Model {
   static entity = 'Account'
   static fields () {
     return {

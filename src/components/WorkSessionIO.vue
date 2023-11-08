@@ -19,12 +19,18 @@
         <!-- Explanation TODO:fix -->
         <div >
             <p>
-            Because this is an offline application, the Workspace cannot be automatically saved.  <bold style="font-weight: bold">If you close 
-            your browser, all work will be lost.</bold> <br><br> 
+                <bold style="font-weight: bold">Demo: </bold>To clear all data and load the app with demo data, press here.
+                <b-button @click="populateDemoData">Add Demo</b-button>
+                <b-button @click="clearDemoData">Clear Data</b-button>
+            </p>
+
+            <p>
+                Because this is an offline application, the Workspace cannot be automatically saved.  <bold style="font-weight: bold">If you close 
+                    your browser, all work will be lost.</bold> <br><br> 
             </p>
             
             <p>
-            Select a previously saved session file (ie. <code>VDI_ApplicationStateData_v*.*.*.gz'</code>) to continue your work.
+                Select a previously saved session file (ie. <code>VDI_ApplicationStateData_v*.*.*.gz'</code>) to continue your work.
             </p>
             <b-form name="uploadForm">
             
@@ -70,7 +76,22 @@
 </template>
 
 <script>
-import { getFormattedFileSize, getSetDifferenceOfArrays } from '../assets/utils.js'
+import { useDisplayStore, 
+            useAccount, 
+            useProject, 
+            usePerson,
+            usePersonProject,
+            useEvent,
+            useFeedback
+        } from '@/main';
+import { getFormattedFileSize, getSetDifferenceOfArrays } from '../assets/utils.js';
+
+import {populateAccountTestData,
+        populateProjectTestData, 
+        populateContactTestData,
+        populateEventTestData,
+        populateFeedbackTestData
+        } from '@/assets/demo.js';
 
 const ExportAppStateFileName = 'WorkSession.gz'
 
@@ -86,6 +107,24 @@ export default {
         }
     },
     methods:{
+        populateDemoData(){
+            //load test data
+            if(useDisplayStore.populateTestData){
+                populateAccountTestData(useAccount)
+                populateProjectTestData(useProject)
+                populateContactTestData(usePerson, useProject)
+                populateEventTestData(useEvent, usePersonProject, usePerson)
+                populateFeedbackTestData(useFeedback, usePersonProject, usePerson)
+            }
+        },
+        clearDemoData(){
+            const keys = Object.keys(localStorage)
+            for(let key of keys){
+                if( ['Lifecycle', 'LifecycleStep'].indexOf(key) == -1 ){
+                    localStorage.removeItem(key)
+                }
+            }
+        },
         async saveWorkStream(e){
             const create = e.target
             const object = localStorage
@@ -154,3 +193,10 @@ export default {
     }
 }
 </script>
+
+
+<style>
+.no-li-dot{
+    list-style-type: none;
+}
+</style>

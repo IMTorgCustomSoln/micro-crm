@@ -1,20 +1,22 @@
 import { Model } from 'pinia-orm';
 import { StringCast, DateCast } from 'pinia-orm/casts';
 import { useDisplayStore } from '@/main';
+import { Lifecycle } from './Lifecycle';
 
 
-export default class Project extends Model {
+export class Project extends Model {
   static entity = 'Project'
-  static primaryKey = ['id', 'Name']
+  //static primaryKey = ['id', 'Name']
   static fields(){
     return {
       id: this.uid(),
-      Name: this.string("<name>"),
-      Status: this.string(useDisplayStore.project.availableStatus[0]),
+      Name: this.string(''),
+      Status: this.string(useDisplayStore.project.availableStatus[0]),    //different from PersonProjectStatus
       Category: this.string(""),
       StartDate: this.attr(),
       EndDate: this.attr(),
-      Lifecycle: this.string(""),
+      LifecycleId: this.attr(null),
+      Lifecycle: this.belongsTo(Lifecycle, 'LifecycleId'),
       Repos: this.string("")
     }
   }

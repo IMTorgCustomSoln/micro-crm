@@ -172,9 +172,9 @@ import {useCollect} from 'pinia-orm/dist/helpers';
 import {useDisplayStore} from '@/main.js';
 import {useLifecycle, useLifecycleStep} from '@/main.js';
 
-import Account from '@/stores/Account';
-import Person from '@/stores/Person';
-import Project from '@/stores/Project';
+import {Account} from '@/stores/Account';
+import {Person} from '@/stores/Person';
+import {Project} from '@/stores/Project';
 import {LifecycleStep} from '@/stores/Lifecycle';
 
 

@@ -1,6 +1,7 @@
-import { Model } from 'pinia-orm'
-import { ArrayCast } from 'pinia-orm/casts'
-import { defaultSteps, defaultLifecycle } from '../assets/defaults.js'
+import { Model } from 'pinia-orm';
+import { ArrayCast } from 'pinia-orm/casts';
+
+import { Project } from '@/stores/Project.js';
 
 
 export class Lifecycle extends Model {
@@ -9,7 +10,8 @@ export class Lifecycle extends Model {
     return {
       id: this.uid(),
       Name: this.string('').notNullable(),
-      LifecycleStep: this.hasMany(LifecycleStep, 'LifecycleId')
+      Projects: this.hasMany(Project, 'id'),
+      LifecycleStep: this.hasMany(LifecycleStep, 'StepId')
     }
   }
 }
@@ -19,7 +21,7 @@ export class LifecycleStep extends Model {
   static fields () {
     return {
       id: this.uid(),
-      LifecycleId: this.attr(null),
+      StepId: this.attr(null),
       Name: this.string('').notNullable(),
       DurationBizDays: this.number(),
       Order: this.number(),
@@ -44,10 +46,3 @@ export class LifecycleStep extends Model {
     }
   }
 }
-
-
-//test data
-for(let step of defaultSteps){
-  defaultLifecycle.LifecycleStep.push(step)
-}
-export const testLifecycle = [defaultLifecycle]

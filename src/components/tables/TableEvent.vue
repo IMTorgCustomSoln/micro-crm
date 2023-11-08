@@ -1,5 +1,6 @@
 <template>
     
+    <h1>Events</h1>
     <div>
       <b-table
         striped hover small

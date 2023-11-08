@@ -1,7 +1,7 @@
 <template>
   <div v-if="this.contactsSelected.length > 0">
     <span>Contacts: {{ this.contactsSelected.length }}    </span>
-    <ModalLogInteraction :contacts="contactsSelected"/>
+    <ModalEvent :contacts="contactsSelected"/>
   </div>
   <div>
   <b-table 
@@ -33,8 +33,8 @@
 <script>
 import {toRaw} from 'vue';
 import {useCollect} from 'pinia-orm/dist/helpers';
-import {useDisplayStore, usePerson} from '@/main.js';
-import ModalLogInteraction from '@/components/modals/ModalLogInteraction.vue';
+import {useDisplayStore, usePerson, usePersonProject, useEvent, useFeedback, useLifecycleStep} from '@/main.js';
+import ModalEvent from '@/components/modals/ModalEvent.vue';
 import ModalContact from '@/components/modals/ModalContact.vue';
 
 
@@ -42,7 +42,7 @@ export default{
   name: 'TableContact',
   components:{
     ModalContact,
-    ModalLogInteraction
+    ModalEvent
   },
   computed: {
     getTableFields: () => {
@@ -54,6 +54,57 @@ export default{
     },
     setViewSelection: () => useDisplayStore.viewSelection,
     contactList: () => {
+      const contacts = []
+      const prjGroups = usePersonProject.withAll().groupBy('StatusId').get()
+      for(const personPrjId in prjGroups){
+        let person = JSON.parse(JSON.stringify( usePerson.find(personPrjId) ))
+        if(person){
+          const referredBy = []
+          const statuses = []
+          let prjs_cnt = 0
+          let refs_cnt = 0
+          let event_cnt = 0
+          let feedback_cnt = 0
+          for(const item of prjGroups[personPrjId]){
+            const checkSelection = !isEmpty(useDisplayStore.projectSelection)
+            const checkPrj = checkSelection ? item.ProjectId == useDisplayStore.projectSelection.id : true
+            if(checkPrj){
+              if(checkSelection){
+                //referred by
+                const names = usePersonProject.withAll().where('RefId', item.StatusId).get().map(ref => ref.ReferredBy.Fullname)
+                referredBy.push(...names)
+                //current status
+                const mxDate = new Date(Math.max(...item.StepStatus.map(e => new Date(e.StatusDate) )))
+                const currentStatus = item.StepStatus.filter(e => +e.StatusDate == +mxDate)[0]
+                const prjName = item.Project.Name.toString()
+                const lcStepName = useLifecycleStep.find(currentStatus.LifecycleStepId).Name
+                const rec = {}
+                rec[prjName] = lcStepName
+                statuses.push(rec)
+              }
+              //attrs
+              prjs_cnt = prjs_cnt + 1
+              refs_cnt = item ? refs_cnt + usePersonProject.withAll().where('RefId', item.StatusId).get().length : refs_cnt
+              event_cnt = item.pivot ? event_cnt + useEvent.withAll().where('id', item.pivot.EventId).get().length: event_cnt
+              feedback_cnt = item ? feedback_cnt + useFeedback.withAll().where('PersonProjectId', item.id).get().length: feedback_cnt
+            }
+          }
+          delete person['id']
+          delete person['PersonProjectStatus']
+          person['ReferredBy'] = referredBy
+          person['Statuses'] = statuses
+          person['Projects'] = prjs_cnt
+          person['References'] = refs_cnt
+          person['Events'] = event_cnt
+          person['Feedback'] = feedback_cnt
+          if(person['Projects']>0){
+            contacts.push(person)
+          }
+        }
+      }
+      return contacts
+
+      /*
       const contacts = useCollect(usePerson.all()).sortBy('Fullname')
       const contactsWithInteractions = usePerson.with('Statuses', (query) => {query.with('Interactions')}).get()
       const contactsWithUseCases = usePerson.with('Statuses', (query) => {query.with('UseCases')}).get()
@@ -67,7 +118,7 @@ export default{
         return contacts.filter(item => toRaw(item.Projects).includes(useDisplayStore.projectSelection.Name) )
       } else {
         return contacts
-      }
+      }*/
     },
   },
   data() {
@@ -162,16 +213,20 @@ const fieldsWithProject = [{
         label: 'Projects',
         sortable: true,
     }, {
-        key: 'interactions',
-        label: 'Interactions',
+        key: 'Statuses',
+        label: 'Status',
         sortable: true,
     }, {
-        key: 'references',
+        key: 'Events',
+        label: 'Events',
+        sortable: true,
+    }, {
+        key: 'References',
         label: 'References',
         sortable: true,
     }, {
-        key: 'usecases',
-        label: 'UseCases',
+        key: 'Feedback',
+        label: 'Feedback',
         sortable: true,
     }, {
         key: 'actions',
@@ -208,16 +263,16 @@ const fieldsWithOutProject = [{
         label: 'Projects',
         sortable: true,
     }, {
-        key: 'interactions',
-        label: 'Interactions',
+        key: 'Events',
+        label: 'Events',
         sortable: true,
     }, {
-        key: 'references',
+        key: 'References',
         label: 'References',
         sortable: true,
     }, {
-        key: 'usecases',
-        label: 'UseCases',
+        key: 'Feedback',
+        label: 'Feedback',
         sortable: true,
     }, {
         key: 'actions',

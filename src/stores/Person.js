@@ -2,7 +2,7 @@ import { Model } from 'pinia-orm'
 import { PersonProjectStatus } from '@/stores/PersonProjectStatus';
 
 
-export default class Person extends Model {
+export class Person extends Model {
   static entity = 'Person'
   static fields () {
     return {
@@ -13,8 +13,12 @@ export default class Person extends Model {
       Number: this.string(""),
       Office: this.string(""),
       Firm: this.string(""),
-      Projects: this.attr([""]),
-      Statuses: this.hasMany(PersonProjectStatus , 'StatusId')
+      //Projects: this.attr([""]),
+      PersonProjectStatus: this.hasMany(PersonProjectStatus, 'StatusId'),   //insert with ReferredBy for selected Project
+      // collect with repos
+      //ReferencesGiven: this.hasMany(PersonProjectStatus , 'RefId'),
+      //Events: this.hasMany(Event, 'ParticipantsId'),    
+      //UseCases: this.hasMany(Interaction, 'ParticipantsId'),        
     }
   }
 }

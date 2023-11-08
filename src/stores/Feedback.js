@@ -1,13 +1,17 @@
 import { Model } from 'pinia-orm';
 import { StringCast } from 'pinia-orm/casts';
 
+import { PersonProjectStatus } from './PersonProjectStatus';
 
-export class UseCase extends Model {
-    static entity = 'UseCase'
+
+export class Feedback extends Model {
+    static entity = 'Feedback'
     static fields(){
         return{
             id: this.uid(),
-            UseCaseId: this.attr(null),
+            PersonProjectId: this.uid(),
+            PersonProject: this.belongsTo(PersonProjectStatus, 'PersonProjectId'),
+            Type: this.string(""),
             Role: this.string(""),
             Use: this.string(""),
             PainPoint: this.string("")
@@ -15,6 +19,7 @@ export class UseCase extends Model {
     }
     static casts(){
         return {
+          Type: StringCast,
           Role: StringCast,
           Use: StringCast,
           PainPoint: StringCast

@@ -28,6 +28,12 @@ const DisplayStore = defineStore('display',{
                 initialLifecycle: 'default',
                 availableCategory: ['Software', 'Hardware'],
                 availableStatus: ['Active', 'Delayed', 'Complete']
+            },
+
+            //Defaults
+            defaults: {
+                event: ['Meeting', 'Building',],
+                feedback: ['Feature', 'UseCase', 'Issue']
             }
         }
     }

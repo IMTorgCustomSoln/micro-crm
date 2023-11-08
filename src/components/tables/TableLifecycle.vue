@@ -48,7 +48,7 @@
 import {useCollect} from 'pinia-orm/dist/helpers';
 import {usePerson, useProject, useLifecycle} from '@/main.js';
 import {groupBy} from '@/assets/utils';
-import {testLifecycle} from '@/stores/Lifecycle.js';
+//import {testLifecycle} from '@/stores/Lifecycle.js';
 import ModalLifecycle from '@/components/modals/ModalLifecycle.vue'
 
 
