@@ -22,14 +22,7 @@
         <div>
           <b-form>
             <b-card bg-variant="light">
-              <!--
-              <b-form-group
-                label-cols-lg="3"
-                label="New Lifecycle"
-                label-size="lg"
-                label-class="font-weight-bold pt-0"
-                class="mb-0"
-              >-->
+  
                 <b-form-group
                   label="Name:"
                   label-for="nested-street"
@@ -167,7 +160,7 @@
 </template>
 
 <script>
-import toRaw from 'vue';
+import {toRaw} from 'vue';
 import {useCollect} from 'pinia-orm/dist/helpers';
 import {useDisplayStore} from '@/main.js';
 import {useLifecycle, useLifecycleStep} from '@/main.js';
@@ -176,7 +169,6 @@ import {Account} from '@/stores/Account';
 import {Person} from '@/stores/Person';
 import {Project} from '@/stores/Project';
 import {LifecycleStep} from '@/stores/Lifecycle';
-
 
 
 export default {
@@ -207,6 +199,10 @@ export default {
             deep: true
           }
   },
+  /*TODO:refactor
+    * consolidate methods and fields
+    * refactor by placing into TableLifecycle > lifecycleList
+  */
   data(){
     return{
       form:{
@@ -309,7 +305,7 @@ export default {
       this.form.lifecycle.step.emailForm = row.emailForm
 
       this.form.lifecycle = {...this.form.lifecycle, displayPlaceholders: []};
-      for(const place of row.placeholders){
+      for(const place of JSON.parse(row.placeholders)){
         const html = `${place.toUpperCase()}`
         this.form.lifecycle.displayPlaceholders.push(html)
       }

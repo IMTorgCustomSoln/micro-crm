@@ -131,6 +131,13 @@ _Minor_
   - ~~populate Log Interaction, with only one row selected~~
   - ~~before project selection, remove ReferredBy~~
   - ~~after project selection, should show PersonProjStatus (need new table)~~
+  - ReferredBy should be the contact who did that
+  - ReferencesGiven should count their references
+* LifecycleTable
+  - fix projects count
+Projects Table
+  - count of contacts for each project
+  - get count of contacts by lifecycle step
 
 
 _New_

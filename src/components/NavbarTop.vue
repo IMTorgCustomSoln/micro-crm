@@ -138,7 +138,7 @@ export default {
       this.selectedItem = option.text
       //useDisplayStore.viewSelection = option
       Object.assign(useDisplayStore.viewSelection, option)
-      console.log(JSON.parse(JSON.stringify(useDisplayStore)) )
+      //console.log(JSON.parse(JSON.stringify(useDisplayStore)) )
     },
   }
 }
