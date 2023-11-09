@@ -7,7 +7,7 @@
           <div><b>Selected:</b> {{ selectedProjects }}</div>
           <div v-if="selectedProjects">
             <Event label="Log Event" contacts="[]"/>
-            <Feedback label="Log Event" contacts="[]"/>
+            <Feedback label="Log Feedback" contacts="[]"/>
           </div>
             <b-row>
                 <b-col>

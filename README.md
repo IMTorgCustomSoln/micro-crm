@@ -130,12 +130,12 @@ _Minor_
 * Contacts Table
   - ~~populate Log Interaction, with only one row selected~~
   - ~~before project selection, remove ReferredBy~~
-  - after project selection, should show PersonProjStatus (need new table)
+  - ~~after project selection, should show PersonProjStatus (need new table)~~
 
 
 _New_
 
-* If project selected, 'Log Event' and 'New Feedback' buttons show (shown on all views)
+* ~~If project selected, 'Log Event' and 'New Feedback' buttons show (shown on all views)~~
 * Feedback
   - if no contact selected, fill-in with Account info
 * Event 
@@ -160,8 +160,8 @@ _New_
     
 * Data I/O
   - in 'Account', turn-on 'Admin' mode (the following are only available in Admin)
-  - in Data I/O, add 'Clear' all data 
-  - in Data I/O, add populate with 'Demo' data
+  - ~~in Data I/O, add 'Clear' all data~~ 
+  - ~~in Data I/O, add populate with 'Demo' data~~
 
 
 

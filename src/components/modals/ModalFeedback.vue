@@ -1,15 +1,15 @@
 <template>
     <b-button
-        v-b-modal.event-modal
+        v-b-modal.feedback-modal
         size="sm" 
         class="my-2 my-sm-0" 
         type="button"
-        @click="$bvModal.show('event-modal')"
+        @click="$bvModal.show('feedback-modal')"
     > {{ label }}
     </b-button>
 
     <b-modal 
-        id="event-modal"
+        id="feedback-modal"
         >
         <template #modal-title>
             Event
