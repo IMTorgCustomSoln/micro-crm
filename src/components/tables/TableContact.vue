@@ -44,12 +44,20 @@ export default{
     ModalContact,
     ModalEvent
   },
+  watch:{
+    getTableFields(newVal, oldVal){
+      Object.assign(this.fields, newVal)
+    }
+  },
   computed: {
-    getTableFields: () => {
-      if(useDisplayStore.projectSelection){
+    getTableFields(){
+      //works with `watch:getTableFields()` to change this.fields - TODO:too complicated!
+      if(!isEmpty(useDisplayStore.projectSelection)){
         Object.assign(this.fields, fieldsWithProject)
+        return fieldsWithProject
       } else {
         Object.assign(this.fields, fieldsWithOutProject)
+        return fieldsWithOutProject
       }
     },
     setViewSelection: () => useDisplayStore.viewSelection,
@@ -60,42 +68,55 @@ export default{
         for(const personPrjId in prjGroups){
           let person = JSON.parse(JSON.stringify( usePerson.find(personPrjId) ))
           if(person){
-            const referredBy = []
-            const statuses = []
+            let referredBy = null
+            const referralGiven = []
+            let statuses = ''
             let prjs_cnt = 0
-            let refs_cnt = 0
             let event_cnt = 0
             let feedback_cnt = 0
             for(const item of prjGroups[personPrjId]){
+              //references given
+              const peopleIdsReferredByThisPerson = usePersonProject.withAll().where('RefId', item.StatusId).get().map(item => item.StatusId)
+              const names = usePerson.where('id', peopleIdsReferredByThisPerson).get().map(item => item.Fullname)
+              referralGiven.push(...names)
+
+              //checks
               const checkSelection = !isEmpty(useDisplayStore.projectSelection)
               const checkPrj = checkSelection ? item.ProjectId == useDisplayStore.projectSelection.id : true
               if(checkPrj){
                 if(checkSelection){
                   //referred by
-                  const names = usePersonProject.withAll().where('RefId', item.StatusId).get().map(ref => ref.ReferredBy.Fullname)
-                  referredBy.push(...names)
+                  referredBy = item.ReferredBy
+
+                  //references given
+                  const peopleIdsReferredByThisPerson = usePersonProject.withAll().where('ProjectId', item.ProjectId).where('RefId', item.StatusId).get().map(item => item.StatusId)
+                  const names = usePerson.where('id', peopleIdsReferredByThisPerson).get().map(item => item.Fullname)
+                  referralGiven.length = 0
+                  referralGiven.push(...names)
+
                   //current status
                   const mxDate = new Date(Math.max(...item.StepStatus.map(e => new Date(e.StatusDate) )))
                   const currentStatus = item.StepStatus.filter(e => +e.StatusDate == +mxDate)[0]
-                  const prjName = item.Project.Name.toString()
                   const lcStepName = useLifecycleStep.find(currentStatus.LifecycleStepId).Name
+                  /*use to keep status of all projects
+                  const prjName = item.Project.Name.toString()
                   const rec = {}
                   rec[prjName] = lcStepName
-                  statuses.push(rec)
+                  statuses.push(rec)*/
+                  statuses = lcStepName
                 }
                 //attrs
                 prjs_cnt = prjs_cnt + 1
-                refs_cnt = item ? refs_cnt + usePersonProject.withAll().where('RefId', item.StatusId).get().length : refs_cnt
                 event_cnt = item.pivot ? event_cnt + useEvent.withAll().where('id', item.pivot.EventId).get().length: event_cnt
                 feedback_cnt = item ? feedback_cnt + useFeedback.withAll().where('PersonProjectId', item.id).get().length: feedback_cnt
               }
             }
             delete person['id']
             delete person['PersonProjectStatus']
-            person['ReferredBy'] = referredBy
+            person['ReferredBy'] = referredBy ?  referredBy.Fullname : null
             person['Statuses'] = statuses
             person['Projects'] = prjs_cnt
-            person['References'] = refs_cnt
+            person['References'] = referralGiven.length
             person['Events'] = event_cnt
             person['Feedback'] = feedback_cnt
             if(person['Projects']>0){
@@ -105,29 +126,13 @@ export default{
         }
       }
       return contacts
-
-      /*
-      const contacts = useCollect(usePerson.all()).sortBy('Fullname')
-      const contactsWithInteractions = usePerson.with('Statuses', (query) => {query.with('Interactions')}).get()
-      const contactsWithUseCases = usePerson.with('Statuses', (query) => {query.with('UseCases')}).get()
-
-      for(let i = 0; i < contacts.length; i++){
-        contacts[i]['interactions'] = contactsWithInteractions[i]['Statuses'][0]['Interactions'].length
-        contacts[i]['usecases'] = contactsWithUseCases[i]['Statuses'][0]['UseCases'].length
-      }
-
-      if( !isEmpty(toRaw(useDisplayStore.projectSelection))){
-        return contacts.filter(item => toRaw(item.Projects).includes(useDisplayStore.projectSelection.Name) )
-      } else {
-        return contacts
-      }*/
     },
   },
   data() {
     return {
       viewSelection:'',
       contactsSelected: [],
-      fields: null,
+      fields: [],
       form:{
         contact:{}
       }
