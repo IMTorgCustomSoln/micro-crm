@@ -133,11 +133,10 @@ _Minor_
   - ~~after project selection, should show PersonProjStatus (need new table)~~
   - ReferredBy should be the contact who did that
   - ReferencesGiven should count their references
-* LifecycleTable
-  - fix projects count
-Projects Table
-  - count of contacts for each project
-  - get count of contacts by lifecycle step
+* ~~LifecycleTable~~
+  - ~~fix projects count~~
+* ~~Projects Table~~
+  - ~~count of contacts for each project~~
 
 
 _New_
@@ -171,6 +170,12 @@ _New_
   - ~~in Data I/O, add populate with 'Demo' data~~
 
 
+_Test_
+
+* consolidate logic within component
+* ^^^ among components
+* create classes as wrappers for stores (ie. useProject)
+* create tests for each
 
 
 

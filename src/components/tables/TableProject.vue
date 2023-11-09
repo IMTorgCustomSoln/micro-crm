@@ -33,9 +33,8 @@
 import {toRaw, ref} from 'vue';
 import {useDisplayStore} from '@/main.js';
 import {useCollect} from 'pinia-orm/dist/helpers';
-import {usePerson, useProject} from '@/main.js';
+import {usePerson, useProject, usePersonProject} from '@/main.js';
 import ModalProject from '@/components/modals/ModalProject.vue';
-
 
 
 export default {
@@ -59,7 +58,17 @@ export default {
   },
   computed: {
     setViewSelection: () => useDisplayStore.viewSelection,
-    projectList: () => useCollect(useProject.all()).sortBy('Name')
+    projectList: () => {
+      const projects = JSON.parse(JSON.stringify( useProject.withAll().get() ))
+      const peoplePerProject = usePersonProject.withAll().groupBy('ProjectId').get()
+      for(const project of projects){
+        project.Contacts = peoplePerProject[project.id]
+        project.ContactCount = project.Contacts ? project.Contacts.length : 0
+        project.StartDate = new Date(project.StartDate)
+        project.EndDate = new Date(project.EndDate)
+      }
+      return projects
+    }
   },
   methods: {
     selectRow(rows){
@@ -90,6 +99,9 @@ export default {
     formatDateAssigned(value) {
       const dt = value.toDateString()
       return dt
+    },
+    formatLifecycle(value){
+      return value.Name
     }
   },
 };
@@ -126,13 +138,13 @@ const fields = [{
         key: 'Lifecycle',
         label: 'Lifecycle',
         sortable: true,
+        formatter: "formatLifecycle"
+    }, {
+        key: 'ContactCount',
+        label: 'Contacts',
+        sortable: true
     }, {
         key: 'actions',
         label: 'Actions'
     }]
-
-
-
-
-
 </script>

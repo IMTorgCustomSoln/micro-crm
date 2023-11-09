@@ -1,5 +1,8 @@
 import { defineStore } from 'pinia'
 
+
+const statuses = ['Active', 'Stand By', 'Delayed', 'Testing-Alpha', 'Testing-Beta', 'Review', 'Complete']
+
 const DisplayStore = defineStore('display',{
     state: () => {
         return {
@@ -23,11 +26,11 @@ const DisplayStore = defineStore('display',{
             //Project
             project: {
                 initialCategory: 'Software',
-                initialStatus: 'Active',
+                initialStatus: statuses[1],
                 initialStartDate: new Date(), 
                 initialLifecycle: 'default',
                 availableCategory: ['Software', 'Hardware'],
-                availableStatus: ['Active', 'Delayed', 'Complete']
+                availableStatus: statuses
             },
 
             //Defaults

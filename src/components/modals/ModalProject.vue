@@ -114,7 +114,7 @@ export default {
             this.form.project.category = prj.Category;
             this.form.project.startdate = prj.StartDate;
             this.form.project.enddate = prj.EndDate;
-            this.form.project.lifecycle = prj.Lifecycle;
+            this.form.project.lifecycle = prj.Lifecycle.Name;
             this.form.project.repos = prj.Repos;
 
             this.originalProjectName = prj.Name;
@@ -178,6 +178,7 @@ export default {
     },
     addProject() {
       const projectIds = useCollect(useProject.all()).sortBy('id').map(item => item.id)
+      const lifecycleId = useLifecycle.where('Name', this.form.project.lifecycle).get()[0]
       const checkId = projectIds.includes(this.form.project.id)
       if(checkId){
         //update existing
@@ -188,7 +189,7 @@ export default {
           Category: this.form.project.category,
           StartDate: this.form.project.startdate,
           EndDate: this.form.project.enddate,
-          Lifecycle: this.form.project.lifecycle,
+          LifecycleId: lifecycleId,
           Repos: this.form.project.repos
         });
       } else {
@@ -199,7 +200,7 @@ export default {
           Category: this.form.project.category,
           StartDate: this.form.project.startdate,
           EndDate: this.form.project.enddate,
-          Lifecycle: this.form.project.lifecycle,
+          Lifecycle: lifecycleId,
           Repos: this.form.project.repos
           });
         }
@@ -221,6 +222,7 @@ export default {
         return false
       }
       this.form.project.id = ''
+      const lifecycleId = useLifecycle.where('Name', this.form.project.lifecycle).get()[0]
       //create new project
       useProject.save({
         Name: this.form.project.name,
@@ -228,7 +230,7 @@ export default {
         Category: this.form.project.category,
         StartDate: this.form.project.startdate,
         EndDate: this.form.project.enddate,
-        Lifecycle: this.form.project.lifecycle,
+        LifecycleId: lifecycleId,
         Repos: this.form.project.repos
         });
       //update contacts with new project

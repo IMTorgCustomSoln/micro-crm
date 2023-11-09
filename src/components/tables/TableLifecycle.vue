@@ -38,9 +38,9 @@ export default {
       const lifecycles = JSON.parse(JSON.stringify( useLifecycle.withAll().get() ))
       const grpPrjs = useProject.withAll().groupBy('LifecycleId').get()
       for(const plan of lifecycles){
-        plan.Projects = grpPrjs[plan.id]
-        plan.ProjectCount = plan.Projects.length
-        plan.LifecycleStep = sortSteps(plan.LifecycleStep, 'Order')     //ensure correct order
+          plan.Projects = grpPrjs[plan.id]
+          plan.ProjectCount = plan.Projects ? plan.Projects.length : 0
+          plan.LifecycleStep = sortSteps(plan.LifecycleStep, 'Order')     //ensure correct order
       }
       return lifecycles
     }
