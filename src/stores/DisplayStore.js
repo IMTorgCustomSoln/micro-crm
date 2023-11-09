@@ -35,7 +35,7 @@ const DisplayStore = defineStore('display',{
 
             //Defaults
             defaults: {
-                event: ['Meeting', 'Building',],
+                event: ['Meeting', 'Developing', 'Planning', 'Presenting', 'TODO', 'Milestone'],
                 feedback: ['Feature', 'UseCase', 'Issue']
             }
         }

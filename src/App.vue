@@ -10,9 +10,7 @@
             <Feedback label="Log Feedback" contacts="[]"/>
           </div>
             <b-row>
-                <b-col>
                 <component :is="selectedPath"/>
-                </b-col>
             </b-row>
         </b-container>
       </main>

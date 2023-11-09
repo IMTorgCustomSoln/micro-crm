@@ -4,13 +4,22 @@
         [ref](https://codepen.io/marijoha/pen/PNjZyW)
     
     -->
-      <b-button v-b-toggle.sidebar-1>Reports</b-button>
+      <b-button v-b-toggle.sidebar-1>Details</b-button>
 
-      <b-sidebar id="sidebar-1" title="Reports" shadow>
+      <b-sidebar id="sidebar-1" title="" shadow>
         <div class="px-3 py-2">
-            <ul>
+          <strong class="hdr">Views</strong>
+            <ul style="list-style: none;">
+              <li>Events</li>
+              <li>Interactions</li>
+              <li>Feedback</li>
+            </ul>
+
+          <br>
+          <strong class="hdr">Reports</strong>
+            <ul style="list-style: none;">
                 <div v-for="report of reports" :key="report.value">
-                    <li style="list-style: none;"  @click="getSelection(report)">{{ report.text }}</li>
+                    <li @click="getSelection(report)">{{ report.text }}</li>
                 </div>
             </ul>
             <!--
@@ -44,3 +53,9 @@ export default {
 }
 
 </script>
+
+<style>
+.hdr{
+  font-size: 24px;
+}
+</style>
