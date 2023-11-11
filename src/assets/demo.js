@@ -1,11 +1,12 @@
 import {faker} from '@faker-js/faker';
 import {addDays, randomIntFromInverval} from './utils.js';
-import { useDisplayStore, useLifecycle, useProject } from '@/main.js';
+import { useDisplayStore, useAccount, useLifecycle, useProject } from '@/main.js';
 import { Feedback } from '@/stores/Feedback.js';
 import {defaultSteps, defaultLifecycle} from './defaults.js';
 
 
-
+// set for consistent results
+faker.seed(123);
 
 
 // Account
@@ -101,7 +102,7 @@ while(i < 10){
 // Populate Data
 export function populateAccountTestData(useProject){
     // Populate tables with test data
-      useProject.save({
+      useAccount.save({
         Fullname: testAccount.Fullname,
         });
 }

@@ -7,6 +7,19 @@ export function addDays(date, days){
   return resultDate
 }
 
+export function workingDaysBetweenDates(start,end) {
+  //Calculate business days between two dates
+  //ref: https://stackoverflow.com/questions/28425132/how-to-calculate-number-of-working-days-between-two-dates-in-javascript-using
+  var first = start.clone().endOf('week');
+  var last = end.clone().startOf('week');
+  var days = last.diff(first,'days') * 5 / 7;
+  var wfirst = first.day() - start.day();
+  if(start.day() == 0) --wfirst;
+  var wlast = end.day() - last.day(); 
+  if(end.day() == 6) --wlast; 
+  return wfirst + Math.floor(days) + wlast;
+}
+
 
 export function randomIntFromInverval(min, max){
   //Get random integer between two integers
@@ -233,4 +246,17 @@ export function isEmpty(obj) {
     }
   }
   return true;
+}
+
+
+export function createEmailWithLocalClient(emailTo, subject, body, ccEmail){
+  //Create an email using the user's local client
+  //ex: window.open('mailto:test@example.com?subject=subject&body=body');
+  const Mailto = `mailto:${emailTo}?`;
+  const Cc = ccEmail ? `cc=${ccEmail}` : ``;
+  const Subject = `subject=${subject}&`;
+  const Body = `body=${body}`;
+  
+  const msgInfo = Mailto + Cc + Subject + Body
+  window.location.href(msgInfo)
 }

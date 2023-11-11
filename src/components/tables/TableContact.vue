@@ -70,6 +70,7 @@ export default{
           if(person){
             let referredBy = null
             const referralGiven = []
+            const projects = []
             let statuses = ''
             let prjs_cnt = 0
             let event_cnt = 0
@@ -105,6 +106,12 @@ export default{
                   statuses.push(rec)*/
                   statuses = lcStepName
                 }
+                //projects
+                /*const rec = {}
+                rec['id'] = item.Project.id
+                rec['Name'] = item.Project.Name*/
+                projects.push(item.Project.Name)
+
                 //attrs
                 prjs_cnt = prjs_cnt + 1
                 event_cnt = item.pivot ? event_cnt + useEvent.withAll().where('id', item.pivot.EventId).get().length: event_cnt
@@ -115,11 +122,12 @@ export default{
             delete person['PersonProjectStatus']
             person['ReferredBy'] = referredBy ?  referredBy.Fullname : null
             person['Statuses'] = statuses
-            person['Projects'] = prjs_cnt
+            person['Projects'] = projects
+            person['ProjectCnt'] = prjs_cnt
             person['References'] = referralGiven.length
             person['Events'] = event_cnt
             person['Feedback'] = feedback_cnt
-            if(person['Projects']>0){
+            if(person['ProjectCnt']>0){
               contacts.push(person)
             }
           }
@@ -216,7 +224,7 @@ const fieldsWithProject = [{
         label: 'Firm',
         sortable: true,
     }, {
-        key: 'Projects',
+        key: 'ProjectCnt',
         label: 'Projects',
         sortable: true,
     }, {
@@ -266,7 +274,7 @@ const fieldsWithOutProject = [{
         label: 'Firm',
         sortable: true,
     }, {
-        key: 'Projects',
+        key: 'ProjectCnt',
         label: 'Projects',
         sortable: true,
     }, {

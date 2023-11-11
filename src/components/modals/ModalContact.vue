@@ -44,10 +44,14 @@
                   label-cols-sm="3"
                   label-align-sm="right"
                 >
-                  <b-form-input id="nested-state" v-model="form.contact.referredBy" list="person-list"></b-form-input>
-                  <datalist id="person-list">
-                    <option v-for="person in availablePersonList" :key="person.id">{{ person }}</option>
-                  </datalist>
+                  <b-form-select id="nested-state" v-model="form.contact.referredBy" :options="availablePersonList"/>
+                  <!-- // TODO:original stopped working, either use -select or -input
+                    // ref-input: https://bootstrap-vue.org/docs/components/form#datalist-helper
+                    // ref-select: https://bootstrap-vue.org/docs/components/form-select/
+                    //
+                    <b-form-datalist id="person-list" :options="availablePersonList">
+                    <option v-for="person in availablePersonList" :key="person.id">{{ person.Fullname }}</option>
+                    </b-form-datalist>-->
                 </b-form-group>
               
                 <b-form-group
@@ -92,7 +96,7 @@
                   label-cols-sm="3"
                   label-align-sm="right"
                 >
-                  <b-form-select id="nested-country" multiple v-model="form.contact.projects" :options="projectList"/>
+                  <b-form-select id="nested-country" v-model="form.contact.projects"  multiple :options="projectList"/>
                 </b-form-group>
               
             <!--</b-form-group>-->
@@ -158,10 +162,10 @@ export default {
   },
   computed:{
     projectList(){
-      return useCollect(useProject.all()).sortBy('Name').map(item=>item.Name)
+      return useProject.all().map(item=>item.Name)
     },
     availablePersonList(){
-      return useCollect(usePerson.all()).sortBy('Name').map(item=>item.Fullname)
+      return usePerson.all().map(item => item.Fullname)
     },
   },
   methods:{

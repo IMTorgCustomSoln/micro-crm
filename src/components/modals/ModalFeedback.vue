@@ -12,7 +12,7 @@
         id="feedback-modal"
         >
         <template #modal-title>
-            Event
+            Feedback
         </template>
         
         <div>
@@ -27,7 +27,12 @@
                   label-cols-sm="3"
                   label-align-sm="right"
                 >
-                  <b-form-input id="nested-street" v-model="form.feedback.type"></b-form-input>
+                  <b-form-select id="nested-street" v-model="form.feedback.type" :options="feedbackTypesList"/>
+                  <!--
+                  <b-form-input id="nested-street" v-model="form.feedback.type" list="feedback-types"></b-form-input>
+                  <datalist id="feedback-types">
+                    <option v-for="typeObj in feedbackTypesList" :key="typeObj.id" >{{ typeObj }}</option>
+                  </datalist>-->
                 </b-form-group>
 
                 <b-form-group
@@ -70,17 +75,17 @@
 
 <script>
 import {toRaw} from 'vue';
-import {useEvent} from '@/main';
+import {useFeedback} from '@/main';
 import {useDisplayStore, usePersonProject} from '@/main';
 
 export default {
-    name: 'ModalEvent',
+    name: 'ModalFeedback',
     props:{
         label: String, 
         contacts: Array
     },
     watch:{
-      contact:{
+      contacts:{
         handler: function(newItem, oldVal) {
             const contactRecords = toRaw(this.contacts)
             /*TODO
@@ -117,7 +122,8 @@ export default {
                     roll: null,
                     use: null,
                     painpoint: null
-                }
+                },
+                //feedbackTypesList: [{id:0, name:'Feature'}, {id:1, name:'UseCase'}, {id:2, name:'Issue'}]
             }
         }
     },
@@ -129,6 +135,11 @@ export default {
         this.form.account.name = account.Fullname
       })
     },*/
+    computed:{
+      feedbackTypesList: () => {
+        return useDisplayStore.defaults.feedback
+      }
+    },
     methods:{
         addFeedback(){
             //basic case of participants chosen from users
@@ -136,7 +147,7 @@ export default {
             const selectedProject = useDisplayStore.projectSelection
             for(const person of this.form.event.participants){
                 const personProject = usePersonProject.where('PersonId', person.id).where('ProjectId', selectedProject.id).get()
-                useEvent.save({
+                useFeedback.save({
                     Type: this.form.event.type,
                     PersonProject: personProject.id,
                     Datetime: this.form.event.datetime,

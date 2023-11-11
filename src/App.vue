@@ -7,7 +7,7 @@
           <div><b>Selected:</b> {{ selectedProjects }}</div>
           <div v-if="selectedProjects">
             <Event label="Log Event" contacts="[]"/>
-            <Feedback label="Log Feedback" contacts="[]"/>
+            <ModalFeedback label="Log Feedback" contacts="[]"/>
           </div>
             <b-row>
                 <component :is="selectedPath"/>
@@ -23,7 +23,7 @@ import NavbarTop from '@/components/NavbarTop.vue';
 import SideBar from '@/components/Sidebar.vue';
 
 import Event from '@/components/modals/ModalEvent.vue';
-import Feedback from '@/components/modals/ModalFeedback.vue';
+import ModalFeedback from '@/components/modals/ModalFeedback.vue';
 
 import ContactPage from '@/views/ContactPage.vue';
 import ProjectPage from '@/views/ProjectPage.vue';
@@ -36,7 +36,7 @@ export default {
     SideBar,
 
     Event,
-    Feedback,
+    ModalFeedback,
 
     ContactPage,
     ProjectPage,
