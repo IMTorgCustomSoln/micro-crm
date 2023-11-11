@@ -196,12 +196,15 @@ export function populateFeedbackTestData(useFeedback, usePersonProject, usePerso
         const Type = types[int]
         const Status = usePersonProject.all(int)[0]
         const person = usePerson.find(Status.StatusId)
+        const dt = faker.date.betweens({from: '2020-01-01T00:00:00.000Z', to:'2023-01-01T00:00:00.000Z', count:1})[0]
+        const datetime = new Date(dt)
         useFeedback.save({
-            PersonProjectId: Status.id,
+            PersonProjectId: Status.id,    //TODO: this should be personProject.id
             Type: Type,
             Role: person.Title,
             Use: faker.lorem.lines(1,3),
-            PainPoint: faker.lorem.lines(1,3)
+            PainPoint: faker.lorem.lines(1,3),
+            Datetime: datetime.toString()
         })
     }
 }

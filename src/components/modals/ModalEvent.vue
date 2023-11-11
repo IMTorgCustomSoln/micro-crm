@@ -28,7 +28,7 @@
                   label-cols-sm="3"
                   label-align-sm="right"
                 >
-                  <b-form-input id="nested-street" v-model="form.event.type"></b-form-input>
+                  <b-form-select id="nested-street" v-model="form.event.type" :options="eventTypesList"></b-form-select>
                 </b-form-group>
 
                 <b-form-group
@@ -38,6 +38,28 @@
                   label-align-sm="right"
                 >
                   <b-form-input id="nested-street" v-model="form.event.participants"></b-form-input>
+                </b-form-group>
+
+                <b-form-group
+                  label="Addresses Feedback?:"
+                  label-for="nested-street"
+                  label-cols-sm="3"
+                  label-align-sm="right"
+                >
+                  <b-form-select id="nested-street" v-model="form.event.addressFeedback" :options="feedbackList"/>
+                </b-form-group>
+                
+                <b-form-group>
+                  Current Lifecycle Step completed for all participants?
+                  <b-form-checkbox
+                    id="checkbox-1"
+                    v-model="form.event.stepCompleted"
+                    name="checkbox-1"
+                    value="not_accepted"
+                    unchecked-value="not_accepted"
+                  >
+                    check if yes 
+                  </b-form-checkbox>
                 </b-form-group>
 
                 <b-form-group
@@ -71,42 +93,13 @@
 
 <script>
 import {toRaw} from 'vue';
-import {useEvent} from '@/main';
+import {useEvent, useFeedback} from '@/main';
 import {useDisplayStore, usePersonProject} from '@/main';
 
 export default {
     name: 'ModalEvent',
     props:{
-        label: String, 
-        contacts: Array
-    },
-    watch:{
-      contact:{
-        handler: function(newItem, oldVal) {
-            const contactRecords = toRaw(this.contacts)
-            /*TODO
-            const prjLifecycle = toRaw(useDisplayStore.projectSelection)['Lifecycle']
-            const steps = useLifecycle.where('Name', prjLifecycle).get()[0]['LifecycleStep']
-            const orderedStatus = []
-            contactRecords.map(rec => {
-                const tmp = steps.filter(step => step['Name']==rec['Status'])[0]['Order']
-                orderedStatus.push({'Order': tmp, 'Status': rec['Status']})
-            })
-            const lowest = Math.min(...orderedStatus.map(item => item['Order']))
-            const lowestStatus = orderedStatus.filter(item => item['Order']==lowest)[0]['Status']
-
-            if(contactRecords.length > 0){
-                this.form.interaction.participants.length = 0
-                console.log(contactRecords)
-                this.form.interaction.lifecycleStep = lowestStatus
-                const names = contactRecords.map(item => item.Fullname)
-                Object.assign(this.form.interaction.participants, names)
-            }*/
-            
-        },
-        deep: true,
-        immediate: true
-      }
+        label: String
     },
     data(){
         return{
@@ -116,32 +109,54 @@ export default {
                   participants: null,
                   datetime: null,
                   type: null,
+                  addressFeedback: null,
+                  stepCompleted: null,
                   comments: null
                 }
             }
         }
     },
-    /*
     mounted(){
       this.$root.$on('bv::modal::show', (bvEvent, modalId) => {
         //console.log('Modal is about to be closed', bvEvent, modalId)
-        let account = useCollect(useAccount.all()).sortBy('Fullname')[0]
-        this.form.account.name = account.Fullname
+        //let account = useCollect(useAccount.all()).sortBy('Fullname')[0]
+        //this.form.account.name = account.Fullname
+        this.form.event.participants = this.sourceList.map(item => item.Fullname).join(', ')
       })
-    },*/
+    },
+    computed:{
+      getCurrentStep: () => {
+        return 1
+      },
+      sourceList: () => {
+       return useDisplayStore.participants
+      },
+      eventTypesList: ()=> {
+        return useDisplayStore.defaults.event
+      },
+      feedbackList: () => {
+        const feedback = useFeedback.all()
+        const items = feedback.map(item => `${item.Type}-${item.Role}-${item.Use}`)
+        return items
+      }
+    },
     methods:{
         addEvent(){
             //basic case of participants chosen from users
             //TODO:useAccount when the Event is a task performed by the user
             const selectedProject = useDisplayStore.projectSelection
             for(const person of this.form.event.participants){
-                const personProject = usePersonProject.where('PersonId', person.id).where('ProjectId', selectedProject.id).get()
-                useEvent.save({
-                    Type: this.form.event.type,
-                    PersonProject: personProject.id,
-                    Datetime: this.form.event.datetime,
-                    Comments: this.form.event.comments,
-                })
+                const personProject = usePersonProject.where('StatusId', person.id).where('ProjectId', selectedProject.id).get()
+                if(personProject.length == 1){
+                  useEvent.save({
+                      Type: this.form.event.type,
+                      PersonProject: personProject.id,
+                      Datetime: this.form.event.datetime,
+                      Comments: this.form.event.comments,
+                  })
+                } else {
+                  console.log(`ERROR: contact ${person} had ${personProject.length} projects`)
+                }
             }
         }
     }

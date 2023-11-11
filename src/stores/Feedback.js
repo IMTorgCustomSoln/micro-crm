@@ -1,5 +1,5 @@
 import { Model } from 'pinia-orm';
-import { StringCast } from 'pinia-orm/casts';
+import { StringCast, DateCast } from 'pinia-orm/casts';
 
 import { PersonProjectStatus } from './PersonProjectStatus';
 
@@ -14,7 +14,8 @@ export class Feedback extends Model {
             Type: this.string(""),
             Role: this.string(""),
             Use: this.string(""),
-            PainPoint: this.string("")
+            PainPoint: this.string(""),
+            Datetime: this.attr()
         }
     }
     static casts(){
@@ -22,7 +23,8 @@ export class Feedback extends Model {
           Type: StringCast,
           Role: StringCast,
           Use: StringCast,
-          PainPoint: StringCast
+          PainPoint: StringCast,
+          Datetime: DateCast
         }
     }
 }

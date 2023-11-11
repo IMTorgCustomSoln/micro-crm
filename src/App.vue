@@ -7,7 +7,7 @@
           <div><b>Selected:</b> {{ selectedProjects }}</div>
           <div v-if="selectedProjects">
             <Event label="Log Event" contacts="[]"/>
-            <ModalFeedback label="Log Feedback" contacts="[]"/>
+            <ModalFeedback label="Log Feedback"/>
           </div>
             <b-row>
                 <component :is="selectedPath"/>

@@ -34,15 +34,13 @@
 import {toRaw} from 'vue';
 import {useCollect} from 'pinia-orm/dist/helpers';
 import {useDisplayStore, usePerson, usePersonProject, useEvent, useFeedback, useLifecycleStep} from '@/main.js';
-import ModalEvent from '@/components/modals/ModalEvent.vue';
 import ModalContact from '@/components/modals/ModalContact.vue';
 
 
 export default{
   name: 'TableContact',
   components:{
-    ModalContact,
-    ModalEvent
+    ModalContact
   },
   watch:{
     getTableFields(newVal, oldVal){
@@ -118,8 +116,8 @@ export default{
                 feedback_cnt = item ? feedback_cnt + useFeedback.withAll().where('PersonProjectId', item.id).get().length: feedback_cnt
               }
             }
-            delete person['id']
-            delete person['PersonProjectStatus']
+            person['id']
+            person['PersonProjectStatus']
             person['ReferredBy'] = referredBy ?  referredBy.Fullname : null
             person['Statuses'] = statuses
             person['Projects'] = projects
@@ -149,9 +147,9 @@ export default{
   methods: {
     selectRow(rows){
       const contacts = JSON.parse(JSON.stringify(rows))
-      const results = []
       const selected = toRaw(useDisplayStore.projectSelection)
       if(!isEmpty(selected)){
+        /*
         const ids = contacts.map(item => item.id)
         const items = usePerson.where('id', ids).with('Statuses').get()
         for(const item of items){
@@ -159,11 +157,9 @@ export default{
           let tmp = item['Statuses'].filter(status => status.Project == toRaw(useDisplayStore.projectSelection).Name)[0]
           contact['Status'] = tmp['CurrentLifecycleStep']
           results.push(contact)
-        }
-      }
-
-      if(results.length > 0){
-        Object.assign(this.contactsSelected, results)
+        }*/
+        this.contactsSelected = contacts
+        useDisplayStore.participants = contacts
         console.log(this.contactsSelected)
       } else {
         this.contactsSelected.length = 0

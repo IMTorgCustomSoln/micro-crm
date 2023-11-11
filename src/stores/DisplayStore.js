@@ -21,7 +21,10 @@ const DisplayStore = defineStore('display',{
                 {value: '4', text: 'Event Summary', path:'EventReport'}
 
               ],
+
+            //User-specified
             projectSelection: {},
+            participants: [],
 
             //Project
             project: {
@@ -35,7 +38,7 @@ const DisplayStore = defineStore('display',{
 
             //Defaults
             defaults: {
-                event: ['Meeting', 'Developing', 'Planning', 'Presenting', 'TODO', 'Milestone'],
+                event: ['Message Receieved', 'Meeting', 'Developing', 'Planning', 'Presenting', 'TODO', 'Milestone'],
                 feedback: ['Feature', 'UseCase', 'Issue']
             }
         }

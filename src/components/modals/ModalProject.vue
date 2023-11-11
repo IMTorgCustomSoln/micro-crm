@@ -28,10 +28,11 @@
                   label-cols-sm="3"
                   label-align-sm="right"
                 >
+                <!--TODO: datalist for typing search (like below) does work, but it may be cleaner to just select from options-->
                   <b-form-input id="nested-state" v-model="form.project.category" list="category-list"></b-form-input>
-                  <datalist id="category-list">
+                  <b-form-datalist id="category-list">
                     <option v-for="category in availableCategoryList" :key="category.id">{{ category }}</option>
-                  </datalist>
+                  </b-form-datalist>
                 </b-form-group>
               
                 <b-form-group
@@ -152,6 +153,7 @@ export default {
   },
   computed:{
     availableCategoryList: () => {
+      //TODO:maybe this should just be the `useDisplayStore.project.availableCategory`
       let categories = useCollect(useProject.all()).sortBy('Name').map(item=>item.Category)
       if(Array.isArray(categories)){
         categories = categories.concat( toRaw(useDisplayStore.project.availableCategory) )

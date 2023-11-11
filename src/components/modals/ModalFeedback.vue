@@ -21,6 +21,16 @@
           </div>
           <b-form>
             <b-card bg-variant="light">
+
+              <b-form-group
+                  label="Source:"
+                  label-for="nested-street"
+                  label-cols-sm="3"
+                  label-align-sm="right"
+                >
+                  <b-form-input id="nested-street" v-model="form.feedback.source"></b-form-input>
+                </b-form-group>
+
                 <b-form-group
                   label="Type:"
                   label-for="nested-street"
@@ -81,61 +91,35 @@ import {useDisplayStore, usePersonProject} from '@/main';
 export default {
     name: 'ModalFeedback',
     props:{
-        label: String, 
-        contacts: Array
-    },
-    watch:{
-      contacts:{
-        handler: function(newItem, oldVal) {
-            const contactRecords = toRaw(this.contacts)
-            /*TODO
-            const prjLifecycle = toRaw(useDisplayStore.projectSelection)['Lifecycle']
-            const steps = useLifecycle.where('Name', prjLifecycle).get()[0]['LifecycleStep']
-            const orderedStatus = []
-            contactRecords.map(rec => {
-                const tmp = steps.filter(step => step['Name']==rec['Status'])[0]['Order']
-                orderedStatus.push({'Order': tmp, 'Status': rec['Status']})
-            })
-            const lowest = Math.min(...orderedStatus.map(item => item['Order']))
-            const lowestStatus = orderedStatus.filter(item => item['Order']==lowest)[0]['Status']
-
-            if(contactRecords.length > 0){
-                this.form.interaction.participants.length = 0
-                console.log(contactRecords)
-                this.form.interaction.lifecycleStep = lowestStatus
-                const names = contactRecords.map(item => item.Fullname)
-                Object.assign(this.form.interaction.participants, names)
-            }*/
-            
-        },
-        deep: true,
-        immediate: true
-      }
+        label: String
     },
     data(){
         return{
             form:{
                 error:'',
                 feedback: {
-                    personProjectId: null,
+                    source: '',
                     type: null,
-                    roll: null,
+                    role: null,
                     use: null,
                     painpoint: null
-                },
-                //feedbackTypesList: [{id:0, name:'Feature'}, {id:1, name:'UseCase'}, {id:2, name:'Issue'}]
+                }
             }
         }
     },
-    /*
     mounted(){
       this.$root.$on('bv::modal::show', (bvEvent, modalId) => {
         //console.log('Modal is about to be closed', bvEvent, modalId)
+        /*
         let account = useCollect(useAccount.all()).sortBy('Fullname')[0]
-        this.form.account.name = account.Fullname
+        this.form.account.name = account.Fullname*/
+        this.form.feedback.source = this.sourceList.map(item => item.Fullname).join(', ')
       })
-    },*/
+    },
     computed:{
+      sourceList: () => {
+       return useDisplayStore.participants
+      },
       feedbackTypesList: () => {
         return useDisplayStore.defaults.feedback
       }
@@ -143,16 +127,23 @@ export default {
     methods:{
         addFeedback(){
             //basic case of participants chosen from users
-            //TODO:useAccount when the Event is a task performed by the user
             const selectedProject = useDisplayStore.projectSelection
-            for(const person of this.form.event.participants){
-                const personProject = usePersonProject.where('PersonId', person.id).where('ProjectId', selectedProject.id).get()
-                useFeedback.save({
-                    Type: this.form.event.type,
-                    PersonProject: personProject.id,
-                    Datetime: this.form.event.datetime,
-                    Comments: this.form.event.comments,
-                })
+            const dt = new Date()
+            const dtStr = dt.toString()
+            for(const person of this.sourceList){
+                const personProject = usePersonProject.where('StatusId', person.id).where('ProjectId', selectedProject.id).get()
+                if(personProject.length == 1){
+                  useFeedback.save({
+                    PersonProjectId: personProject[0].id,
+                    Type: this.form.feedback.type,
+                    Role: this.form.feedback.role,
+                    Use: this.form.feedback.use,
+                    PainPoint: this.form.feedback.painpoint,
+                    Datetime: dtStr
+                  })
+                } else {
+                  console.log(`ERROR: contact ${person} had ${personProject.length} projects`)
+                }
             }
         }
     }
