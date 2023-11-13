@@ -23,7 +23,7 @@ export class PersonProjectStatus extends Model {
           ReferredBy: this.belongsTo(Person, 'RefId'),
           //CurrentLifecycleStep: this.string(""),
           //LifecycleStepIds: this.attr([]),
-          StepStatus: this.hasMany(StepStatus, 'StepId'),
+          StepStatus: this.hasMany(StepStatus, 'ProjectId'),
           // collections
           Events: this.hasMany(Event, 'EventId'),
           Feedback: this.hasMany(Feedback, 'UseCaseId'),
@@ -47,15 +47,16 @@ static entity = 'StepStatus'
 static fields () {
   return {
     id: this.uid(),
-    StepId: this.attr(null),
+    ProjectId: this.attr(null),
     LifecycleStepId: this.attr(),
     LifecycleStep: this.belongsTo(LifecycleStep, 'LifecycleStepId'),
-    StatusDate: this.attr()
+    CompletionDate: this.attr(),
   }
 }
 static casts(){
   return {
-    StatusDate: DateCast,
+    StartDate: DateCast,
+    EndDate: DateCast,
   }
 }
 }

@@ -1,17 +1,19 @@
-import {faker} from '@faker-js/faker';
-import {addDays, randomIntFromInverval} from './utils.js';
-import { useLifecycle, useProject } from '@/main.js';
-import { Feedback } from '@/stores/Feedback.js';
-
-
 
 
 // Lifecycle and Steps
 
+let step_Initialize = {
+    Name:'initialize',
+    DurationBizDays: 0,
+    Order:0,
+    Placeholder:[], 
+    EmailForm: ``
+}
+
 let step_Prospect = {
     Name:'prospect',
     DurationBizDays: 3,
-    Order:0,
+    Order:1,
     Placeholder:[], 
     EmailForm: ``
 }
@@ -19,7 +21,7 @@ let step_Prospect = {
 let step_Lead = {
     Name:'lead',
     DurationBizDays: 7, 
-    Order:1, 
+    Order:2, 
     Placeholder: [`<CONTACT_FULLNAME>`, `<CONTACT_REFERREDBY>`, `<PRODUCT_NAME>`, `<ACCOUNT_FULLNAME>`],
     EmailForm: `
 <CONTACT_FULLNAME>,
@@ -35,7 +37,7 @@ Respectfully,
 let step_Onboarded =  {
     Name:'onboarded',
     DurationBizDays: 14, 
-    Order:2, 
+    Order:3, 
     Placeholder: [`<CONTACT_FULLNAME>`,`<PRODUCT_NAME>`, `<ACCOUNT_FULLNAME>`],
     EmailForm: `
 <CONTACT_FULLNAME>,
@@ -52,7 +54,7 @@ Respectfully,
 let step_Followup = {
     Name: 'followup',
     DurationBizDays: 7,
-    Order: 3, 
+    Order: 4, 
     Placeholder: [`<CONTACT_FULLNAME>`,`<PRODUCT_NAME>`, `<ACCOUNT_FULLNAME>`],
     EmailForm:`
 <CONTACT_FULLNAME>,
@@ -69,7 +71,7 @@ Respectfully,
 let step_Intention = {
     Name: 'intention',
     DurationBizDays: 14,
-    Order: 4, 
+    Order: 5, 
     Placeholder: [`<CONTACT_FULLNAME>`,`<PRODUCT_NAME>`, `<ACCOUNT_FULLNAME>`],
     EmailForm:`
 <CONTACT_FULLNAME>,
@@ -82,6 +84,7 @@ Respectfully,
 `}
 
 export const defaultSteps = [
+  step_Initialize,
   step_Prospect,
   step_Lead,
   step_Onboarded,

@@ -12,6 +12,8 @@ export class Event extends Model {
           PersonProject: this.belongsToMany(PersonProjectStatus, PersonProjectStatusEvent, 'EventId', 'PersonProjectStatusId'),
           Datetime: this.attr(),
           Type: this.string(""),    // Meeting, Building, ...
+          AddressFeedback: this.attr(),
+          StepCompleted: this.attr(),
           Comments: this.string(""),
       }
   }

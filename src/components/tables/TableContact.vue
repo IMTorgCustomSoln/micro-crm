@@ -94,8 +94,8 @@ export default{
                   referralGiven.push(...names)
 
                   //current status
-                  const mxDate = new Date(Math.max(...item.StepStatus.map(e => new Date(e.StatusDate) )))
-                  const currentStatus = item.StepStatus.filter(e => +e.StatusDate == +mxDate)[0]
+                  const mxDate = new Date(Math.max(...item.StepStatus.map(e => new Date(e.CompletionDate) )))
+                  const currentStatus = item.StepStatus.filter(e => +new Date(e.CompletionDate) == +mxDate)[0]
                   const lcStepName = useLifecycleStep.find(currentStatus.LifecycleStepId).Name
                   /*use to keep status of all projects
                   const prjName = item.Project.Name.toString()

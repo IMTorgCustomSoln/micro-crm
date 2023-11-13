@@ -5,7 +5,6 @@
       <b-table
         striped hover small
         :items="eventList"
-        :fields="fields"
 
         primary-key='id'
         responsive="sm" sticky-header="1000px"
@@ -19,6 +18,7 @@
 
 
 <script>
+import { useEvent } from '@/main';
 
 export default{
     name: 'TableEvent',
@@ -26,7 +26,10 @@ export default{
         return{}
     },
     computed:{
-        eventList:()=> []
+        eventList(){
+          const results = useEvent.withAllRecursive().get()
+          return results
+        }
     }
 }
 </script>

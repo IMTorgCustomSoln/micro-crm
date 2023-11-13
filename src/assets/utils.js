@@ -7,23 +7,53 @@ export function addDays(date, days){
   return resultDate
 }
 
+
 export function workingDaysBetweenDates(start,end) {
-  //Calculate business days between two dates
+  //Calculate business days between two dates, or today, if `end` not provided.
+  /*
+  //TODO: use `moment.js`
   //ref: https://stackoverflow.com/questions/28425132/how-to-calculate-number-of-working-days-between-two-dates-in-javascript-using
-  var first = start.clone().endOf('week');
-  var last = end.clone().startOf('week');
+  var first = structuredClone(start).endOf('week');
+  var last = structuredClone(end).startOf('week');
   var days = last.diff(first,'days') * 5 / 7;
   var wfirst = first.day() - start.day();
   if(start.day() == 0) --wfirst;
   var wlast = end.day() - last.day(); 
   if(end.day() == 6) --wlast; 
   return wfirst + Math.floor(days) + wlast;
+  */
+ let diff = 0
+ if(Object.prototype.toString.call(start)!='[object Date]'){
+  start = new Date(start)
+  }
+  if(end){
+    if(Object.prototype.toString.call(end)!='[object Date]'){
+      end = new Date(end)
+    }
+    diff = end - start
+  } else {
+    const today = new Date()
+    diff = today - start
+  }
+  const diffTime = Math.abs(diff);
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  //console.log(diffTime + " milliseconds");
+  //console.log(diffDays + " days");
+ return diffDays
 }
 
 
-export function randomIntFromInverval(min, max){
+export function randomIntFromInverval(min, max, faker){
   //Get random integer between two integers
-  return Math.floor(Math.random() * (max - min + 1) + min)
+  //provide faker if a seed is needed for pseudo-random number generator
+  let result = null
+  if(!faker){
+    result = Math.floor(Math.random() * (max - min + 1) + min)
+  }else{
+    const tmp = faker.number.int({ min: 0 , max: 1}) * (max - min)
+    result = Math.floor(tmp + min)
+  }
+  return result
 }
 
 

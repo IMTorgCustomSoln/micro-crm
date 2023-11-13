@@ -149,10 +149,12 @@ export default {
                 const personProject = usePersonProject.where('StatusId', person.id).where('ProjectId', selectedProject.id).get()
                 if(personProject.length == 1){
                   useEvent.save({
-                      Type: this.form.event.type,
-                      PersonProject: personProject.id,
-                      Datetime: this.form.event.datetime,
-                      Comments: this.form.event.comments,
+                    PersonProjectId: personProject[0].id,
+                    Type: this.form.event.type,
+                    Datetime: this.form.event.datetime,
+                    AddressFeedback: this.form.event.addressFeedback,
+                    StepCompleted: this.form.event.stepCompleted,
+                    Comments: this.form.event.comments,
                   })
                 } else {
                   console.log(`ERROR: contact ${person} had ${personProject.length} projects`)

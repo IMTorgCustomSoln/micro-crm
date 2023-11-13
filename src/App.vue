@@ -28,6 +28,9 @@ import ModalFeedback from '@/components/modals/ModalFeedback.vue';
 import ContactPage from '@/views/ContactPage.vue';
 import ProjectPage from '@/views/ProjectPage.vue';
 import LifecyclePage from '@/views/LifecyclePage.vue';
+import EventReport from '@/views/EventReport.vue'
+import NextStepsReport from './views/NextStepsReport.vue';
+
 
 export default {
   name: `App`,
@@ -35,12 +38,13 @@ export default {
     NavbarTop,
     SideBar,
 
-    Event,
+    EventReport,
     ModalFeedback,
 
     ContactPage,
     ProjectPage,
     LifecyclePage,
+    NextStepsReport
   },
   data() {
     return {

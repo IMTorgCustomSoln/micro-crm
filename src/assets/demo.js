@@ -1,11 +1,10 @@
 import {faker} from '@faker-js/faker';
 import {addDays, randomIntFromInverval} from './utils.js';
-import { useDisplayStore, useAccount, useLifecycle, useProject } from '@/main.js';
-import { Feedback } from '@/stores/Feedback.js';
+import {useDisplayStore, useAccount, useLifecycle, useLifecycleStep, useProject, usePersonProject} from '@/main.js';
 import {defaultSteps, defaultLifecycle} from './defaults.js';
 
 
-// set for consistent results
+// set for repeatable results
 faker.seed(123);
 
 
@@ -20,7 +19,7 @@ export const testProjects = []
 var i = 0;
 while(i < 3){
     const dtBegin = faker.date.betweens({from: '2020-01-01T00:00:00.000Z', to:'2023-01-01T00:00:00.000Z', count:1})[0]
-    const dtEnd = addDays(dtBegin, randomIntFromInverval(100,200))
+    const dtEnd = addDays(dtBegin, randomIntFromInverval(100, 200, faker))
     const project = {
         Name: faker.commerce.productName(),
         Status: 'active',
@@ -39,7 +38,7 @@ while(i < 3){
 export const testContacts = []
 i = 0;
 while(i < 10){
-    const projects = randomIntFromInverval(0, testProjects.length-1)
+    const projects = randomIntFromInverval(0, testProjects.length-1, faker)
     const contact = {
         Fullname: faker.person.fullName(),
         Title: faker.person.jobTitle(),
@@ -50,12 +49,12 @@ while(i < 10){
         Projects: [testProjects[projects].Name],
         Statuses: []
     }
-    const numberOfEvents = randomIntFromInverval(1,5)
+    const numberOfEvents = randomIntFromInverval(1,5, faker)
     const Events = []
     let j = 0
     while(j < numberOfEvents){
         const Event = {
-            LifecycleStep: defaultSteps[randomIntFromInverval(0,3)].Name,
+            LifecycleStep: defaultSteps[randomIntFromInverval(0, 3, faker)].Name,
             Participants: [contact.Fullname],
             Datetime: new Date(),
             Comments: faker.lorem.paragraph(),
@@ -63,7 +62,7 @@ while(i < 10){
         Events.push(Event)
         j++
     }
-    const numberOfFeedbacks = randomIntFromInverval(2,3)
+    const numberOfFeedbacks = randomIntFromInverval(2, 3, faker)
     const Feedbacks = []
     j = 0
     while(j < numberOfFeedbacks){
@@ -78,19 +77,39 @@ while(i < 10){
 
     let referredBy = ''
     if(testContacts.length > 2){
-        const chooseFromContacts = randomIntFromInverval(0,testContacts.length-1)
+        const chooseFromContacts = randomIntFromInverval(0, testContacts.length-1, faker)
         referredBy = testContacts[chooseFromContacts]
     } else {
         referredBy = faker.person.fullName()
+    }
+
+    // Statuses
+    //   i) ~~earlier steps must be completed, ~~
+    //   ii) ~~initialization with step-0, has CompletionDate of begining of project,~~
+    //   iii)~CompletionDate of step-1 implies the start date of step-2
+    const finalStepIdx = randomIntFromInverval(0, defaultSteps.length-1, faker)
+    const arrSteps = Array(finalStepIdx).fill().map((element, index) => index + 1)
+    arrSteps.unshift(0)
+    const dt = new Date()
+    const StepStatuses = []
+    for(const idx of arrSteps){
+        //const step = defaultSteps[idx]
+        const date = addDays(dt, idx*10)
+        const rec = {
+            LifecycleStepId: '',
+            CompletionDate: date
+        }
+        StepStatuses.push(rec)
     }
     const status = {
         Person: contact.Fullname,
         Project: contact.Projects[0],
         ReferredBy: '',     //TODO:applying referredBy errors
-        CurrentLifecycleStep: defaultSteps[randomIntFromInverval(3,defaultSteps.length-1)].Name,
+        StepStatus: StepStatuses,
         Events: Events,
         Feedbacks: Feedbacks
     }
+    //TODO:get steps earlier in lifecycle
     contact.Statuses.push(status)
     testContacts.push(contact)
     i++
@@ -128,23 +147,29 @@ export function populateContactTestData(usePerson, useProject){
     // Populate tables with test data
     for(const contact of testContacts){
         //get random project
-        const randInt = randomIntFromInverval(0, projects.length-1)
+        const randInt = randomIntFromInverval(0, projects.length-1, faker)
         const project = projects[randInt]
 
         //get random person for referredby
         const persons = usePerson.all()
         let refId = null
         if( persons.length > 0){
-            const int = randomIntFromInverval(0,persons.length-1)
+            const int = randomIntFromInverval(0, persons.length-1, faker)
             refId = persons[int].id
         }
         //get step
         const lc = useLifecycle.withAll().get()
         const selected_lc = lc.filter(item => item.id == project.LifecycleId)[0]
-        const selected_step = selected_lc.LifecycleStep[randomIntFromInverval(0, selected_lc.LifecycleStep.length-1)]
+        const selected_step = selected_lc.LifecycleStep[randomIntFromInverval(0, selected_lc.LifecycleStep.length-1, faker)]
         
         //save
         const dt = faker.date.betweens({from: '2020-01-01T00:00:00.000Z', to:'2023-01-01T00:00:00.000Z', count:1})[0]
+        const lcSteps = useLifecycleStep.all()
+        contact.Statuses[0].StepStatus.map((item,idx) => item.LifecycleStepId = lcSteps[idx].id)
+        /*
+        usePersonProject.with('StepStatus').get()
+
+        */
         usePerson.save({
             Fullname: contact.Fullname,
             Title: contact.Title,
@@ -155,10 +180,7 @@ export function populateContactTestData(usePerson, useProject){
             PersonProjectStatus: [{
                 ProjectId: project.id,
                 RefId: refId,
-                StepStatus: [{
-                    LifecycleStepId: selected_step.id,
-                    StatusDate: new Date(dt)
-                }],
+                StepStatus: contact.Statuses[0].StepStatus,
             }]
             // collect with repos
             //...TODO
@@ -192,7 +214,7 @@ export function populateFeedbackTestData(useFeedback, usePersonProject, usePerso
     const Feedbacks = [0,1,2,3]
     for(const idea of Feedbacks){
         const types = useDisplayStore.defaults.feedback
-        const int = randomIntFromInverval(0,2)
+        const int = randomIntFromInverval(0, 2, faker)
         const Type = types[int]
         const Status = usePersonProject.all(int)[0]
         const person = usePerson.find(Status.StatusId)
