@@ -37,12 +37,12 @@ export class Event extends Model {
 }
 
 export class PersonProjectStatusEvent extends Model {
-static entity = 'PersonProjectStatusEvent'
-static primaryKey = ['PersonProjectStatusId','EventId']
-static fields(){
-  return {
-    PersonProjectStatusId: this.attr(null),
-    EventId: this.attr(null)
+  static entity = 'PersonProjectStatusEvent'
+  static primaryKey = ['PersonProjectStatusId','EventId']
+  static fields(){
+    return {
+      PersonProjectStatusId: this.attr(null),
+      EventId: this.attr(null)
+    }
   }
-}
 }

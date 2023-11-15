@@ -17,7 +17,7 @@ const testAccount = {
 // Projects
 export const testProjects = []
 var i = 0;
-while(i < 3){
+while(i < 2){
     const dtBegin = faker.date.betweens({from: '2020-01-01T00:00:00.000Z', to:'2023-01-01T00:00:00.000Z', count:1})[0]
     const dtEnd = addDays(dtBegin, randomIntFromInverval(100, 200, faker))
     const project = {
@@ -37,7 +37,7 @@ while(i < 3){
 // Contacts
 export const testContacts = []
 i = 0;
-while(i < 10){
+while(i < 5){
     const projects = randomIntFromInverval(0, testProjects.length-1, faker)
     const contact = {
         Fullname: faker.person.fullName(),

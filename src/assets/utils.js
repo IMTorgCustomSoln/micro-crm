@@ -279,7 +279,7 @@ export function isEmpty(obj) {
 }
 
 
-export function createEmailWithLocalClient(emailTo, subject, body, ccEmail){
+export function createEmailString(emailTo, subject, body, ccEmail){
   //Create an email using the user's local client
   //ex: window.open('mailto:test@example.com?subject=subject&body=body');
   const Mailto = `mailto:${emailTo}?`;
@@ -288,5 +288,9 @@ export function createEmailWithLocalClient(emailTo, subject, body, ccEmail){
   const Body = `body=${body}`;
   
   const msgInfo = Mailto + Cc + Subject + Body
-  window.location.href(msgInfo)
+  return msgInfo
+}
+
+export function createEmailInLocalClient(msgInfo){
+  window.open(msgInfo)
 }
