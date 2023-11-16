@@ -1,3 +1,8 @@
+import { toRaw } from 'vue';
+import moment from 'moment-timezone';
+
+
+
 
 // ProcessData
 export function addDays(date, days){
@@ -8,38 +13,42 @@ export function addDays(date, days){
 }
 
 
-export function workingDaysBetweenDates(start,end) {
+export function workingDaysBetweenDates(useMoment=true, start, end) {
   //Calculate business days between two dates, or today, if `end` not provided.
-  /*
+  // start < end: start occurs before end
   //TODO: use `moment.js`
   //ref: https://stackoverflow.com/questions/28425132/how-to-calculate-number-of-working-days-between-two-dates-in-javascript-using
-  var first = structuredClone(start).endOf('week');
-  var last = structuredClone(end).startOf('week');
-  var days = last.diff(first,'days') * 5 / 7;
-  var wfirst = first.day() - start.day();
-  if(start.day() == 0) --wfirst;
-  var wlast = end.day() - last.day(); 
-  if(end.day() == 6) --wlast; 
-  return wfirst + Math.floor(days) + wlast;
-  */
- let diff = 0
- if(Object.prototype.toString.call(start)!='[object Date]'){
-  start = new Date(start)
-  }
-  if(end){
-    if(Object.prototype.toString.call(end)!='[object Date]'){
-      end = new Date(end)
+  if(useMoment){
+    const startM = moment(new Date(start))
+    const endM = end ? moment(end) : moment()
+    var first = startM.clone().endOf('week');
+    var last = endM.clone().startOf('week');
+    var days = last.diff(first,'days') * 5 / 7;
+    var wfirst = first.day() - startM.day();
+    if(startM.day() == 0) --wfirst;
+    var wlast = endM.day() - last.day(); 
+    if(endM.day() == 6) --wlast; 
+    return wfirst + Math.floor(days) + wlast;
+  }else{
+   let diff = 0
+   if(Object.prototype.toString.call(start)!='[object Date]'){
+    start = new Date(start)
     }
-    diff = end - start
-  } else {
-    const today = new Date()
-    diff = today - start
+    if(end){
+      if(Object.prototype.toString.call(end)!='[object Date]'){
+        end = new Date(end)
+      }
+      diff = end - start
+    } else {
+      const today = new Date()
+      diff = today - start
+    }
+    const diffTime = Math.abs(diff);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    //console.log(diffTime + " milliseconds");
+    //console.log(diffDays + " days");
+   return diffDays
   }
-  const diffTime = Math.abs(diff);
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  //console.log(diffTime + " milliseconds");
-  //console.log(diffDays + " days");
- return diffDays
 }
 
 

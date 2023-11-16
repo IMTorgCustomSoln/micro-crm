@@ -101,7 +101,7 @@ export default {
               const completed = personProject.StepStatus.filter(step => step.CompletionDate!=null)
               const mxIdx = completed.length > 0 ? completed.length - 1 : 0
               const lastCompletedStep = personProject.StepStatus[mxIdx]
-              const daysFromLastCompletedStepStart = workingDaysBetweenDates(lastCompletedStep.CompletionDate)
+              const daysFromLastCompletedStepStart = workingDaysBetweenDates(true, toRaw(lastCompletedStep.CompletionDate) )
 
               //
               const lifecycleSteps = useLifecycle.withAllRecursive().find(personProject.Project.LifecycleId)
@@ -112,7 +112,7 @@ export default {
               const record = {}
               record.DaysUntilDue = daysUntilDue
               record.DaysInCurrentStep = daysFromLastCompletedStepStart
-              record.DaysUntilProjectEndDate = workingDaysBetweenDates(personProject.Project.EndDate)
+              record.DaysUntilProjectEndDate = workingDaysBetweenDates(true, personProject.Project.EndDate)
               record.ProjectEndDate = (new Date(personProject.Project.EndDate)).toDateString()
               record.Person = person.Fullname
               record.Project = personProject.Project.Name
