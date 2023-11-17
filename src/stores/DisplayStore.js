@@ -10,6 +10,9 @@ const DisplayStore = defineStore('display',{
             enableAdmin: true,
             populateDefault: true,
             populateTestData: true,
+            exportAppStateFileName: 'WorkSession.gz',
+
+
             viewCount: 0,
             viewSelection: {value: '1', text: 'Project', path:'ProjectPage'},
             options:[

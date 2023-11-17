@@ -96,7 +96,7 @@ import {populateAccountTestData,
         populateFeedbackTestData
         } from '@/assets/demo.js';
 
-const ExportAppStateFileName = 'WorkSession.gz'
+
 
 export default {
     name: "WorkSessionIO",
@@ -106,7 +106,16 @@ export default {
             preview:{
                 fileName:'',
                 fileSize:''
-            }
+            },
+            config: {
+                fileHandle: '',
+                fileName: '',
+                fileSize: '',
+                autoSave: true,
+            },
+            resultDisplay: {
+                error: ''
+            },
         }
     },
     computed:{
@@ -138,18 +147,21 @@ export default {
                 const readStream = new Blob( [JSON.stringify(object)], { type: 'application/json' }).stream()
                 //const compressedStream = readStream.pipeThrough(new TextEncoderStream())    //(new CompressionStream('gzip'))   TODO: I don't know why decoding pipeline fails
                 const compressedStream = readStream.pipeThrough(new CompressionStream('gzip'))
-                const fileHandle = await showSaveFilePicker( {
-                    suggestedName: ExportAppStateFileName,
-                    types: [
-                        {
-                            description: "GZIP File",
-                            accept: {
-                                "application/gzip": [".gz"]
+                if(!this.config.fileHandle){
+                    this.config.fileHandle = await showSaveFilePicker( {
+                        suggestedName: useDisplayStore.exportAppStateFileName,
+                        types: [
+                            {
+                                description: "GZIP File",
+                                accept: {
+                                    "application/gzip": [".gz"]
+                                }
                             }
-                        }
-                    ]
-                })
-                const writableStream = await fileHandle.createWritable()
+                        ]
+                    })
+                    this.config.fileName = this.config.fileHandle.name
+                }
+                const writableStream = await this.config.fileHandle.createWritable()
                 compressedStream.pipeTo(writableStream)
               } catch (err) {
                 console.error(err.name, err.message);

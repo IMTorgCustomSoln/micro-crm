@@ -81,7 +81,6 @@ export default {
             this.adminMode = !useDisplayStore.enableAdmin;
             this.adminDisplay = this.adminMode ? 'On' : 'Off';
             useDisplayStore.enableAdmin = this.adminMode;
-            console.log(useDisplayStore.enableAdmin)
         }
     }
 }
