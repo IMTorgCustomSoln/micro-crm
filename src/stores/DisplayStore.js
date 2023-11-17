@@ -12,7 +12,7 @@ const DisplayStore = defineStore('display',{
             populateTestData: true,
             exportAppStateFileName: 'WorkSession.gz',
 
-
+            //Display
             viewCount: 0,
             viewSelection: {value: '1', text: 'Project', path:'ProjectPage'},
             options:[
@@ -21,9 +21,13 @@ const DisplayStore = defineStore('display',{
                 {value: '2', text: 'Contact', path:'ContactPage'},
                 {value: '3', text: 'Lifecycle', path:'LifecyclePage'},
 
-                //Sidebar.vue
-                {value: '4', text: 'Event Summary', path:'EventReport'},
-                {value: '5', text: 'Next Steps', path:'NextStepsReport'}
+                //Sidebar.vue / views
+                {value: '4', text: 'Events', path:'EventPage'}, 
+                {value: '5', text: 'Feedback', path:'FeedbackPage'},
+
+                //Sidebar.vue / reports
+                {value: '6', text: 'Event Summary', path:'EventReport'},
+                {value: '7', text: 'Next Steps', path:'NextStepsReport'}
 
               ],
 

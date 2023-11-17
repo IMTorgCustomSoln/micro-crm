@@ -10,9 +10,9 @@
         <div class="px-3 py-2">
           <strong class="hdr">Views</strong>
             <ul style="list-style: none;">
-              <li>Events</li>
-              <li>Interactions</li>
-              <li>Feedback</li>
+              <div v-for="view of views" :key="view.value">
+                    <li @click="getSelection(view)">{{ view.text }}</li>
+                </div>
             </ul>
 
           <br>
@@ -40,7 +40,8 @@ export default {
     name: 'SideBar',
     data(){
         return{
-            reports: useDisplayStore.options.slice(3)
+          views: useDisplayStore.options.slice(3,5),
+          reports: useDisplayStore.options.slice(5)
         }
     },
     methods:{

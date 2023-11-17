@@ -25,10 +25,17 @@ import SideBar from '@/components/Sidebar.vue';
 import Event from '@/components/modals/ModalEvent.vue';
 import ModalFeedback from '@/components/modals/ModalFeedback.vue';
 
+//Navbar Views
 import ContactPage from '@/views/ContactPage.vue';
 import ProjectPage from '@/views/ProjectPage.vue';
 import LifecyclePage from '@/views/LifecyclePage.vue';
-import EventReport from '@/views/EventReport.vue'
+
+//Sidebar:Views
+import EventPage from '@/views/EventPage.vue'
+
+
+//Sidebar:Reports
+import EventSummaryReport from '@/views/EventSummaryReport.vue';
 import NextStepsReport from './views/NextStepsReport.vue';
 
 
@@ -37,13 +44,19 @@ export default {
   components:{
     NavbarTop,
     SideBar,
-
-    EventReport,
     ModalFeedback,
 
-    ContactPage,
+    //
     ProjectPage,
+    ContactPage,
     LifecyclePage,
+
+    //
+    EventPage,
+    //FeedbackPage,
+
+    //
+    EventSummaryReport,
     NextStepsReport
   },
   data() {

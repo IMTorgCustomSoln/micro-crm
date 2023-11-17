@@ -94,6 +94,15 @@ export function groupBy(list, keyGetter) {
 }
 
 
+
+export function getUniqueArrValues(arr){
+  function onlyUnique(value, index, array) {
+    return array.indexOf(value) === index;
+  }
+  return arr.filter(onlyUnique);
+}
+
+
 export function getRightSetDifferenceOfArrays(arr1, arr2){
   /*Get items in arr1 that are not in arr2
   */

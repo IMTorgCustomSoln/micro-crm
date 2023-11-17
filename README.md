@@ -163,19 +163,20 @@ _New_
     + based on simple model of org structure populated from titles / positions
     + need a modal to describe org structure model, or load org structure
     + select lines connecting referrals, order / timeline, etc.
+  - Outstanding / Unaddressed Feedback
     
-* Data I/O
-  - in 'Account', turn-on 'Admin' mode (the following are only available in Admin)
+* ~~Data I/O~~
+  - ~~in 'Account', turn-on 'Admin' mode (the following are only available in Admin)~~
   - ~~in Data I/O, add 'Clear' all data~~ 
   - ~~in Data I/O, add populate with 'Demo' data~~
 
 
 _Test_
 
-* consolidate logic within component
+* consolidate logic within component: `getters`
 * ^^^ among components
 * create classes as wrappers for stores (ie. useProject)
-* create tests for each
+* create tests for each: `vue test utils`
 
 
 

@@ -7,7 +7,7 @@
 import TableEvent from '@/components/tables/TableEvent.vue'
 
 export default {
-  name:'EventReport',
+  name:'EventPage',
   components:{
     TableEvent
   }
