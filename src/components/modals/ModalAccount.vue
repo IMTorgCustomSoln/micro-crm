@@ -22,6 +22,20 @@
                   <b-form-input id="nested-street" v-model="form.account.name"></b-form-input>
                 </b-form-group>
             </b-card>
+
+            <div>
+                <em>Admin Mode enables the user to make changes not typically available.</em>
+                <b-button 
+                    @click="toggleAdminState" 
+                    size="sm" 
+                    variant="danger"
+                    :pressed.sync="adminMode"
+                    >
+                     Admin Mode is {{ adminDisplay }}
+                </b-button>
+            </div>
+
+
         </b-form>
         </div>
         <template #modal-footer>
@@ -33,13 +47,15 @@
 
 <script>
 import { isEmpty } from '@/assets/utils';
-import {useAccount} from '@/main';
+import {useDisplayStore, useAccount} from '@/main';
 import { useCollect } from 'pinia-orm/dist/helpers';
 
 export default {
     name: 'ModalAccount',
     data(){
         return{
+            adminMode: true,
+            adminDisplay: 'On',
             form:{
                 error:'',
                 account: {
@@ -60,9 +76,13 @@ export default {
     methods:{
         addAccount(){
             return true
+        },
+        toggleAdminState(){
+            this.adminMode = !useDisplayStore.enableAdmin;
+            this.adminDisplay = this.adminMode ? 'On' : 'Off';
+            useDisplayStore.enableAdmin = this.adminMode;
+            console.log(useDisplayStore.enableAdmin)
         }
     }
 }
-
-
 </script>

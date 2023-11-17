@@ -7,6 +7,7 @@ const DisplayStore = defineStore('display',{
     state: () => {
         return {
             //Global
+            enableAdmin: true,
             populateDefault: true,
             populateTestData: true,
             viewCount: 0,

@@ -15,39 +15,42 @@
         <template #modal-title>
             Save or load current work session
         </template>
-        <br>
-        <!-- Explanation TODO:fix -->
-        <div >
-            <p>
-                <bold style="font-weight: bold">Demo: </bold>To clear all data and load the app with demo data, press here.
-                <b-button @click="populateDemoData">Add Demo</b-button>
-                <b-button @click="clearDemoData">Clear Data</b-button>
-            </p>
-
+        <div>
             <p>
                 Because this is an offline application, the Workspace cannot be automatically saved.  <bold style="font-weight: bold">If you close 
-                    your browser, all work will be lost.</bold> <br><br> 
+                    your browser, all work will be lost.</bold> <br><br>
+                To save your current Workspace data, press <code>Save</code>, below.
             </p>
-            
             <p>
-                Select a previously saved session file (ie. <code>VDI_ApplicationStateData_v*.*.*.gz'</code>) to continue your work.
+                Or, select a previously saved Workspace session file (ie. <code>MicroCRM_ApplicationStateData_v*.*.*.gz'</code>) to continue your work.
             </p>
+
             <b-form name="uploadForm">
-            
-            <label for="uploadAppDataInput" class="custom-file-upload">
-                <b-icon-cloud-arrow-up-fill class="h2 mb-0" variant="success" /> Upload
-            </label><br/>
-            <input id="uploadAppDataInput" 
-                   type="file" 
-                   @change="previewWorkspace"
-                   accept=".gz"
-            />
-            <ul class="no-li-dot">
-                <li><label for="fileName">File: &nbsp</label><output id="fileName">{{ preview.fileName }}</output></li>
-                <li><label for="fileSize">Size: &nbsp</label><output id="fileSize">{{ preview.fileSize }}</output></li>
-            </ul>
-           
+                <label for="uploadAppDataInput" class="custom-file-upload">
+                    <b-icon-cloud-arrow-up-fill class="h2 mb-0" variant="success" /> Upload Workspace
+                </label><br/>
+                <input id="uploadAppDataInput" 
+                       type="file" 
+                       @change="previewWorkspace"
+                       accept=".gz"
+                />
+                <ul class="no-li-dot">
+                    <li><label for="fileName">File: &nbsp</label><output id="fileName">{{ preview.fileName }}</output></li>
+                    <li><label for="fileSize">Size: &nbsp</label><output id="fileSize">{{ preview.fileSize }}</output></li>
+                </ul>
+                Then, press <code>Load</code> to populate the Workspace.
             </b-form>
+
+            <div v-if="getAdminState">
+                <hr>
+                <p>
+                    <bold style="font-weight: bold">Demo: </bold>For learning purposes, demo data can be loaded.  This allows the user to try features that are available, otherwise.
+                    <ul>
+                        <li>To load the app with demo data: <b-button @click="populateDemoData" size="sm" class="my-2 my-sm-0" >Load Demo</b-button></li>
+                        <li>To clear the app of all data: <b-button @click="clearDemoData" size="sm" class="my-2 my-sm-0" >Clear All Data</b-button></li>
+                    </ul>
+                </p>
+            </div>
         </div>
 
         <!-- Control -->
@@ -55,7 +58,7 @@
             <div >
                 <b-button 
                   id=''
-                  size="sm" 
+                  size="md" 
                   class="my-2 my-sm-0" 
                   type="button"
                   @click="saveWorkStream"
@@ -63,7 +66,7 @@
                 </b-button>
                 <b-button 
                   id=''
-                  size="sm" 
+                  size="md" 
                   class="my-2 my-sm-0" 
                   type="button"
                   @click="uploadAppDataInput"
@@ -105,6 +108,9 @@ export default {
                 fileSize:''
             }
         }
+    },
+    computed:{
+        getAdminState(){ return useDisplayStore.enableAdmin},
     },
     methods:{
         populateDemoData(){
@@ -195,8 +201,18 @@ export default {
 </script>
 
 
-<style>
+<style scoped>
 .no-li-dot{
     list-style-type: none;
+}
+
+.custom-file-upload {
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+}
+
+input[type="file"] {
+    display: none;
 }
 </style>
