@@ -6,7 +6,7 @@
         <b-container class="bv-example-row">
           <div><b>Selected:</b> {{ selectedProjects }}</div>
           <div v-if="selectedProjects">
-            <Event label="Log Event" contacts="[]"/>
+            <ModalEvent label="Log Event" contacts="[]"/>
             <ModalFeedback label="Log Feedback"/>
           </div>
             <b-row>
@@ -22,7 +22,7 @@ import {useDisplayStore} from '@/main.js';
 import NavbarTop from '@/components/NavbarTop.vue';
 import SideBar from '@/components/Sidebar.vue';
 
-import Event from '@/components/modals/ModalEvent.vue';
+import ModalEvent from '@/components/modals/ModalEvent.vue';
 import ModalFeedback from '@/components/modals/ModalFeedback.vue';
 
 //Navbar Views
@@ -31,7 +31,8 @@ import ProjectPage from '@/views/ProjectPage.vue';
 import LifecyclePage from '@/views/LifecyclePage.vue';
 
 //Sidebar:Views
-import EventPage from '@/views/EventPage.vue'
+import EventPage from '@/views/EventPage.vue';
+import FeedbackPage from '@/views/FeedbackPage.vue';
 
 
 //Sidebar:Reports
@@ -44,6 +45,7 @@ export default {
   components:{
     NavbarTop,
     SideBar,
+    ModalEvent,
     ModalFeedback,
 
     //
@@ -53,7 +55,7 @@ export default {
 
     //
     EventPage,
-    //FeedbackPage,
+    FeedbackPage,
 
     //
     EventSummaryReport,

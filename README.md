@@ -142,10 +142,15 @@ _Minor_
 _New_
 
 * ~~If project selected, 'Log Event' and 'New Feedback' buttons show (shown on all views)~~
-* Feedback
-  - if no contact selected, fill-in with Account info
 * Event 
+  - config modal to be used anywhere
+  - setup modal for table
   - if Type 'Dev' then possible to choose Feedback that addresses it
+* Feedback
+  - config modal to be used anywhere
+  - setup modal for table
+  - if no contact selected, fill-in with Account info
+
 
 * Left side-bar reports
   - ~~setup~~
@@ -165,14 +170,17 @@ _New_
     + select lines connecting referrals, order / timeline, etc.
   - Outstanding / Unaddressed Feedback
     
-* ~~Data I/O~~
+* Data I/O
   - ~~in 'Account', turn-on 'Admin' mode (the following are only available in Admin)~~
   - ~~in Data I/O, add 'Clear' all data~~ 
   - ~~in Data I/O, add populate with 'Demo' data~~
+  - load contact info, and associated lifecycle step, from csv
 
 
 _Test_
 
+* refactor demo.js to remove unnecessary code
+  - save data to json file
 * consolidate logic within component: `getters`
 * ^^^ among components
 * create classes as wrappers for stores (ie. useProject)

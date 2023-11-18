@@ -100,6 +100,8 @@ export default {
     name: 'ModalEvent',
     props:{
         label: String
+        //TODO: item: Array
+        //watch item to populate modal in Edit mode
     },
     data(){
         return{
