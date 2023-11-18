@@ -122,21 +122,9 @@ npm run lint
 
 _Minor_
 
-* TypeError: Converting circular structure to JSON
-* ~~if project is selected, then that row should still be highlighted after returning from another page~~
-* ~~Lifecycle view, table col Steps: space between items in array~~
+* ? TypeError: Converting circular structure to JSON
 * add selected checkmark to tables, [ref](https://stackoverflow.com/questions/66669105/how-do-i-get-the-indices-of-current-selected-rows-in-bootstrap-vues-table-when)
-* ModalLifecycle: style 'Steps:' table
-* Contacts Table
-  - ~~populate Log Interaction, with only one row selected~~
-  - ~~before project selection, remove ReferredBy~~
-  - ~~after project selection, should show PersonProjStatus (need new table)~~
-  - ~~ReferredBy should be the contact who did that~~
-  - ~~ReferencesGiven should count their references~~
-* ~~LifecycleTable~~
-  - ~~fix projects count~~
-* ~~Projects Table~~
-  - ~~count of contacts for each project~~
+
 
 
 _New_
@@ -169,6 +157,7 @@ _New_
     + need a modal to describe org structure model, or load org structure
     + select lines connecting referrals, order / timeline, etc.
   - Outstanding / Unaddressed Feedback
+    
     
 * Data I/O
   - ~~in 'Account', turn-on 'Admin' mode (the following are only available in Admin)~~
