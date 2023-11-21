@@ -1,8 +1,22 @@
 <template>
-  <div v-if="this.contactsSelected.length > 0">
-    <span>Contacts: {{ this.contactsSelected.length }}    </span>
-    <ModalEvent :contacts="contactsSelected"/>
+  <div>
+    <b-row>
+      <b-col>
+      <div v-if="selectedProjects">
+        <b-button size="sm" @click="logEvent">Log Event</b-button>
+        <ModalFeedback label="Log Feedback"/>
+      </div>
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col>
+      <div v-if="this.contactsSelected.length > 0">
+        <span>Contacts: {{ this.contactsSelected.length }}    </span>
+      </div>
+      </b-col>
+    </b-row>
   </div>
+
   <div>
   <b-table 
     striped hover small
@@ -19,12 +33,13 @@
     >
     <template #cell(actions)="row">
         <span>
-          <b-btn size="sm" @click="editContact(row)">Edit</b-btn>
-          <b-btn size="sm" @click="deleteContact(row)">Delete</b-btn>
+          <b-button size="sm" @click="editContact(row)">Edit</b-button>
+          <b-button size="sm" @click="deleteContact(row)">Delete</b-button>
         </span>
     </template>
   </b-table>
   <ModalContact :item="form.contact"/>
+  <ModalEvent :contact="contactsSelected"/>
   </div>
 
   </template>
@@ -32,15 +47,15 @@
   
 <script>
 import {toRaw} from 'vue';
-import {useCollect} from 'pinia-orm/dist/helpers';
 import {useDisplayStore, usePerson, usePersonProject, useEvent, useFeedback, useLifecycleStep} from '@/main.js';
 import ModalContact from '@/components/modals/ModalContact.vue';
-
+import ModalEvent from '@/components/modals/ModalEvent.vue'
 
 export default{
   name: 'TableContact',
   components:{
-    ModalContact
+    ModalContact,
+    ModalEvent
   },
   watch:{
     getTableFields(newVal, oldVal){
@@ -48,6 +63,9 @@ export default{
     }
   },
   computed: {
+    selectedProjects(){
+      return useDisplayStore.projectSelection.Name
+    },
     getTableFields(){
       //works with `watch:getTableFields()` to change this.fields - TODO:too complicated!
       if(!isEmpty(useDisplayStore.projectSelection)){
@@ -145,6 +163,9 @@ export default{
     };
   },
   methods: {
+    logEvent(){
+      this.$bvModal.show('event-modal')
+    },
     selectRow(rows){
       const contacts = JSON.parse(JSON.stringify(rows))
       const selected = toRaw(useDisplayStore.projectSelection)

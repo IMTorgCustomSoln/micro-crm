@@ -6,8 +6,11 @@
         <b-container class="bv-example-row">
           <div><b>Selected:</b> {{ selectedProjects }}</div>
           <div v-if="selectedProjects">
-            <ModalEvent label="Log Event" contacts="[]"/>
+            <!--
+            <ModalEvent/>
+            <b-button size="sm" @click="logEvent">Log Event</b-button>
             <ModalFeedback label="Log Feedback"/>
+            -->
           </div>
             <b-row>
                 <component :is="selectedPath"/>
@@ -71,6 +74,11 @@ export default {
     },
     selectedProjects(){
       return useDisplayStore.projectSelection.Name
+    }
+  },
+  methods:{
+    logEvent(){
+      this.$bvModal.show('event-modal')
     }
   }
 };

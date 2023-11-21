@@ -1,12 +1,4 @@
 <template>
-    <b-button
-        v-b-modal.event-modal
-        size="sm" 
-        class="my-2 my-sm-0" 
-        type="button"
-        @click="$bvModal.show('event-modal')"
-    > {{ label }}
-    </b-button>
 
     <b-modal 
         id="event-modal"
@@ -94,21 +86,21 @@
 <script>
 import {toRaw} from 'vue';
 import {useEvent, useFeedback} from '@/main';
-import {useDisplayStore, usePersonProject} from '@/main';
+import {useDisplayStore, usePersonProject, usePerson} from '@/main';
+import { isEmpty } from '@/assets/utils';
 
 export default {
     name: 'ModalEvent',
-    props:{
-        label: String
-        //TODO: item: Array
-        //watch item to populate modal in Edit mode
-    },
+    props:['event','contact'],
     data(){
         return{
+            eventsOriginal:null,
             form:{
                 error:'',
                 event: {
+                  id: null,
                   participants: null,
+                  projects:null,
                   datetime: null,
                   type: null,
                   addressFeedback: null,
@@ -123,7 +115,16 @@ export default {
         //console.log('Modal is about to be closed', bvEvent, modalId)
         //let account = useCollect(useAccount.all()).sortBy('Fullname')[0]
         //this.form.account.name = account.Fullname
+        const contact = toRaw(this.contact)
+        const event = toRaw(this.event)
+        if(contact){
         this.form.event.participants = this.sourceList.map(item => item.Fullname).join(', ')
+        }else if(event){
+          this.addItem(event)
+        }
+        else{
+          console.log('ERROR: ModalEvent')
+        }
       })
     },
     computed:{
@@ -143,21 +144,46 @@ export default {
       }
     },
     methods:{
-        addEvent(){
-            //basic case of participants chosen from users
-            //TODO:useAccount when the Event is a task performed by the user
+      addItem(event){
+        this.eventsOriginal = event
+        const personIds = event.Particpants.map(item => item.StatusId)
+        const names = usePerson.find(personIds).map(item => item.Fullname)
+
+        this.form.event.participants = names;
+        this.form.event.projects = event.Projects;
+        this.form.event.datetime = event.Date;
+        this.form.event.type = event.Type;
+        this.form.event.addressFeedback = event.AddressFeedback;
+        this.form.event.stepCompleted = event.StepCompleted;
+        this.form.event.comments = event.Comments;
+      },
+      addEvent(){
+          //basic case of participants chosen from users
+          //TODO:useAccount when the Event is a task performed by the user
             const selectedProject = useDisplayStore.projectSelection
             for(const person of this.form.event.participants){
                 const personProject = usePersonProject.where('StatusId', person.id).where('ProjectId', selectedProject.id).get()
                 if(personProject.length == 1){
-                  useEvent.save({
-                    PersonProjectId: personProject[0].id,
-                    Type: this.form.event.type,
-                    Datetime: this.form.event.datetime,
-                    AddressFeedback: this.form.event.addressFeedback,
-                    StepCompleted: this.form.event.stepCompleted,
-                    Comments: this.form.event.comments,
-                  })
+                  if(!this.event.id){
+                    useEvent.save({
+                      PersonProjectId: personProject[0].id,
+                      Type: this.form.event.type,
+                      Datetime: this.form.event.datetime,
+                      AddressFeedback: this.form.event.addressFeedback,
+                      StepCompleted: this.form.event.stepCompleted,
+                      Comments: this.form.event.comments,
+                    })
+                  }else{
+                    useEvent.save({
+                      id: this.form.event.id,
+                      PersonProjectId: personProject[0].id,
+                      Type: this.form.event.type,
+                      Datetime: this.form.event.datetime,
+                      AddressFeedback: this.form.event.addressFeedback,
+                      StepCompleted: this.form.event.stepCompleted,
+                      Comments: this.form.event.comments,
+                    })
+                  }
                 } else {
                   console.log(`ERROR: contact ${person} had ${personProject.length} projects`)
                 }

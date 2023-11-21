@@ -19,6 +19,7 @@
         </span>
     </template>
     </b-table>
+    <ModalEvent :event="form.event"/>
     </div>
 
 </template>
@@ -27,12 +28,19 @@
 <script>
 import { getUniqueArrValues } from '@/assets/utils';
 import { useEvent, usePerson } from '@/main';
+import ModalEvent from '@/components/modals/ModalEvent.vue'
 
 export default{
     name: 'TableEvent',
+    components:{
+      ModalEvent
+    },
     data(){
         return{
-          fields: tableFields
+          fields: tableFields,
+          form:{
+            event:{}
+          }
         }
     },
     computed:{
@@ -41,6 +49,7 @@ export default{
           const results = []
           for(const event of events){
             const record = {}
+            record.id = event.id
             record.Date = event.Datetime
             record.Type = event.Type
             record.Project = event.PersonProject
@@ -55,7 +64,9 @@ export default{
     },
     methods:{
       editEvent(row){
-        console.log(row)
+        const event = JSON.parse(JSON.stringify(row)).item
+        Object.assign(this.form.event, event)
+        this.$bvModal.show('event-modal')
       },
       deleteEvent(row){
         console.log(row)

@@ -163,7 +163,9 @@ _New_
   - ~~in 'Account', turn-on 'Admin' mode (the following are only available in Admin)~~
   - ~~in Data I/O, add 'Clear' all data~~ 
   - ~~in Data I/O, add populate with 'Demo' data~~
-  - load contact info, and associated lifecycle step, from csv
+  - load contact info (with project), and associated lifecycle step (assume other steps completed), from csv
+
+* enable re-ocurring logic for steps, such-as 'follow-up', 'qtrly touchbase'
 
 
 _Test_
