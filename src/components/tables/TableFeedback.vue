@@ -19,6 +19,7 @@
         </span>
       </template>
       </b-table>
+      <ModalFeedback :feedback="form.feedback"/>
     </div>
 
 </template>
@@ -26,12 +27,19 @@
 
 <script>
 import { useFeedback, usePerson } from '@/main';
+import ModalFeedback from '../modals/ModalFeedback.vue';
 
 export default{
     name: 'TableFeedback',
+    components:{
+      ModalFeedback
+    },
     data(){
         return{
-          fields: tableFields
+          fields: tableFields,
+          form:{
+            feedback:{}
+          }
         }
     },
     computed:{
@@ -54,9 +62,13 @@ export default{
     },
     methods:{
       editFeedback(row){
+        const feedback = JSON.parse(JSON.stringify(row)).item
+        Object.assign(this.form.feedback, feedback)
+        this.$bvModal.show('feedback-modal')
         console.log(row)
       },
       deleteFeedback(row){
+        //TODO
         console.log(row)
       },
       getDateString(date){

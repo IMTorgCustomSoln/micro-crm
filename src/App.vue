@@ -5,13 +5,6 @@
         <SideBar/>
         <b-container class="bv-example-row">
           <div><b>Selected:</b> {{ selectedProjects }}</div>
-          <div v-if="selectedProjects">
-            <!--
-            <ModalEvent/>
-            <b-button size="sm" @click="logEvent">Log Event</b-button>
-            <ModalFeedback label="Log Feedback"/>
-            -->
-          </div>
             <b-row>
                 <component :is="selectedPath"/>
             </b-row>

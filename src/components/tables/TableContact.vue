@@ -4,7 +4,7 @@
       <b-col>
       <div v-if="selectedProjects">
         <b-button size="sm" @click="logEvent">Log Event</b-button>
-        <ModalFeedback label="Log Feedback"/>
+        <b-button size="sm" @click="logFeedback">Log Feedback</b-button>
       </div>
       </b-col>
     </b-row>
@@ -40,6 +40,7 @@
   </b-table>
   <ModalContact :item="form.contact"/>
   <ModalEvent :contact="contactsSelected"/>
+  <ModalFeedback :source="contactsSelected"/>
   </div>
 
   </template>
@@ -50,12 +51,14 @@ import {toRaw} from 'vue';
 import {useDisplayStore, usePerson, usePersonProject, useEvent, useFeedback, useLifecycleStep} from '@/main.js';
 import ModalContact from '@/components/modals/ModalContact.vue';
 import ModalEvent from '@/components/modals/ModalEvent.vue'
+import ModalFeedback from '@/components/modals/ModalFeedback.vue'
 
 export default{
   name: 'TableContact',
   components:{
     ModalContact,
-    ModalEvent
+    ModalEvent,
+    ModalFeedback
   },
   watch:{
     getTableFields(newVal, oldVal){
@@ -165,6 +168,9 @@ export default{
   methods: {
     logEvent(){
       this.$bvModal.show('event-modal')
+    },
+    logFeedback(){
+      this.$bvModal.show('feedback-modal')
     },
     selectRow(rows){
       const contacts = JSON.parse(JSON.stringify(rows))

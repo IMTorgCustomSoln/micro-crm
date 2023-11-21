@@ -98,7 +98,6 @@ export default {
             form:{
                 error:'',
                 event: {
-                  id: null,
                   participants: null,
                   projects:null,
                   datetime: null,
@@ -164,7 +163,7 @@ export default {
             for(const person of this.form.event.participants){
                 const personProject = usePersonProject.where('StatusId', person.id).where('ProjectId', selectedProject.id).get()
                 if(personProject.length == 1){
-                  if(!this.event.id){
+                  if(!this.eventsOriginal.id){
                     useEvent.save({
                       PersonProjectId: personProject[0].id,
                       Type: this.form.event.type,
@@ -175,7 +174,7 @@ export default {
                     })
                   }else{
                     useEvent.save({
-                      id: this.form.event.id,
+                      id: this.eventsOriginal.id,
                       PersonProjectId: personProject[0].id,
                       Type: this.form.event.type,
                       Datetime: this.form.event.datetime,

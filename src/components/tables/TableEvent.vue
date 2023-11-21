@@ -69,6 +69,7 @@ export default{
         this.$bvModal.show('event-modal')
       },
       deleteEvent(row){
+        //TODO
         console.log(row)
       },
       getDateString(date){

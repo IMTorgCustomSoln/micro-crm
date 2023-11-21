@@ -1,12 +1,4 @@
 <template>
-    <b-button
-        v-b-modal.feedback-modal
-        size="sm" 
-        class="my-2 my-sm-0" 
-        type="button"
-        @click="$bvModal.show('feedback-modal')"
-    > {{ label }}
-    </b-button>
 
     <b-modal 
         id="feedback-modal"
@@ -86,15 +78,14 @@
 <script>
 import {toRaw} from 'vue';
 import {useFeedback} from '@/main';
-import {useDisplayStore, usePersonProject} from '@/main';
+import {useDisplayStore, usePersonProject, usePerson} from '@/main';
 
 export default {
     name: 'ModalFeedback',
-    props:{
-        label: String
-    },
+    props:['feedback','source'],
     data(){
         return{
+          feedbackOriginal: null,
             form:{
                 error:'',
                 feedback: {
@@ -113,7 +104,16 @@ export default {
         /*
         let account = useCollect(useAccount.all()).sortBy('Fullname')[0]
         this.form.account.name = account.Fullname*/
-        this.form.feedback.source = this.sourceList.map(item => item.Fullname).join(', ')
+        const source = toRaw(this.source)
+        const feedback= toRaw(this.feedback)
+        if(source){
+          this.form.feedback.source = this.sourceList.map(item => item.Fullname).join(', ')
+        }else if(feedback){
+          this.addItem(feedback)
+        }
+        else{
+          console.log('ERROR: ModalEvent')
+        }
       })
     },
     computed:{
@@ -125,14 +125,27 @@ export default {
       }
     },
     methods:{
-        addFeedback(){
-            //basic case of participants chosen from users
-            const selectedProject = useDisplayStore.projectSelection
-            const dt = new Date()
-            const dtStr = dt.toString()
-            for(const person of this.sourceList){
-                const personProject = usePersonProject.where('StatusId', person.id).where('ProjectId', selectedProject.id).get()
-                if(personProject.length == 1){
+      addItem(feedback){
+        this.feedbackOriginal = feedback
+        const personId = feedback.Source.StatusId
+        const name = usePerson.find(personId).Fullname
+
+        this.form.feedback.source = name;
+        this.form.feedback.type = feedback.Type;
+        this.form.feedback.role = feedback.Role;
+        this.form.feedback.use = feedback.Use;
+        this.form.feedback.painpoint = feedback.PainPoint;
+        this.form.feedback.datetime = feedback.Date;
+      },
+      addFeedback(){
+          //basic case of participants chosen from users
+          const selectedProject = useDisplayStore.projectSelection
+          const dt = new Date()
+          const dtStr = dt.toString()
+          for(const person of this.sourceList){
+              const personProject = usePersonProject.where('StatusId', person.id).where('ProjectId', selectedProject.id).get()
+              if(personProject.length == 1){
+                if(!this.feedbackOriginal.id){
                   useFeedback.save({
                     PersonProjectId: personProject[0].id,
                     Type: this.form.feedback.type,
@@ -141,11 +154,22 @@ export default {
                     PainPoint: this.form.feedback.painpoint,
                     Datetime: dtStr
                   })
-                } else {
-                  console.log(`ERROR: contact ${person} had ${personProject.length} projects`)
+                }else{
+                  useFeedback.save({
+                    id: this.feedbackOriginal.id,
+                    PersonProjectId: personProject[0].id,
+                    Type: this.form.feedback.type,
+                    Role: this.form.feedback.role,
+                    Use: this.form.feedback.use,
+                    PainPoint: this.form.feedback.painpoint,
+                    Datetime: dtStr
+                  })
                 }
-            }
-        }
+              } else {
+                console.log(`ERROR: contact ${person} had ${personProject.length} projects`)
+              }
+          }
+      }
     }
 }
 
