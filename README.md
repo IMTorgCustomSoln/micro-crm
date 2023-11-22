@@ -54,10 +54,14 @@ This project builds into a single file: ./dist/index.html using the plugin with 
 npm run build
 ```
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
+### Run Unit Tests with [Vitest](https://vitest.dev/) or Cypress
 
 ```sh
 npm run test:unit
+```
+
+```sh
+npm run cypress:open
 ```
 
 ### Lint with [ESLint](https://eslint.org/)
