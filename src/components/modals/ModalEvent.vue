@@ -145,6 +145,7 @@ export default {
     methods:{
       addItem(event){
         this.eventsOriginal = event
+        if(event.Particpants){
         const personIds = event.Particpants.map(item => item.StatusId)
         const names = usePerson.find(personIds).map(item => item.Fullname)
 
@@ -155,6 +156,7 @@ export default {
         this.form.event.addressFeedback = event.AddressFeedback;
         this.form.event.stepCompleted = event.StepCompleted;
         this.form.event.comments = event.Comments;
+        }
       },
       addEvent(){
           //basic case of participants chosen from users

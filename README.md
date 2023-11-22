@@ -130,11 +130,11 @@ _Minor_
 _New_
 
 * ~~If project selected, 'Log Event' and 'New Feedback' buttons show (shown on all views)~~
-* Event 
+* ~~Event~~ 
   - config modal to be used anywhere
   - setup modal for table
   - if Type 'Dev' then possible to choose Feedback that addresses it
-* Feedback
+* ~~Feedback~~
   - config modal to be used anywhere
   - setup modal for table
   - if no contact selected, fill-in with Account info
@@ -143,7 +143,7 @@ _New_
 * Left side-bar reports
   - ~~setup~~
 * General
-  - Project is selectable (or not - show all) within each page.  Independent of Main Selection
+  - ???Project is selectable (or not - show all) within each page.  Independent of Main Selection
   - Sections: ??? history, current, future
 * Report, Projects
   - Previous Events Summary: for selected time period: events grouped by project, filterable by Type (Discussion, Development, ...)
@@ -166,6 +166,7 @@ _New_
   - load contact info (with project), and associated lifecycle step (assume other steps completed), from csv
 
 * enable re-ocurring logic for steps, such-as 'follow-up', 'qtrly touchbase'
+* add table export-to-csv to each page
 
 
 _Test_

@@ -48,6 +48,7 @@ export default{
           const results = []
           for(const feedback of feedbacks){
             const record = {}
+            record.id = feedback.id
             record.Date = feedback.Datetime
             record.Type = feedback.Type
             record.PainPoint = feedback.PainPoint
@@ -68,8 +69,8 @@ export default{
         console.log(row)
       },
       deleteFeedback(row){
-        //TODO
-        console.log(row)
+        const feedback = JSON.parse(JSON.stringify(row)).item
+        useFeedback.where('id', feedback.id).delete()
       },
       getDateString(date){
         return (new Date(date)).toDateString()

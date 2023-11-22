@@ -1,7 +1,6 @@
 <template>
     
     <h1>Events</h1>
-    <div>
       <b-table
         striped hover small
         :items="eventList"
@@ -20,7 +19,6 @@
     </template>
     </b-table>
     <ModalEvent :event="form.event"/>
-    </div>
 
 </template>
 
@@ -69,8 +67,8 @@ export default{
         this.$bvModal.show('event-modal')
       },
       deleteEvent(row){
-        //TODO
-        console.log(row)
+        const event = JSON.parse(JSON.stringify(row)).item
+        useEvent.where('id', event.id).delete()
       },
       getDateString(date){
         return (new Date(date)).toDateString()
