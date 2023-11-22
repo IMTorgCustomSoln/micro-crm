@@ -122,29 +122,24 @@ npm run lint
 
 _Minor_
 
-* ? TypeError: Converting circular structure to JSON
 * add selected checkmark to tables, [ref](https://stackoverflow.com/questions/66669105/how-do-i-get-the-indices-of-current-selected-rows-in-bootstrap-vues-table-when)
 
 
 
 _New_
+   
+* Data I/O
+  - ~~in 'Account', turn-on 'Admin' mode (the following are only available in Admin)~~
+  - ~~in Data I/O, add 'Clear' all data~~ 
+  - ~~in Data I/O, add populate with 'Demo' data~~
+* ~~add table export-to-csv~~
+* load contact info (with project), and associated lifecycle step (assume other steps completed), from csv
+* enable re-ocurring logic for steps, such-as 'follow-up', 'qtrly touchbase'
 
-* ~~If project selected, 'Log Event' and 'New Feedback' buttons show (shown on all views)~~
-* ~~Event~~ 
-  - config modal to be used anywhere
-  - setup modal for table
-  - if Type 'Dev' then possible to choose Feedback that addresses it
-* ~~Feedback~~
-  - config modal to be used anywhere
-  - setup modal for table
-  - if no contact selected, fill-in with Account info
-
-
-* Left side-bar reports
-  - ~~setup~~
 * General
   - ???Project is selectable (or not - show all) within each page.  Independent of Main Selection
   - Sections: ??? history, current, future
+
 * Report, Projects
   - Previous Events Summary: for selected time period: events grouped by project, filterable by Type (Discussion, Development, ...)
   - Project Feedback: list of all feedback, filterable by Type (UseCase, Feature Request, Issue, ...) => ?export to trello
@@ -157,17 +152,7 @@ _New_
     + need a modal to describe org structure model, or load org structure
     + select lines connecting referrals, order / timeline, etc.
   - Outstanding / Unaddressed Feedback
-    
-    
-* Data I/O
-  - ~~in 'Account', turn-on 'Admin' mode (the following are only available in Admin)~~
-  - ~~in Data I/O, add 'Clear' all data~~ 
-  - ~~in Data I/O, add populate with 'Demo' data~~
-  - load contact info (with project), and associated lifecycle step (assume other steps completed), from csv
-
-* enable re-ocurring logic for steps, such-as 'follow-up', 'qtrly touchbase'
-* add table export-to-csv to each page
-
+* ~~add table export-to-csv to each page~~
 
 _Test_
 
