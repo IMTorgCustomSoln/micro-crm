@@ -1,31 +1,34 @@
 <template>
-    
     <div>
-      <ExportToCsv :exportArray="this.visibleRecords" />
-      <b-table
-        ref="prjTable" 
-        striped hover small
-        selectable
-        select-mode="single"
-        :items="projectList"
-        :fields="fields"
+      <b-row >
+        <ExportToCsv :exportArray="this.visibleRecords" />
+      </b-row>
 
-        primary-key='id'
-        responsive="sm" sticky-header="1000px"
-        bordered
-        thead-class="tableHead bg-dark text-white"
-        @row-selected="selectRow"  
-      >
-      <template #cell(actions)="row">
-        <span>
-          <b-btn size="sm" @click="editItem(row)">Edit</b-btn>
-          <b-btn size="sm" @click="deleteItem(row)">Delete</b-btn>
-        </span>
-      </template>
-    </b-table>
-    <ModalProject :item="form.project"/>
-    </div>
+      <b-row>
+        <b-table
+            ref="prjTable" 
+            striped hover small
+            selectable
+            select-mode="single"
+            :items="projectList"
+            :fields="fields"
 
+            primary-key='id'
+            responsive="sm" sticky-header="1000px"
+            bordered
+            thead-class="tableHead bg-dark text-white"
+            @row-selected="selectRow"  
+          >
+          <template #cell(actions)="row">
+            <span>
+              <b-btn size="sm" @click="editItem(row)">Edit</b-btn>
+              <b-btn size="sm" @click="deleteItem(row)">Delete</b-btn>
+            </span>
+          </template>
+        </b-table>
+        <ModalProject :item="form.project"/>
+      </b-row>
+  </div>
 </template>
 
 
@@ -56,10 +59,12 @@ export default {
     };
   },
   mounted() {
+    //preserve row selection after page change
     const itemIds = this.$refs.prjTable.items.map(item => item.id)
     const index = itemIds.indexOf(useDisplayStore.projectSelection.id)
     this.$refs.prjTable.selectRow(index)
 
+    //force re-run after mount
     this.getFomattedRows()
   },
   computed: {

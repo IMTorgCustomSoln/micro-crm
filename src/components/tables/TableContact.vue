@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-row>
-      <b-col>
+      <b-col cols="12">
       <div v-if="selectedProjects">
         <b-button size="sm" @click="logEvent">Log Event</b-button>
         <b-button size="sm" @click="logFeedback">Log Feedback</b-button>
@@ -12,16 +12,24 @@
       <b-col>
       <div v-if="this.contactsSelected.length > 0">
         <span>Contacts: {{ this.contactsSelected.length }}    </span>
+        <b-button size="sm" @click="clearSelected">Clear Row Selections</b-button>
       </div>
       </b-col>
     </b-row>
-  </div>
+  <b-row>
+    <b-col>
+      
+      <ExportToCsv :exportArray="this.visibleRecords" />
+    </b-col>
+  </b-row>
+
+</div>
+
 
   <div>
   <b-table 
+    ref="contactsTable"
     striped hover small
-    selectable
-    select-mode="multiple"
     :items="contactList"
     :fields="fields"
 
@@ -29,7 +37,10 @@
     responsive="sm" sticky-header="1000px"
     bordered
     thead-class="tableHead bg-dark text-white"
-    @row-selected="selectRow"  
+
+    selectable
+    select-mode="multi"
+    @row-selected="onRowSelected"  
     >
     <template #cell(actions)="row">
         <span>
@@ -52,13 +63,15 @@ import {useDisplayStore, usePerson, usePersonProject, useEvent, useFeedback, use
 import ModalContact from '@/components/modals/ModalContact.vue';
 import ModalEvent from '@/components/modals/ModalEvent.vue'
 import ModalFeedback from '@/components/modals/ModalFeedback.vue'
+import ExportToCsv from '../ExportToCsv.vue';
 
 export default{
   name: 'TableContact',
   components:{
     ModalContact,
     ModalEvent,
-    ModalFeedback
+    ModalFeedback,
+    ExportToCsv
   },
   watch:{
     getTableFields(newVal, oldVal){
@@ -157,7 +170,8 @@ export default{
   },
   data() {
     return {
-      viewSelection:'',
+      visibleRecords: [],
+      viewSelection: '',
       contactsSelected: [],
       fields: [],
       form:{
@@ -165,26 +179,47 @@ export default{
       }
     };
   },
+  mounted(){
+    //preserve row selection after page change
+    const itemIds = this.$refs.contactsTable.items.map(item => item.id)
+    const participantIds = useDisplayStore.participants.map(item => item.id)
+    for(const id of participantIds){
+      const index = itemIds.indexOf( id )
+      this.$refs.contactsTable.selectRow(index)
+    }
+
+    //force re-run after mount
+    this.getFomattedRows()
+  },
   methods: {
+    getFomattedRows(){
+      if(this){
+        for(const item of this.contactList){
+          const record = {}
+          for(const field of this.fields){
+              if(field.formatter){
+                  record[field.label] = this[field.formatter](item[field.key])
+              }else{
+                  record[field.label] = item[field.key]
+              }
+          }
+          this.visibleRecords.push(record)
+        }
+      }
+    },
     logEvent(){
       this.$bvModal.show('event-modal')
     },
     logFeedback(){
       this.$bvModal.show('feedback-modal')
     },
-    selectRow(rows){
+    clearSelected() {
+        this.$refs.contactsTable.clearSelected()
+    },
+    onRowSelected(rows){
       const contacts = JSON.parse(JSON.stringify(rows))
       const selected = toRaw(useDisplayStore.projectSelection)
       if(!isEmpty(selected)){
-        /*
-        const ids = contacts.map(item => item.id)
-        const items = usePerson.where('id', ids).with('Statuses').get()
-        for(const item of items){
-          const contact = contacts.filter(contact => contact.id == item.id)[0]
-          let tmp = item['Statuses'].filter(status => status.Project == toRaw(useDisplayStore.projectSelection).Name)[0]
-          contact['Status'] = tmp['CurrentLifecycleStep']
-          results.push(contact)
-        }*/
         this.contactsSelected = contacts
         useDisplayStore.participants = contacts
         console.log(this.contactsSelected)

@@ -1,23 +1,21 @@
 <template>
-
-    <div >
+    <div>
     <label for="downloadOutput" class="custom-file-download">
         <b-icon-box-arrow-down 
             class="h2 mb-0" 
             variant="primary"
             font-scale="0.97" 
-            /> Download
+            /> {{ label }}
     </label>
     <input id="downloadOutput" 
         type="button"
         @click="exportToCsv" 
         /> 
     </div>
-
 </template>
 
 <script>
-import {toRaw, ref} from 'vue';
+import {toRaw} from 'vue';
 
 
 export default{
@@ -25,11 +23,13 @@ export default{
     props:['exportArray'],
     data(){
         return {
-            ExportTextName: 'export.csv'
+            ExportTextName: 'export.csv',
+            label: null
         }
     },
     methods:{
         exportToCsv(e){
+            // this.$props.exportArray = [{'col1': val1, 'col2': val2, ...},...]
             //ref: https://stackoverflow.com/questions/18848860/javascript-array-to-csv
             const create = e.target
             const exportArray = toRaw(this.exportArray)
@@ -38,8 +38,19 @@ export default{
             //lineArray.push("data:text/csv;charset=utf-8," + columns.join(','))
             lineArray.push(columns.join(','))
             exportArray.forEach(function (infoArray, index) {
-                const values = columns.map(item => infoArray[item])
-                var line = values.join(",");
+                const values = columns.map(item => {
+                    //double-quote strings with commas so that they will not be separated as another cell
+                    if(typeof(infoArray[item])=='string'){
+                        if(infoArray[item].indexOf(',') != -1){
+                            return `"${infoArray[item]}"`
+                        }else{
+                            return infoArray[item]
+                        }
+                    }else{
+                        return infoArray[item]
+                    }
+            })
+                var line = values.join(',');
                 lineArray.push(line);
             });
 
@@ -86,9 +97,11 @@ input[type="button"] {
     padding: 6px 12px;
     cursor: pointer;
 }
+
+/*TODO: move to the right edge
 .move-right{
     position: absolute;
     right: 0px;
     margin-right: 35px;
-}
+}*/
 </style>
