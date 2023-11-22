@@ -11,20 +11,19 @@
     <b-row>
       <b-col>
       <div v-if="this.contactsSelected.length > 0">
-        <span>Contacts: {{ this.contactsSelected.length }}    </span>
+        <span>Contacts: {{ this.contactsSelected.length }}</span>
+        <br>
         <b-button size="sm" @click="clearSelected">Clear Row Selections</b-button>
+        <span><em>Note: only contact selections from the same project can be used to Log something.</em></span>
       </div>
       </b-col>
     </b-row>
   <b-row>
     <b-col>
-      
       <ExportToCsv :exportArray="this.visibleRecords" />
     </b-col>
   </b-row>
-
 </div>
-
 
   <div>
   <b-table 
