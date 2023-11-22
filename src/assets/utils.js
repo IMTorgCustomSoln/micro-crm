@@ -2,6 +2,18 @@ import moment from 'moment-timezone';
 
 
 
+export function getMethod(obj, methodName){
+    var res = [];
+    for(var m in obj) {
+        if(typeof obj[m] == 'function') {
+          if(m == methodName){
+            res.push(m)
+          }
+        }
+    }
+    return res;
+}
+
 
 // ProcessData
 export function addDays(date, days){

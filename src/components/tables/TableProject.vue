@@ -1,6 +1,7 @@
 <template>
     
     <div>
+      <ExportToCsv :exportArray="this.visibleRecords" />
       <b-table
         ref="prjTable" 
         striped hover small
@@ -31,19 +32,22 @@
 
 <script>
 import {toRaw, ref} from 'vue';
+import { getMethod } from '@/assets/utils';
 import {useDisplayStore} from '@/main.js';
-import {useCollect} from 'pinia-orm/dist/helpers';
 import {usePerson, useProject, usePersonProject} from '@/main.js';
 import ModalProject from '@/components/modals/ModalProject.vue';
+import ExportToCsv from '../ExportToCsv.vue';
 
 
 export default {
   name: 'TableProject',
   components:{
-    ModalProject
+    ModalProject,
+    ExportToCsv 
   },
   data() {
     return {
+      visibleRecords: [],
       viewSelection:'',
       fields: fields,
       form:{
@@ -55,6 +59,8 @@ export default {
     const itemIds = this.$refs.prjTable.items.map(item => item.id)
     const index = itemIds.indexOf(useDisplayStore.projectSelection.id)
     this.$refs.prjTable.selectRow(index)
+
+    this.getFomattedRows()
   },
   computed: {
     setViewSelection: () => useDisplayStore.viewSelection,
@@ -71,6 +77,21 @@ export default {
     }
   },
   methods: {
+    getFomattedRows(){
+      if(this){
+        for(const item of this.projectList){
+          const record = {}
+          for(const field of this.fields){
+              if(field.formatter){
+                  record[field.label] = this[field.formatter](item[field.key])
+              }else{
+                  record[field.label] = item[field.key]
+              }
+          }
+          this.visibleRecords.push(record)
+        }
+      }
+    },
     selectRow(rows){
       const prj = JSON.parse(JSON.stringify(rows))[0]
       if(prj){
