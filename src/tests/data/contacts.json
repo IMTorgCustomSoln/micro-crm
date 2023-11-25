@@ -1,4 +1,5 @@
-[
+{
+  "contacts": [
     {
       "id": "VUoz14MCr4L6oJ15Nxm05",
       "Fullname": "Yvette Medhurst",
@@ -155,3 +156,4 @@
         }]
     }
 ]
+}

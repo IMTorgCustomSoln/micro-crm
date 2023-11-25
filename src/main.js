@@ -60,11 +60,29 @@ export const testLifecycle = [defaultLifecycle]
 if(useDisplayStore.populateDefault){
     for(const plan of testLifecycle){
         useLifecycle.save({
-              Name: plan.Name,
-              LifecycleStep: plan.LifecycleStep
-            });
+          id: "TJBQwoU9w3tOmYmEF_7cy",
+          Name: plan.Name,
+          LifecycleStep: plan.LifecycleStep
+        });
       }
-}
+}/*
+const lifecycleSteps = []
+for(const step of defaultSteps){
+    const newStep = new LifecycleStep({
+        id: step.id,
+        Name: step.Name,
+        DurationBizDays: step.DurationBizDays,
+        Order: step.Order,
+        Placeholder: step.Placeholder, 
+        EmailForm: step.EmailForm
+    })
+    lifecycleSteps.push(newStep)
+  }
+useLifecycle.save({
+    id: "TJBQwoU9w3tOmYmEF_7cy",
+    Name: "default",
+    LifecycleStep: lifecycleSteps
+})*/
 
 
 app.mount('#app')

@@ -47,7 +47,6 @@
                     <bold style="font-weight: bold">Demo: </bold>For learning purposes, demo data can be loaded.  This allows the user to try features that are available, otherwise.
                     <ul>
                         <li>To load the app with demo data: <b-button @click="populateDemoData" size="sm" class="my-2 my-sm-0" >Load Demo</b-button></li>
-                        <li>Test stores using demo data: <b-button @click="testDemoData" size="sm" class="my-2 my-sm-0" >Test Demo</b-button></li>
                         <li>To clear the app of all data: <b-button @click="clearDemoData" size="sm" class="my-2 my-sm-0" >Clear All Data</b-button></li>
                     </ul>
                 </p>
@@ -80,7 +79,8 @@
 </template>
 
 <script>
-import { useDisplayStore, 
+import { useDisplayStore,
+            useLifecycle, 
             useAccount, 
             useProject, 
             usePerson,
@@ -90,7 +90,8 @@ import { useDisplayStore,
         } from '@/main';
 import { getFormattedFileSize, getSetDifferenceOfArrays } from '../assets/utils.js';
 
-import {populateAccountTestData,
+import {populateLifecycleTestData,
+        populateAccountTestData,
         populateProjectTestData, 
         populateContactTestData,
         populateEventTestData,
@@ -126,18 +127,13 @@ export default {
         populateDemoData(){
             //load test data
             if(useDisplayStore.populateTestData){
+                populateLifecycleTestData(useLifecycle)
                 populateAccountTestData(useAccount)
                 populateProjectTestData(useProject)
                 populateContactTestData(usePerson, useProject)
                 populateEventTestData(useEvent, usePersonProject, usePerson)
                 populateFeedbackTestData(useFeedback, usePersonProject, usePerson)
             }
-        },
-        testDemoData(){
-            testLifecycleData()
-            testAccountData()
-            testProjectData()
-            //TODO:more
         },
         clearDemoData(){
             const keys = Object.keys(localStorage)
