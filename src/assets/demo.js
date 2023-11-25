@@ -33,8 +33,12 @@ export function populateProjectTestData(useProject){
     const check1 = useProject.all().length == 2
     console.log(`check-1 useProject: ${check1}`)
 }
-export function populateContactTestData(usePerson, useProject){
+export function populateContactTestData(usePerson){
+    const {contacts} = dataContacts
+    usePerson.save(contacts)
 
+    const check1 = usePerson.all().length == 5
+    console.log(`check-1 usePerson: ${check1}`)
 }
 export function populateEventTestData(useEvent, usePersonProject, usePerson){
 
