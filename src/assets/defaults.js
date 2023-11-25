@@ -3,6 +3,7 @@
 // Lifecycle and Steps
 
 let step_Initialize = {
+    id:"2MJ-Mqib3fKLH6S30UdBk",
     Name:'initialize',
     DurationBizDays: 0,
     Order:0,
@@ -11,6 +12,7 @@ let step_Initialize = {
 }
 
 let step_Prospect = {
+    id:"9BITiki6IEDIdBVBX83y_",
     Name:'prospect',
     DurationBizDays: 3,
     Order:1,
@@ -19,6 +21,7 @@ let step_Prospect = {
 }
 
 let step_Lead = {
+    id:"KbxvZJDuaZ4qQyffv3Eqg",
     Name:'lead',
     DurationBizDays: 7, 
     Order:2, 
@@ -35,6 +38,7 @@ Respectfully,
 `}
 
 let step_Onboarded =  {
+    id:"W_SBuP7rUIYCp3I2icMKR",
     Name:'onboarded',
     DurationBizDays: 14, 
     Order:3, 
@@ -52,6 +56,7 @@ Respectfully,
 `}
 
 let step_Followup = {
+    id:"llAA0NXqiTdvI9-9JIw6P",
     Name: 'followup',
     DurationBizDays: 7,
     Order: 4, 
@@ -69,6 +74,7 @@ Respectfully,
 `}
 
 let step_Intention = {
+    id:"yt20Divoth_pYZoIZUnft",
     Name: 'intention',
     DurationBizDays: 14,
     Order: 5, 
