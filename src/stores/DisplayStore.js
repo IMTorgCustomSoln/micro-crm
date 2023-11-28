@@ -6,7 +6,7 @@ const statuses = ['Active', 'Stand By', 'Delayed', 'Testing-Alpha', 'Testing-Bet
 const DisplayStore = defineStore('display',{
     state: () => {
         return {
-            //Global
+            //Admin
             enableAdmin: true,
             populateDefault: true,
             populateTestData: true,
@@ -34,6 +34,7 @@ const DisplayStore = defineStore('display',{
             //User-specified
             projectSelection: {},
             participants: [],
+            isNavOpen: false,
 
             //Project
             project: {
@@ -51,6 +52,15 @@ const DisplayStore = defineStore('display',{
                 feedback: ['Feature', 'UseCase', 'Issue']
             }
         }
+    },
+    actions:{
+        setIsNavOpen(yesno) {
+            this.isNavOpen = yesno;
+          },
+        toggleNav() {
+            this.isNavOpen = !this.isNavOpen;
+            console.log('toggled!')
+          }
     }
 })
 
