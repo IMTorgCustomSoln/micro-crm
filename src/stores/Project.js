@@ -1,6 +1,6 @@
 import { Model } from 'pinia-orm';
 import { StringCast, DateCast } from 'pinia-orm/casts';
-import { useDisplayStore, useProject, usePersonProject } from '@/main';
+import { useDisplayStore, usePersonProject } from '@/main';
 import { Lifecycle } from './Lifecycle';
 
 
@@ -28,7 +28,7 @@ export class Project extends Model {
       EndDate: DateCast
     }
   }
-  get projectList () {
+  get projectFull () {
     const project = {
       id: this.id,
       Name: this.Name,

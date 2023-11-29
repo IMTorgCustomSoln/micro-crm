@@ -1,7 +1,8 @@
 import { Model } from 'pinia-orm';
 import { StringCast, DateCast } from 'pinia-orm/casts';
-import { useDisplayStore } from '@/main';
+import { useDisplayStore, usePerson } from '@/main';
 import { PersonProjectStatus } from '@/stores/PersonProjectStatus';
+import { isEmpty } from '@/assets/utils';
 
 
 export class Event extends Model {
@@ -33,6 +34,24 @@ export class Event extends Model {
           }
         }
       }
+    }
+    get eventFull(){
+      if(isEmpty(this.PersonProject)){
+        throw `ERROR: must query using 'useEvent.all()' to 
+                ensure all fields are populated`
+    }
+      const persons = this.PersonProject.map(item => usePerson.find( item.StatusId ) )
+      const event = {
+        id: this.id,
+        Date: new Date(this.Datetime),
+        Type: this.Type,
+        Project: this.PersonProject,
+        Particpants: persons,
+        StepCompleted: this.StepCompleted,
+        AddressFeedback: this.AddressFeedback,
+        Comments: this.Comments
+      }
+      return event
     }
 }
 

@@ -90,6 +90,7 @@ import { useDisplayStore,
         } from '@/main';
 import { getFormattedFileSize, getSetDifferenceOfArrays } from '../assets/utils.js';
 
+// fixed values
 import {populateLifecycleTestData,
         populateAccountTestData,
         populateProjectTestData, 
@@ -97,7 +98,16 @@ import {populateLifecycleTestData,
         populateEventTestData,
         populateFeedbackTestData
         } from '@/assets/demo.js';
-
+/*
+// generated values
+import {populateLifecycleTestData,
+        populateAccountTestData,
+        populateProjectTestData, 
+        populateContactTestData,
+        populateEventTestData,
+        populateFeedbackTestData
+        } from '@/assets/generateData'
+*/
 
 
 export default {

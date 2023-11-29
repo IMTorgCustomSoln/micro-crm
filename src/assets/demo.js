@@ -1,3 +1,5 @@
+import { arraysEqual } from './utils';
+
 import {
     useDisplayStore, 
     useAccount, 
@@ -11,6 +13,10 @@ import {
 import * as dataAccount from '@/tests/data/account'
 import * as dataProjects from '@/tests/data/projects'
 import * as dataContacts from '@/tests/data/contacts'
+import * as dataEvents from '@/tests/data/events'
+import * as dataFeedbacks from '@/tests/data/feedback'
+
+
 
 
 export function populateLifecycleTestData(useLifecycle){
@@ -23,26 +29,59 @@ export function populateAccountTestData(useAccount){
     useAccount.save(account)
 
     const check1 = useAccount.all()[0].Fullname == "John Doe"
+    const check2 = arraysEqual( Object.keys(useAccount.all()[0]), Object.keys(account) )
     console.log(`check-1 useAcccount: ${check1}`)
+    console.log(`check-2 useAcccount: ${check2}`)
 }
 
 export function populateProjectTestData(useProject){
     const {projects} = dataProjects
     useProject.save(projects)
 
-    const check1 = useProject.all().length == 2
+    const projectList = useProject.withAll().get().map(item => item.projectFull)
+    const check1 = projectList.length == 2
+    const check2 = arraysEqual( Object.keys(useProject.all()[0]).sort(), Object.keys(projects[0]).sort() )
     console.log(`check-1 useProject: ${check1}`)
+    console.log(`check-2 useProject: ${check2}`)
+    
 }
 export function populateContactTestData(usePerson){
     const {contacts} = dataContacts
     usePerson.save(contacts)
 
-    const check1 = usePerson.all().length == 5
+    const personList = usePerson.all().map(item => item.personFull)
+    const check1 = personList.length == 5
+    const check2 = arraysEqual( Object.keys(usePerson.all()[0]).sort(), Object.keys(contacts[0]).sort() )
+
+    const projectList = useProject.withAll().get().map(item => item.projectFull)
+    const check3 = projectList[0].ContactCount == 2 && projectList[1].ContactCount == 3
     console.log(`check-1 usePerson: ${check1}`)
+    console.log(`check-2 usePerson: ${check2}`)
+    console.log(`check-3 useProject: ${check3}`)
 }
-export function populateEventTestData(useEvent, usePersonProject, usePerson){
+export function populateEventTestData(useEvent){
+    const {events} = dataEvents
+    useEvent.save(events)
 
+    const eventList = useEvent.all().map(item => item.eventFull)
+    const eventFields = ['AddressFeedback', 'Comments', 'Datetime', 'PersonProject', 'StepCompleted', 'Type', 'id']
+    const check1 = eventList.length == 1
+    const check2 = arraysEqual( Object.keys(useEvent.all()[0]).sort(), eventFields.sort())
+    console.log(`check-1 useEvent: ${check1}`)
+    console.log(`check-2 useEvent: ${check2}`)
 }
-export function populateFeedbackTestData(useFeedback, usePersonProject, usePerson){
+export function populateFeedbackTestData(useFeedback){
+    const {feedbacks} = dataFeedbacks
+    useFeedback.save(feedbacks)
 
+    const feedbackList = useFeedback.withAll().get().map(item => item.feedbackFull)
+    const check1 = feedbackList.length == 2
+    const check2 = arraysEqual( Object.keys(useFeedback.all()[0]).sort(), Object.keys(feedbacks[0]).sort() )
+    console.log(`check-1 useFeedback: ${check1}`)
+    console.log(`check-2 useFeedback: ${check2}`)
+}
+export function populatePersonProject(usePersonProject){
+    const personProjectList = usePersonProject.withAll().get().map(item => item.personProjectFull)
+    const check1 = personProjectList.length == 5
+    console.log(`check-1 usePersonProject: ${check1}`)
 }

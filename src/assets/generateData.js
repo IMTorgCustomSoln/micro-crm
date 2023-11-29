@@ -116,7 +116,11 @@ while(i < 5){
 }
 
 
-
+// Lifecycle Data (same as demo.js)
+export function populateLifecycleTestData(useLifecycle){
+    const check1 = useLifecycle.all()[0].Name == "default"
+    console.log(`check-1 useLifecycle: ${check1}`)
+}
 
 // Populate Data
 export function populateAccountTestData(useAccount){

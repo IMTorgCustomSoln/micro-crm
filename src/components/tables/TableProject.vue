@@ -70,7 +70,7 @@ export default {
   computed: {
     setViewSelection: () => useDisplayStore.viewSelection,
     projectList: () => {
-      const projects = useProject.withAll().get().map(item => item.projectList)
+      const projects = useProject.withAll().get().map(item => item.projectFull)
       return projects
     }
   },
