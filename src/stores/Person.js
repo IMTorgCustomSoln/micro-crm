@@ -53,6 +53,31 @@ export class Person extends Model {
     }
     return person
   }
+  get referredBy(){
+    let prjGroups = []
+    //project selected => Name
+    if(!isEmpty(useDisplayStore.projectSelection)){
+      prjGroups = usePersonProject.withAll()
+                          .where('PersonId', this.id)
+                          .where('ProjectId', useDisplayStore.projectSelection.id)
+                          .get()
+      if(prjGroups.length==1){
+        return prjGroups[0].ReferredBy
+      }else{
+        return null
+      }
+    //no project selected => count
+    }else{
+      prjGroups = usePersonProject.withAll()
+                          .where('PersonId', this.id)
+                          .get()
+      if(prjGroups){
+        return prjGroups.map(item => item.RefId).length
+      }else{
+        return null
+      }
+    }
+  }
   get personWithSelectedProject(){
     //record
     const person = {
@@ -63,12 +88,12 @@ export class Person extends Model {
       Number: this.Number,
       Office: this.Office,
       Firm: this.Firm,
-      PersonProjectStatus: null,
-      ReferredBy: null,
+      //PersonProjectStatus: null,
+      ReferredBy: this.referredBy,
       Statuses: null,
       Projects: null,
       ProjectCnt: null,
-      References: null,
+      ReferencesGiven: null,
       Events: null,
       Feedback: null,
     }
@@ -85,18 +110,21 @@ export class Person extends Model {
     if(isOneProjectGroup){
       return;
     }
+    person['Projects'] =  prjGroups
     //references given
     const peopleIdsReferredByThisPerson = usePersonProject.withAll()
                                             .where('ProjectId', useDisplayStore.projectSelection.id)
                                             .where('RefId', person.id)
                                             .get().map(item => item.PersonId)
     const names = usePerson.where('id', peopleIdsReferredByThisPerson).get().map(item => item.Fullname)
-    person['References'] = names.length
+    person['ReferencesGiven'] = names.length
     //current status
     const mxDate = new Date(Math.max(...prjGroups[0].StepStatus.map(e => new Date(e.CompletionDate) )))
     const currentStatus = prjGroups[0].StepStatus.filter(e => +new Date(e.CompletionDate) == +mxDate)[0]
     const lcStepName = useLifecycleStep.find(currentStatus.LifecycleStepId).Name
     person['Statuses'] =lcStepName
+    person['Events'] = prjGroups.map(function (item) { return this.acc += item.Events.length; }, { acc: 0 })[prjGroups.length - 1]
+    person['Feedback'] = prjGroups.map(function (item) { return this.acc += item.Feedback.length; }, { acc: 0 })[prjGroups.length - 1]
     return person
   }
   get personWithProjectFull(){
@@ -110,24 +138,24 @@ export class Person extends Model {
       Office: this.Office,
       Firm: this.Firm,
 
-      PersonProjectStatus: null,
-      ReferredBy: null,
+      //PersonProjectStatus: null,
+      ReferredBy: this.referredBy,
       Statuses: null,
 
       Projects: null,
       ProjectCnt: null,
-      References: this.ReferencesGiven.length,
+      ReferencesGiven: this.ReferencesGiven.length,
       Events: null,
       Feedback: null,
     }
     //all projects associated with person
     const prjGroups = usePersonProject.withAll().where('PersonId', this.id).get()
     if(!isEmpty(prjGroups)){
-      person['Projects'] = prjGroups.map(item => item.Name)
+      person['Projects'] = prjGroups
       person['ProjectCnt'] = prjGroups.length
       person['Events'] = prjGroups.map(function (item) { return this.acc += item.Events.length; }, { acc: 0 })[prjGroups.length - 1]
       person['Feedback'] = prjGroups.map(function (item) { return this.acc += item.Feedback.length; }, { acc: 0 })[prjGroups.length - 1]
     }
     return person
-      }
+  }
 }

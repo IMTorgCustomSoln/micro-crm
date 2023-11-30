@@ -12,14 +12,6 @@
         <div>
           <b-form>
             <b-card bg-variant="light">
-              <!--
-              <b-form-group
-                label-cols-lg="3"
-                label=""
-                label-size="lg"
-                label-class="font-weight-bold pt-0"
-                class="mb-0"
-              >-->
                 <b-form-group
                   label="Name:"
                   label-for="nested-street"
@@ -122,7 +114,7 @@ import { useCollect } from 'pinia-orm/dist/helpers';
 
 export default {
   name: 'ModalContact',
-  props:['item'],
+  props:['item'],     //TODO: remember to use raw data when needed
   watch: { 
       item: {
           handler: function(newItem, oldVal) {
@@ -135,7 +127,8 @@ export default {
             this.form.contact.number = contact.Number;
             this.form.contact.office = contact.Office;
             this.form.contact.firm = contact.Firm;
-            this.form.contact = {...this.form.contact, projects: contact.Projects};
+            const projects = contact.Projects.map(item => item.Project.Name)
+            this.form.contact = {...this.form.contact, projects: projects};
 
             this.$bvModal.show('new-lifecycle-modal');
             },
@@ -159,6 +152,12 @@ export default {
         }
       }
     }
+  },
+  mounted(){
+    this.$root.$on('bv::modal::hidden', (bvEvent, modalId) => {
+      //console.log('Modal is about to be closed', bvEvent, modalId)
+      this.initializeFormValues()
+    })
   },
   computed:{
     projectList(){

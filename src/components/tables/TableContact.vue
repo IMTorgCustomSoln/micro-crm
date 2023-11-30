@@ -58,11 +58,12 @@
   
 <script>
 import {toRaw} from 'vue';
+import {isEmpty} from '@/assets/utils'
 import {useDisplayStore, usePerson, usePersonProject, useEvent, useFeedback, useLifecycleStep} from '@/main.js';
 import ModalContact from '@/components/modals/ModalContact.vue';
 import ModalEvent from '@/components/modals/ModalEvent.vue'
 import ModalFeedback from '@/components/modals/ModalFeedback.vue'
-import ExportToCsv from '../ExportToCsv.vue';
+import ExportToCsv from '@/components/ExportToCsv.vue';
 
 export default{
   name: 'TableContact',
@@ -170,21 +171,17 @@ export default{
     deleteContact(row){
       const contact = JSON.parse(JSON.stringify(row)).item
       usePerson.where('id', contact.id).delete()
-    }
-  },
-};
-
-
-
-
-function isEmpty(obj) {
-  for (const prop in obj) {
-    if (Object.hasOwn(obj, prop)) {
-      return false;
+    },
+    formatReferredBy(val){
+      if(!isEmpty(useDisplayStore.projectSelection)){
+        return val ? val.Fullname : ''
+      }else{
+        return val
+      }
     }
   }
-  return true;
-}
+};
+
 
 
 // Table data items
@@ -199,7 +196,8 @@ const fieldsWithProject = [{
     }, {
         key: 'ReferredBy',
         label: 'Referred By',
-        sortable: true
+        sortable: true,
+        formatter: 'formatReferredBy'
     }, {
         key: 'Email',
         label: 'Email',
@@ -217,20 +215,16 @@ const fieldsWithProject = [{
         label: 'Firm',
         sortable: true,
     }, {
-        key: 'ProjectCnt',
-        label: 'Projects',
-        sortable: true,
-    }, {
         key: 'Statuses',
         label: 'Status',
         sortable: true,
     }, {
-        key: 'Events',
-        label: 'Events',
+        key: 'ReferencesGiven',
+        label: 'References Given',
         sortable: true,
     }, {
-        key: 'References',
-        label: 'References',
+        key: 'Events',
+        label: 'Events',
         sortable: true,
     }, {
         key: 'Feedback',
@@ -251,6 +245,11 @@ const fieldsWithOutProject = [{
         label: 'Title',
         sortable: true
     }, {
+        key: 'ReferredBy',
+        label: 'Referred By',
+        sortable: true,
+        formatter: 'formatReferredBy'
+    }, {
         key: 'Email',
         label: 'Email',
         sortable: true,
@@ -271,12 +270,12 @@ const fieldsWithOutProject = [{
         label: 'Projects',
         sortable: true,
     }, {
-        key: 'Events',
-        label: 'Events',
+        key: 'ReferencesGiven',
+        label: 'References Given',
         sortable: true,
     }, {
-        key: 'References',
-        label: 'References',
+        key: 'Events',
+        label: 'Events',
         sortable: true,
     }, {
         key: 'Feedback',

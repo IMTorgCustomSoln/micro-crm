@@ -12,12 +12,12 @@ export class Project extends Model {
     return {
       id: this.uid(),
       Name: this.string(''),
-      Status: this.string(useDisplayStore.project.availableStatus[0]),    //different from PersonProjectStatus
+      Status: this.string(useDisplayStore.project.availableStatus[0]),    //different from PersonProject
       Category: this.string(""),
       StartDate: this.attr(null),
       EndDate: this.attr(null),
       LifecycleId: this.attr(null),
-      Lifecycle: this.belongsTo(Lifecycle, 'LifecycleId'),      //TODO:CORRECT
+      Lifecycle: this.belongsTo(Lifecycle, 'LifecycleId'),      
       PersonProjectStatus: this.hasMany(PersonProject, 'ProjectId'),
       Repos: this.string("")
     }

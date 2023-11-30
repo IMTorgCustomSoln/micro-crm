@@ -3,16 +3,16 @@ import { useRepo } from 'pinia-orm'
 import { Project } from '@/stores/Project.js'
 //import { PersonProjectStatus } from '@/stores/PersonProjectStatus';
 
-import data from '@/tests/data/projects.json'
+import * as dataProjects from '@/tests/data/projects'
 
 
 describe('Project', () => {
-  const dataProjects = data 
+  const {projects} = dataProjects 
   const useProject = useRepo(Project)
-  //const usePersonProject = useRepo(PersonProjectStatus)
+  const usePersonProject = useRepo(PersonProjectStatus)
 
 
-  for(const project of dataProjects){
+  for(const project of projects){
     useProject.save({
       Name: project.Name,
       Status: project.Status,
