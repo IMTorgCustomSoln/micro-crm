@@ -143,6 +143,9 @@ export default {
       }
     },
     methods:{
+      initializeFormValues(){
+        console.log('TODO: init values')
+      },
       addItem(event){
         this.eventsOriginal = event
         if(event.Particpants){
@@ -162,14 +165,22 @@ export default {
           //basic case of participants chosen from users
           //TODO:useAccount when the Event is a task performed by the user
             const selectedProject = useDisplayStore.projectSelection
-            for(const person of this.form.event.participants){
-                const personProject = usePersonProject.where('StatusId', person.id).where('ProjectId', selectedProject.id).get()
+            const participantNames = this.form.event.participants.split(',').map(item => item.trim())
+            const participants = usePerson
+                                  .withAll()
+                                  .where('Fullname', participantNames)
+                                  .get()
+            for(const person of participants){
+                const personProject = usePersonProject
+                                        .where('PersonId', person.id)
+                                        .where('ProjectId', selectedProject.id)
+                                        .get()
                 if(personProject.length == 1){
-                  if(!this.eventsOriginal.id){
+                  if(!this.eventsOriginal){
                     useEvent.save({
                       PersonProjectId: personProject[0].id,
                       Type: this.form.event.type,
-                      Datetime: this.form.event.datetime,
+                      Datetime: new Date(Date.parse(this.form.event.datetime)),
                       AddressFeedback: this.form.event.addressFeedback,
                       StepCompleted: this.form.event.stepCompleted,
                       Comments: this.form.event.comments,
@@ -179,7 +190,7 @@ export default {
                       id: this.eventsOriginal.id,
                       PersonProjectId: personProject[0].id,
                       Type: this.form.event.type,
-                      Datetime: this.form.event.datetime,
+                      Datetime: new Date(Date.parse(this.form.event.datetime)),
                       AddressFeedback: this.form.event.addressFeedback,
                       StepCompleted: this.form.event.stepCompleted,
                       Comments: this.form.event.comments,
@@ -189,6 +200,8 @@ export default {
                   console.log(`ERROR: contact ${person} had ${personProject.length} projects`)
                 }
             }
+            this.initializeFormValues();
+            this.$bvModal.hide('event-modal');
         }
     }
 }
