@@ -49,7 +49,7 @@ export function populateContactTestData(usePerson){
     const {contacts} = dataContacts
     usePerson.save(contacts)
 
-    const personList = usePerson.all().map(item => item.personFull)
+    const personList = usePerson.all().map(item => item.personLimited)
     const check1 = personList.length == 5
     const check2 = arraysEqual( Object.keys(usePerson.all()[0]).sort(), Object.keys(contacts[0]).sort() )
 
@@ -80,8 +80,16 @@ export function populateFeedbackTestData(useFeedback){
     console.log(`check-1 useFeedback: ${check1}`)
     console.log(`check-2 useFeedback: ${check2}`)
 }
-export function populatePersonProject(usePersonProject){
-    const personProjectList = usePersonProject.withAll().get().map(item => item.personProjectFull)
+export function populatePersonProject(usePersonProject, usePerson, useDisplayStore){
+    const personProjectList = usePersonProject.withAll().get()//.map(item => item.personProjectFull)
+    useDisplayStore.projectSelection = personProjectList[0].Project
+    const personSelectedProjectList = usePerson.withAll().get().map(item => item.personWithSelectedProject).filter(item => item != undefined)
+    const personAllProjectList = usePerson.withAll().get().map(item => item.personWithProjectFull)
+    
     const check1 = personProjectList.length == 5
+    const check2 = personSelectedProjectList.length == 2
+    const check3 = personAllProjectList.length == 5
     console.log(`check-1 usePersonProject: ${check1}`)
+    console.log(`check-2 usePerson: ${check2}`)
+    console.log(`check-3 usePerson: ${check3}`)
 }

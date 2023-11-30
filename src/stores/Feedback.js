@@ -1,7 +1,7 @@
 import { Model } from 'pinia-orm';
 import { StringCast, DateCast } from 'pinia-orm/casts';
 
-import { PersonProjectStatus } from './PersonProjectStatus';
+import { PersonProject } from './PersonProject';
 import { isEmpty } from '@/assets/utils';
 
 
@@ -11,7 +11,7 @@ export class Feedback extends Model {
         return{
             id: this.uid(),
             PersonProjectId: this.attr(null),
-            PersonProject: this.belongsTo(PersonProjectStatus, 'PersonProjectId'),
+            PersonProject: this.belongsTo(PersonProject, 'PersonProjectId'),
             Type: this.string(""),
             Role: this.string(""),
             Use: this.string(""),

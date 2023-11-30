@@ -70,7 +70,14 @@ export default {
   computed: {
     setViewSelection: () => useDisplayStore.viewSelection,
     projectList: () => {
-      const projects = useProject.withAll().get().map(item => item.projectFull)
+      const projects = JSON.parse(JSON.stringify( useProject.withAll().get() ))
+      const peoplePerProject = usePersonProject.withAll().groupBy('ProjectId').get()
+      for(const project of projects){
+        project.Contacts = peoplePerProject[project.id]
+        project.ContactCount = project.Contacts ? project.Contacts.length : 0
+        project.StartDate = new Date(project.StartDate)
+        project.EndDate = new Date(project.EndDate)
+      }
       return projects
     }
   },

@@ -33,8 +33,8 @@ import {Account} from '@/stores/Account.js';
 import {Person} from "@/stores/Person.js";
 import {Project} from "@/stores/Project.js";
 import {Lifecycle, LifecycleStep} from "@/stores/Lifecycle.js";
-import {PersonProjectStatus} from '@/stores/PersonProjectStatus';
-import {PersonProjectStatusEvent} from '@/stores/Event';
+import {PersonProject} from '@/stores/PersonProject';
+import {PersonProjectEvent} from '@/stores/Event';
 import {Event} from '@/stores/Event';
 import {Feedback} from '@/stores/Feedback';
 
@@ -43,8 +43,8 @@ export const usePerson = useRepo(Person, pinia);
 export const useProject= useRepo(Project, pinia);
 export const useLifecycle = useRepo(Lifecycle, pinia);
 export const useLifecycleStep = useRepo(LifecycleStep, pinia);
-export const usePersonProject = useRepo(PersonProjectStatus, pinia);
-export const usePersonProjectEvent = useRepo(PersonProjectStatusEvent, pinia);
+export const usePersonProject = useRepo(PersonProject, pinia);
+export const usePersonProjectEvent = useRepo(PersonProjectEvent, pinia);
 export const useEvent = useRepo(Event, pinia);
 export const useFeedback = useRepo(Feedback, pinia);
 

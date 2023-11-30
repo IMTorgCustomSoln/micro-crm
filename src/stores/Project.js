@@ -2,6 +2,7 @@ import { Model } from 'pinia-orm';
 import { StringCast, DateCast } from 'pinia-orm/casts';
 import { useDisplayStore, usePersonProject } from '@/main';
 import { Lifecycle } from './Lifecycle';
+import { PersonProject } from './PersonProject';
 
 
 export class Project extends Model {
@@ -16,7 +17,8 @@ export class Project extends Model {
       StartDate: this.attr(null),
       EndDate: this.attr(null),
       LifecycleId: this.attr(null),
-      Lifecycle: this.belongsTo(Lifecycle, 'LifecycleId'),
+      Lifecycle: this.belongsTo(Lifecycle, 'LifecycleId'),      //TODO:CORRECT
+      PersonProjectStatus: this.hasMany(PersonProject, 'ProjectId'),
       Repos: this.string("")
     }
   }

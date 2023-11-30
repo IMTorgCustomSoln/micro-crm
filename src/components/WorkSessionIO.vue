@@ -1,4 +1,3 @@
-
 <template>
    <!-- Open modal button -->
    <b-button
@@ -96,7 +95,8 @@ import {populateLifecycleTestData,
         populateProjectTestData, 
         populateContactTestData,
         populateEventTestData,
-        populateFeedbackTestData
+        populateFeedbackTestData,
+        populatePersonProject
         } from '@/assets/demo.js';
 /*
 // generated values
@@ -140,9 +140,10 @@ export default {
                 populateLifecycleTestData(useLifecycle)
                 populateAccountTestData(useAccount)
                 populateProjectTestData(useProject)
-                populateContactTestData(usePerson, useProject)
-                populateEventTestData(useEvent, usePersonProject, usePerson)
-                populateFeedbackTestData(useFeedback, usePersonProject, usePerson)
+                populateContactTestData(usePerson)    //, useProject)
+                populateEventTestData(useEvent)    //, usePersonProject, usePerson)
+                populateFeedbackTestData(useFeedback)   //, usePersonProject, usePerson)
+                populatePersonProject(usePersonProject, usePerson, useDisplayStore)
             }
         },
         clearDemoData(){

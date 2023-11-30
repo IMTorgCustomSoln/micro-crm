@@ -2,6 +2,7 @@ import { Model } from 'pinia-orm';
 import { ArrayCast } from 'pinia-orm/casts';
 
 import { Project } from '@/stores/Project.js';
+import { StepStatus } from './PersonProject';
 
 
 export class Lifecycle extends Model {
@@ -10,8 +11,8 @@ export class Lifecycle extends Model {
     return {
       id: this.uid(),
       Name: this.string('').notNullable(),
-      Projects: this.hasMany(Project, 'id'),
-      LifecycleStep: this.hasMany(LifecycleStep, 'StepId')
+      Projects: this.hasMany(Project, 'LifecycleId'),                  //TODO:what is the purpose of this?  Should it be LifecycleId?
+      LifecycleStep: this.hasMany(LifecycleStep, 'LifecycleId')        
     }
   }
 }
@@ -21,7 +22,9 @@ export class LifecycleStep extends Model {
   static fields () {
     return {
       id: this.uid(),
-      StepId: this.attr(null),
+      LifecycleId: this.attr(null),              //TODO:change to LifecycleId (here and above)?
+      Lifecycle: this.belongsTo(Lifecycle, 'LifecycleId'),
+      StepStatus: this.hasMany(StepStatus, 'LifecycleStepId'),
       Name: this.string('').notNullable(),
       DurationBizDays: this.number(),
       Order: this.number(),

@@ -8,7 +8,7 @@
       "Number": "1-484-776-3743 x6332",
       "Office": "Computers",
       "Firm": "Yundt LLC",
-      "PersonProjectStatus": [{
+      "PersonProject": [{
         "id": "YV5nqUk5uixzoXH8cNekt",
         "ProjectId": "IP8fjeI0OXuR66QXq0t4t",
         "RefId": "",
@@ -48,7 +48,7 @@
       "Number": "409-969-3252 x4529",
       "Office": "Home",
       "Firm": "Maggio, Gerhold and Rau",
-      "PersonProjectStatus": [{
+      "PersonProject": [{
         "id": "XDunE8BZwaxkXDtTK4D83",
         "ProjectId": "qPyVI676ab7PDlNs6JDQ-",
         "RefId": "VUoz14MCr4L6oJ15Nxm05",
@@ -68,7 +68,7 @@
       "Number": "1-871-641-9421 x9695",
       "Office": "Music",
       "Firm": "Kohler - Halvorson",
-      "PersonProjectStatus": [{
+      "PersonProject": [{
         "ProjectId": "qPyVI676ab7PDlNs6JDQ-",
         "RefId": "VUoz14MCr4L6oJ15Nxm05",
         "StepStatus": [
@@ -87,7 +87,7 @@
       "Number": "(589) 710-0748 x358",
       "Office": "Industrial",
       "Firm": "Kovacek Group",
-      "PersonProjectStatus": [{
+      "PersonProject": [{
         "ProjectId": "IP8fjeI0OXuR66QXq0t4t",
         "RefId": "eweuIYJuTrAGktPE-GK8d",
         "StepStatus": [
@@ -126,7 +126,7 @@
       "Number": "821-419-5657 x46325",
       "Office": "Health",
       "Firm": "Schowalter - Barrows",
-      "PersonProjectStatus": [{
+      "PersonProject": [{
         "ProjectId": "qPyVI676ab7PDlNs6JDQ-",
         "RefId": "nLou5foP_4HeB5vbGH63I",
         "StepStatus": [
