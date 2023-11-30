@@ -16,14 +16,22 @@
         </template>
         <div>
             <p>
-                Because this is an offline application, the Workspace cannot be automatically saved.  <bold style="font-weight: bold">If you close 
-                    your browser, all work will be lost.</bold> <br><br>
+                Because this is an offline application, the Workspace cannot be automatically saved to disk.  <bold style="font-weight: bold">If you clear 
+                    your browser cache, all work will be lost.</bold> <br><br>
                 To save your current Workspace data, press <code>Save</code>, below.
             </p>
             <p>
                 Or, select a previously saved Workspace session file (ie. <code>MicroCRM_ApplicationStateData_v*.*.*.gz'</code>) to continue your work.
             </p>
 
+            <b-card bg-variant="light">
+                <b-form-group
+                label-cols-lg="3"
+                label="Workspace"
+                label-size="lg"
+                label-class="font-weight-bold pt-0"
+                class="mb-0"
+                >
             <b-form name="uploadForm">
                 <label for="uploadAppDataInput" class="custom-file-upload">
                     <b-icon-cloud-arrow-up-fill class="h2 mb-0" variant="success" /> Upload Workspace
@@ -39,17 +47,29 @@
                 </ul>
                 Then, press <code>Load</code> to populate the Workspace.
             </b-form>
-
+            </b-form-group>
+            </b-card>
+            
+            <b-card bg-variant="light">
+            <b-form-group
+                label-cols-lg="3"
+                label="Demo Data"
+                label-size="lg"
+                label-class="font-weight-bold pt-0"
+                class="mb-0"
+                >
             <div v-if="getAdminState">
-                <hr>
                 <p>
-                    <bold style="font-weight: bold">Demo: </bold>For learning purposes, demo data can be loaded.  This allows the user to try features that are available, otherwise.
-                    <ul>
+                    For learning purposes, demo data can be loaded.  This allows the user to try features that are available, otherwise.
+                    <ul class="no-li-dot">
                         <li>To load the app with demo data: <b-button @click="populateDemoData" size="sm" class="my-2 my-sm-0" >Load Demo</b-button></li>
                         <li>To clear the app of all data: <b-button @click="clearDemoData" size="sm" class="my-2 my-sm-0" >Clear All Data</b-button></li>
                     </ul>
                 </p>
             </div>
+            </b-form-group>
+            </b-card>
+
         </div>
 
         <!-- Control -->
