@@ -83,7 +83,7 @@
                 </b-form-group>
               
                 <b-form-group
-                  label="Projects: (multiple allowed)"
+                  label="Projects: (multiple allowed with `Shift+click`)"
                   label-for="nested-country"
                   label-cols-sm="3"
                   label-align-sm="right"
@@ -97,7 +97,7 @@
           </div>
 
             <template #modal-footer>
-                  <b-button @click="addOrUpdateContact" v-b-modal.modal-close_visit class="btn-sm m-1" >Add Contact</b-button>
+                  <b-button @click="addOrUpdateContact" v-b-modal.modal-close_visit class="btn-sm m-1" >Add / Update Contact</b-button>
                   <!--<b-button @click="processData" v-b-modal.modal-close_visit class="btn-sm m-1" >Process Data</b-button>-->
               </template>
 
@@ -107,8 +107,9 @@
 </template>
 
 <script>
-import {useDisplayStore} from '@/main.js';
-import {usePerson, useProject} from '@/main.js';
+import { arraysEqual, getRightSetDifferenceOfArrays } from '@/assets/utils';
+import {useDisplayStore, useLifecycle} from '@/main.js';
+import {usePerson, useProject, usePersonProject} from '@/main.js';
 import { useCollect } from 'pinia-orm/dist/helpers';
 
 
@@ -180,33 +181,56 @@ export default {
       this.form.contact = {...this.form.contact, projects: []};
     },
     addOrUpdateContact() {
-      //check if currently in lc list
-      const contactIds = useCollect(usePerson.all()).sortBy('id').map(item => item.id)
-      const checkId = contactIds.includes(this.form.contact.id)
-      if(checkId){
-        usePerson.save({
-          id: this.form.contact.id,
-          Fullname: this.form.contact.fullname,
-          ReferredBy: this.form.contact.referredBy,
-          Title: this.form.contact.title,
-          Email: this.form.contact.email,
-          Number: this.form.contact.number,
-          Office: this.form.contact.office,
-          Firm: this.form.contact.firm,
-          Projects: this.form.contact.projects,
-        });
-      }else{
-        usePerson.save({
-          Fullname: this.form.contact.fullname,
-          ReferredBy: this.form.contact.referredBy,
-          Title: this.form.contact.title,
-          Email: this.form.contact.email,
-          Number: this.form.contact.number,
-          Office: this.form.contact.office,
-          Firm: this.form.contact.firm,
-          Projects: this.form.contact.projects,
-        });
+      //check if new user
+      //const contactIds = useCollect(usePerson.all()).sortBy('id').map(item => item.id)
+      //const checkNewUser = contactIds.includes(this.form.contact.id)
+
+      //check for new projects
+      const requestedProjectIds = useProject.withAll()
+                                    .where('Name', this.form.contact.projects)
+                                    .get()
+                                    .map(item => item.id)
+      const currenProjectIds = JSON.parse(JSON.stringify(this.$props.item)).Projects.map(item => item.Project.id)
+      const newProjectIds = getRightSetDifferenceOfArrays(requestedProjectIds, currenProjectIds)
+      //add projects
+      const personProjects = []
+      //new projects
+      for(const newProjectId of newProjectIds){
+        const project = useProject.find(newProjectId)
+        const initialStepId = useLifecycle.withAll()
+                              .find(project.LifecycleId)
+                              .lifecycleFull
+                              .LifecycleStep[0].id
+        const initialStep = {
+          LifecycleStepId: initialStepId,
+          CompletionDate: new Date()
+        }
+        const personProject = {
+          ProjectId: project.id,
+          RefId: this.form.contact.referredBy,
+          StepStatus: [initialStep]
+        }
+        personProjects.push(personProject)
       }
+      //existing projects
+      const existingProjects = usePersonProject.withAll()
+                                .where('PersonId', this.form.contact.id)
+                                .where('ProjectId', currenProjectIds)
+                                .get()
+      personProjects.push(...existingProjects)
+      //save
+      usePerson.save({
+        id: this.form.contact.id,
+          Fullname: this.form.contact.fullname,
+          ReferredBy: this.form.contact.referredBy,
+          Title: this.form.contact.title,
+          Email: this.form.contact.email,
+          Number: this.form.contact.number,
+          Office: this.form.contact.office,
+          Firm: this.form.contact.firm,
+          PersonProject: personProjects
+        })
+      //clean-up
       this.initializeFormValues();
       this.$bvModal.hide('new-contact-modal');
     }

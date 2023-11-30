@@ -69,13 +69,11 @@ export class Person extends Model {
     //no project selected => count
     }else{
       prjGroups = usePersonProject.withAll()
-                          .where('PersonId', this.id)
-                          .get()
-      if(prjGroups){
-        return prjGroups.map(item => item.RefId).length
-      }else{
-        return null
-      }
+                    .where('PersonId', this.id)
+                    .get()
+                    .map(item => item.RefId)
+                    .filter(item => item != null)
+      return prjGroups.length
     }
   }
   get personWithSelectedProject(){
@@ -118,11 +116,20 @@ export class Person extends Model {
                                             .get().map(item => item.PersonId)
     const names = usePerson.where('id', peopleIdsReferredByThisPerson).get().map(item => item.Fullname)
     person['ReferencesGiven'] = names.length
-    //current status
-    const mxDate = new Date(Math.max(...prjGroups[0].StepStatus.map(e => new Date(e.CompletionDate) )))
-    const currentStatus = prjGroups[0].StepStatus.filter(e => +new Date(e.CompletionDate) == +mxDate)[0]
-    const lcStepName = useLifecycleStep.find(currentStatus.LifecycleStepId).Name
-    person['Statuses'] =lcStepName
+    /*current status
+    //THE FOLLOWING IS CORRECT BUT OVERLY COMPLICATED
+    const dateOfLastCompletedStep = new Date(Math.max(...prjGroups[0].StepStatus.map(e => new Date(e.CompletionDate) )))
+    const currentStep = prjGroups[0].StepStatus
+                          .filter(e => {
+                            +new Date(e.CompletionDate) == +dateOfLastCompletedStep
+                          })[0]
+    const lifecycleStepName = useLifecycleStep.find(currentStep.id).Name
+    person['Statuses'] = lifecycleStepName
+    */
+   const currentStep = prjGroups[0].StepStatus[ prjGroups[0].StepStatus.length - 1 ]
+   const stepId = currentStep.LifecycleStepId //THIS IS CORRECT NOW  ~~? currentStep.LifecycleStepId : currentStep.id    //: which is correct???  This will effect: `ModalContact.vue`, ln.219, usePerson.save({~~
+    console.log(`id: ${this.id}, currentStep.id: ${currentStep.id}, currentStep.LifecycleStepId: ${currentStep.LifecycleStepId}`)
+    person['Statuses'] = useLifecycleStep.find(stepId).Name
     person['Events'] = prjGroups.map(function (item) { return this.acc += item.Events.length; }, { acc: 0 })[prjGroups.length - 1]
     person['Feedback'] = prjGroups.map(function (item) { return this.acc += item.Feedback.length; }, { acc: 0 })[prjGroups.length - 1]
     return person

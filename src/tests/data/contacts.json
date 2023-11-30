@@ -13,32 +13,32 @@
         "ProjectId": "IP8fjeI0OXuR66QXq0t4t",
         "RefId": "",
         "StepStatus": [
-            {
-                "LifecycleStepId": "2MJ-Mqib3fKLH6S30UdBk",
-                "CompletionDate": "2023-11-24T16:51:37.219Z"
-              },
-              {
-                "LifecycleStepId": "9BITiki6IEDIdBVBX83y_",
-                "CompletionDate": "2023-12-04T16:51:37.219Z"
-              },
-              {
-                "LifecycleStepId": "KbxvZJDuaZ4qQyffv3Eqg",
-                "CompletionDate": "2023-12-14T16:51:37.219Z"
-              },
-              {
-                "LifecycleStepId": "W_SBuP7rUIYCp3I2icMKR",
-                "CompletionDate": "2023-12-24T16:51:37.219Z"
-              },
-              {
-                "LifecycleStepId": "llAA0NXqiTdvI9-9JIw6P",
-                "CompletionDate": "2024-01-03T16:51:37.219Z"
-              },
-              {
-                "LifecycleStepId": "yt20Divoth_pYZoIZUnft",
-                "CompletionDate": "2024-01-13T16:51:37.219Z"
-              }
-              ]
-        }]
+          {
+            "LifecycleStepId": "2MJ-Mqib3fKLH6S30UdBk",
+            "CompletionDate": "2023-11-24T16:51:37.219Z"
+          },
+          {
+            "LifecycleStepId": "9BITiki6IEDIdBVBX83y_",
+            "CompletionDate": "2023-12-04T16:51:37.219Z"
+          },
+          {
+            "LifecycleStepId": "KbxvZJDuaZ4qQyffv3Eqg",
+            "CompletionDate": "2023-12-14T16:51:37.219Z"
+          },
+          {
+            "LifecycleStepId": "W_SBuP7rUIYCp3I2icMKR",
+            "CompletionDate": "2023-12-24T16:51:37.219Z"
+          },
+          {
+            "LifecycleStepId": "llAA0NXqiTdvI9-9JIw6P",
+            "CompletionDate": "2024-01-03T16:51:37.219Z"
+          },
+          {
+            "LifecycleStepId": "yt20Divoth_pYZoIZUnft",
+            "CompletionDate": "2024-01-13T16:51:37.219Z"
+          }
+        ]
+      }]
     },
     {
       "id": "nOAo2t2aR854peJ-SSD3n",
@@ -53,12 +53,16 @@
         "ProjectId": "qPyVI676ab7PDlNs6JDQ-",
         "RefId": "VUoz14MCr4L6oJ15Nxm05",
         "StepStatus": [
-                {
-                  "LifecycleStepId": "2MJ-Mqib3fKLH6S30UdBk",
-                  "CompletionDate": "2023-11-24T16:51:37.215Z"
-                }
-              ]
-        }]
+          {
+            "LifecycleStepId": "2MJ-Mqib3fKLH6S30UdBk",
+            "CompletionDate": "2023-11-24T16:51:37.219Z"
+          },
+          {
+            "LifecycleStepId": "9BITiki6IEDIdBVBX83y_",
+            "CompletionDate": "2023-12-04T16:51:37.219Z"
+          }
+        ]
+      }]
     },
     {
       "id": "eweuIYJuTrAGktPE-GK8d",
@@ -72,12 +76,20 @@
         "ProjectId": "qPyVI676ab7PDlNs6JDQ-",
         "RefId": "VUoz14MCr4L6oJ15Nxm05",
         "StepStatus": [
-                {
-                  "LifecycleStepId": "2MJ-Mqib3fKLH6S30UdBk",
-                  "CompletionDate": "2023-11-24T16:51:37.218Z"
-                }
-            ]
-        }]
+          {
+            "LifecycleStepId": "2MJ-Mqib3fKLH6S30UdBk",
+            "CompletionDate": "2023-11-24T16:51:37.219Z"
+          },
+          {
+            "LifecycleStepId": "9BITiki6IEDIdBVBX83y_",
+            "CompletionDate": "2023-12-04T16:51:37.219Z"
+          },
+          {
+            "LifecycleStepId": "KbxvZJDuaZ4qQyffv3Eqg",
+            "CompletionDate": "2023-12-14T16:51:37.219Z"
+          }
+        ]
+      }]
     },
     {
       "id": "nLou5foP_4HeB5vbGH63I",
@@ -91,32 +103,24 @@
         "ProjectId": "IP8fjeI0OXuR66QXq0t4t",
         "RefId": "eweuIYJuTrAGktPE-GK8d",
         "StepStatus": [
-                {
-                  "LifecycleStepId": "2MJ-Mqib3fKLH6S30UdBk",
-                  "CompletionDate": "2023-11-24T16:51:37.219Z"
-                },
-                {
-                  "LifecycleStepId": "9BITiki6IEDIdBVBX83y_",
-                  "CompletionDate": "2023-12-04T16:51:37.219Z"
-                },
-                {
-                  "LifecycleStepId": "KbxvZJDuaZ4qQyffv3Eqg",
-                  "CompletionDate": "2023-12-14T16:51:37.219Z"
-                },
-                {
-                  "LifecycleStepId": "W_SBuP7rUIYCp3I2icMKR",
-                  "CompletionDate": "2023-12-24T16:51:37.219Z"
-                },
-                {
-                  "LifecycleStepId": "llAA0NXqiTdvI9-9JIw6P",
-                  "CompletionDate": "2024-01-03T16:51:37.219Z"
-                },
-                {
-                  "LifecycleStepId": "yt20Divoth_pYZoIZUnft",
-                  "CompletionDate": "2024-01-13T16:51:37.219Z"
-                }
-              ]
-        }]
+          {
+            "LifecycleStepId": "2MJ-Mqib3fKLH6S30UdBk",
+            "CompletionDate": "2023-11-24T16:51:37.219Z"
+          },
+          {
+            "LifecycleStepId": "9BITiki6IEDIdBVBX83y_",
+            "CompletionDate": "2023-12-04T16:51:37.219Z"
+          },
+          {
+            "LifecycleStepId": "KbxvZJDuaZ4qQyffv3Eqg",
+            "CompletionDate": "2023-12-14T16:51:37.219Z"
+          },
+          {
+            "LifecycleStepId": "W_SBuP7rUIYCp3I2icMKR",
+            "CompletionDate": "2023-12-24T16:51:37.219Z"
+          }  
+        ]
+      }]
     },
     {
       "id": "4ZLngfdWpmi_B4HtMs5jd",
@@ -130,32 +134,28 @@
         "ProjectId": "qPyVI676ab7PDlNs6JDQ-",
         "RefId": "nLou5foP_4HeB5vbGH63I",
         "StepStatus": [
-            {
-                "LifecycleStepId": "2MJ-Mqib3fKLH6S30UdBk",
-                "CompletionDate": "2023-11-24T16:51:37.219Z"
-              },
-              {
-                "LifecycleStepId": "9BITiki6IEDIdBVBX83y_",
-                "CompletionDate": "2023-12-04T16:51:37.219Z"
-              },
-              {
-                "LifecycleStepId": "KbxvZJDuaZ4qQyffv3Eqg",
-                "CompletionDate": "2023-12-14T16:51:37.219Z"
-              },
-              {
-                "LifecycleStepId": "W_SBuP7rUIYCp3I2icMKR",
-                "CompletionDate": "2023-12-24T16:51:37.219Z"
-              },
-              {
-                "LifecycleStepId": "llAA0NXqiTdvI9-9JIw6P",
-                "CompletionDate": "2024-01-03T16:51:37.219Z"
-              },
-              {
-                "LifecycleStepId": "yt20Divoth_pYZoIZUnft",
-                "CompletionDate": "2024-01-13T16:51:37.219Z"
-              }
-            ]
-        }]
+          {
+            "LifecycleStepId": "2MJ-Mqib3fKLH6S30UdBk",
+            "CompletionDate": "2023-11-24T16:51:37.219Z"
+          },
+          {
+            "LifecycleStepId": "9BITiki6IEDIdBVBX83y_",
+            "CompletionDate": "2023-12-04T16:51:37.219Z"
+          },
+          {
+            "LifecycleStepId": "KbxvZJDuaZ4qQyffv3Eqg",
+            "CompletionDate": "2023-12-14T16:51:37.219Z"
+          },
+          {
+            "LifecycleStepId": "W_SBuP7rUIYCp3I2icMKR",
+            "CompletionDate": "2023-12-24T16:51:37.219Z"
+          },
+          {
+            "LifecycleStepId": "llAA0NXqiTdvI9-9JIw6P",
+            "CompletionDate": "2024-01-03T16:51:37.219Z"
+          }
+        ]
+      }]
     }
 ]
 }
