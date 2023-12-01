@@ -63,7 +63,7 @@ export function populateEventTestData(useEvent){
     const {events} = dataEvents
     useEvent.save(events)
 
-    const eventList = useEvent.all().map(item => item.eventFull)
+    const eventList = useEvent.withAllRecursive().get().map(item => item.eventFull)
     const eventFields = ['AddressFeedback', 'Comments', 'Datetime', 'PersonProject', 'StepCompleted', 'Type', 'id']
     const check1 = eventList.length == 1
     const check2 = arraysEqual( Object.keys(useEvent.all()[0]).sort(), eventFields.sort())

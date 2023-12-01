@@ -128,7 +128,7 @@ export class Person extends Model {
     */
    const currentStep = prjGroups[0].StepStatus[ prjGroups[0].StepStatus.length - 1 ]
    const stepId = currentStep.LifecycleStepId //THIS IS CORRECT NOW  ~~? currentStep.LifecycleStepId : currentStep.id    //: which is correct???  This will effect: `ModalContact.vue`, ln.219, usePerson.save({~~
-    console.log(`id: ${this.id}, currentStep.id: ${currentStep.id}, currentStep.LifecycleStepId: ${currentStep.LifecycleStepId}`)
+    //console.log(`id: ${this.id}, currentStep.id: ${currentStep.id}, currentStep.LifecycleStepId: ${currentStep.LifecycleStepId}`)
     person['Statuses'] = useLifecycleStep.find(stepId).Name
     person['Events'] = prjGroups.map(function (item) { return this.acc += item.Events.length; }, { acc: 0 })[prjGroups.length - 1]
     person['Feedback'] = prjGroups.map(function (item) { return this.acc += item.Feedback.length; }, { acc: 0 })[prjGroups.length - 1]

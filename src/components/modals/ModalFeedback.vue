@@ -125,6 +125,9 @@ export default {
       }
     },
     methods:{
+      initializeFormValues(){
+        console.log('TODO: init values')
+      },
       addItem(feedback){
         this.feedbackOriginal = feedback
         const personId = feedback.Source.StatusId
@@ -141,18 +144,20 @@ export default {
           //basic case of participants chosen from users
           const selectedProject = useDisplayStore.projectSelection
           const dt = new Date()
-          const dtStr = dt.toString()
           for(const person of this.sourceList){
-              const personProject = usePersonProject.where('StatusId', person.id).where('ProjectId', selectedProject.id).get()
+              const personProject = usePersonProject
+                                      .where('PersonId', person.id)
+                                      .where('ProjectId', selectedProject.id)
+                                      .get()
               if(personProject.length == 1){
-                if(!this.feedbackOriginal.id){
+                if(!this.feedbackOriginal){
                   useFeedback.save({
                     PersonProjectId: personProject[0].id,
                     Type: this.form.feedback.type,
                     Role: this.form.feedback.role,
                     Use: this.form.feedback.use,
                     PainPoint: this.form.feedback.painpoint,
-                    Datetime: dtStr
+                    Datetime: dt
                   })
                 }else{
                   useFeedback.save({
@@ -162,13 +167,15 @@ export default {
                     Role: this.form.feedback.role,
                     Use: this.form.feedback.use,
                     PainPoint: this.form.feedback.painpoint,
-                    Datetime: dtStr
+                    Datetime: dt
                   })
                 }
               } else {
                 console.log(`ERROR: contact ${person} had ${personProject.length} projects`)
               }
           }
+          this.initializeFormValues();
+          this.$bvModal.hide('feedback-modal');
       }
     }
 }

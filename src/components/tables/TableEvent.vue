@@ -43,21 +43,11 @@ export default{
     },
     computed:{
         eventList(){
-          const events = useEvent.withAllRecursive().get()
-          const results = []
-          for(const event of events){
-            const record = {}
-            record.id = event.id
-            record.Date = event.Datetime
-            record.Type = event.Type
-            record.Project = event.PersonProject
-            record.Particpants = event.PersonProject
-            record.StepCompleted = event.StepCompleted
-            record.AddressFeedback = event.AddressFeedback
-            record.Comments = event.Comments
-            results.push(record)
-          }
-          return results
+          const events = useEvent
+                          .withAllRecursive()
+                          .get()
+                          .map(item => item.eventFull)
+          return events
         }
     },
     methods:{
@@ -73,15 +63,14 @@ export default{
       getDateString(date){
         return (new Date(date)).toDateString()
       },
-      getProjects(personProjects){
-        const projects = personProjects.map(item => item.Project.Name)
-            const uniqueList = getUniqueArrValues(projects).join(' ').trim()
-            return uniqueList
+      formatProjects(personProjects){
+        const projectNames = personProjects.map(item => item.Project.Name)
+        const uniqueList = getUniqueArrValues(projectNames).join(' ').trim()
+        return uniqueList
       },
-      getParticipants(personProjects){
-        const persons = usePerson.withAllRecursive().get()
-        const participantIds = personProjects.map(item => item.StatusId)
-        const participantList = persons.filter(item => participantIds.indexOf(item.id) != -1 ).map(item => item.Fullname)
+      formatParticipants(personProjects){
+        const participanttNames = personProjects.map(item => item.Fullname)
+        const participantList = getUniqueArrValues(participanttNames)
         return `(${participantList.length}) - ${participantList.join(', ')}`
       }
     }
@@ -100,12 +89,12 @@ const tableFields = [{
         key: 'Project',
         label: 'Project',
         sortable: true,
-        formatter: "getProjects"
+        formatter: "formatProjects"
     }, {
         key: 'Particpants',
         label: 'Particpants',
         sortable: true,
-        formatter: "getParticipants"
+        formatter: "formatParticipants"
     }, {
         key: 'StepCompleted',
         label: 'Step Completed',

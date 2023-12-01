@@ -40,10 +40,10 @@ export class Event extends Model {
         throw `ERROR: must query using 'useEvent.all()' to 
                 ensure all fields are populated`
     }
-      const persons = this.PersonProject.map(item => usePerson.find( item.StatusId ) )
+      const persons = this.PersonProject.map(item => usePerson.find( item.PersonId ) )
       const event = {
         id: this.id,
-        Date: new Date(this.Datetime),
+        Date: new Date( Date.parse(this.Datetime) ),
         Type: this.Type,
         Project: this.PersonProject,
         Particpants: persons,

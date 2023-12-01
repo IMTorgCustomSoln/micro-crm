@@ -3,7 +3,7 @@ import { DateCast } from 'pinia-orm/casts';
 
 import {Person} from '@/stores/Person';
 import {Project} from '@/stores/Project'
-import {PersonProjectEvent} from '@/stores/Event';
+import {Event, PersonProjectEvent} from '@/stores/Event';
 import {Feedback} from '@/stores/Feedback.js';
 import { LifecycleStep } from './Lifecycle';
 
@@ -35,7 +35,8 @@ export class PersonProject extends Model {
           StepStatus: this.hasMany(StepStatus, 'PersonProjectId'),
           // collections
           //Events: this.hasMany(Event, 'EventId'),
-          Events: this.hasMany(PersonProjectEvent, 'PersonProjectId'),
+          //Events: this.hasMany(PersonProjectEvent, 'PersonProjectId'),
+          Events: this.belongsToMany(Event, PersonProjectEvent, 'PersonProjectId', 'EventId'),
           Feedback: this.hasMany(Feedback, 'PersonProjectId'),
       }
   }
