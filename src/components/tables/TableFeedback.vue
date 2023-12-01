@@ -44,21 +44,7 @@ export default{
     },
     computed:{
         feedbackList(){
-          const feedbacks = useFeedback.withAllRecursive().get()
-          const results = []
-          for(const feedback of feedbacks){
-            const record = {}
-            record.id = feedback.id
-            record.Date = feedback.Datetime
-            record.Type = feedback.Type
-            record.PainPoint = feedback.PainPoint
-            record.Project = feedback.PersonProject
-            record.Role = feedback.Role
-            record.Use = feedback.Use
-            record.Source = feedback.PersonProject
-            results.push(record)
-          }
-          return results
+          return useFeedback.withAllRecursive().get().map(item => item.feedbackFull)
         }
     },
     methods:{
@@ -82,10 +68,7 @@ export default{
       },
       getSource(personProject){
         //TODO:assuming that there is ONLY one project - is that true?
-        const persons = usePerson.withAllRecursive().get()
-        const sourceId = personProject.StatusId
-        const sourceName = persons.filter(item => sourceId.indexOf(item.id) != -1 ).map(item => item.Fullname)[0]
-        return sourceName
+        return personProject.Person.Fullname
       }
     }
 }

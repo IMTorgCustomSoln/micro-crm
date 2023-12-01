@@ -54,10 +54,32 @@ This project builds into a single file: ./dist/index.html using the plugin with 
 npm run build
 ```
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
+### ~~Run Unit Tests with [Vitest](https://vitest.dev/)~~ Fails
 
 ```sh
 npm run test:unit
+```
+
+Errors with the following
+
+```
+TypeError: Cannot read properties of undefined (reading 'newRawInstance')
+ ❯ Function.belongsTo node_modules/pinia-orm/dist/index.mjs:2446:30
+ ❯ Function.fields src/stores/PersonProjectStatus.js:22:25
+     20|           //Person: this.belongsTo(Person, 'PersonId'),
+     21|           ProjectId: this.attr(null),
+     22|           Project: this.belongsTo(Project, 'ProjectId'),
+       |                         ^
+     23|           RefId: this.attr(null),
+     24|           ReferredBy: this.belongsTo(Person, 'RefId'),
+```
+
+### ~~Run E2E Cypress~~ Fails
+
+Error in dev container
+
+```sh
+npm run cypress:open
 ```
 
 ### Lint with [ESLint](https://eslint.org/)

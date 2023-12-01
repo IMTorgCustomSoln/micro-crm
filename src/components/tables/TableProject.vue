@@ -37,7 +37,7 @@
 import {toRaw, ref} from 'vue';
 import { getMethod } from '@/assets/utils';
 import {useDisplayStore} from '@/main.js';
-import {usePerson, useProject, usePersonProject} from '@/main.js';
+import {usePerson, useProject} from '@/main.js';
 import ModalProject from '@/components/modals/ModalProject.vue';
 import ExportToCsv from '../ExportToCsv.vue';
 
@@ -69,21 +69,11 @@ export default {
   },
   computed: {
     setViewSelection: () => useDisplayStore.viewSelection,
-    projectList: () => {
-      const projects = JSON.parse(JSON.stringify( useProject.withAll().get() ))
-      const peoplePerProject = usePersonProject.withAll().groupBy('ProjectId').get()
-      for(const project of projects){
-        project.Contacts = peoplePerProject[project.id]
-        project.ContactCount = project.Contacts ? project.Contacts.length : 0
-        project.StartDate = new Date(project.StartDate)
-        project.EndDate = new Date(project.EndDate)
-      }
-      return projects
-    }
+    projectList: () => useProject.withAll().get().map(item => item.projectFull)
   },
   methods: {
     getFomattedRows(){
-      if(this){
+      if(this.projectList){
         for(const item of this.projectList){
           const record = {}
           for(const field of this.fields){
@@ -106,20 +96,16 @@ export default {
       }
     },
     editItem(item){
-      console.log(item)
-      //this.form.project = item
       const prj = JSON.parse(JSON.stringify(item)).item
       Object.assign(this.form.project, prj  )
       this.$bvModal.show('new-project-modal')   //TODO:tightly coupled, but no direct dependency
     },
     deleteItem(item){
       const prj = JSON.parse(JSON.stringify(item)).item
-      //useProject.destroy(prj.id)
       useProject.where('id', prj.id).delete()
     },
     deleteAll(){
       const ids = usePerson.all().map(item => item.id)
-      console.log(ids)
       usePerson.destroy(ids)
     },
     formatDateAssigned(value) {

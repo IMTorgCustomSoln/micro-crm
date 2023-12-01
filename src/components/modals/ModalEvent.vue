@@ -47,7 +47,7 @@
                     id="checkbox-1"
                     v-model="form.event.stepCompleted"
                     name="checkbox-1"
-                    value="not_accepted"
+                    value="accepted"
                     unchecked-value="not_accepted"
                   >
                     check if yes 
@@ -116,9 +116,9 @@ export default {
         //this.form.account.name = account.Fullname
         const contact = toRaw(this.contact)
         const event = toRaw(this.event)
-        if(contact){
-        this.form.event.participants = this.sourceList.map(item => item.Fullname).join(', ')
-        }else if(event){
+        if(!isEmpty(contact)){
+          this.form.event.participants = this.sourceList.map(item => item.Fullname).join(', ')
+        }else if(!isEmpty(event)){
           this.addItem(event)
         }
         else{
@@ -143,53 +143,57 @@ export default {
       }
     },
     methods:{
+      initializeFormValues(){
+        console.log('TODO: init values')
+      },
       addItem(event){
         this.eventsOriginal = event
-        if(event.Particpants){
-        const personIds = event.Particpants.map(item => item.StatusId)
-        const names = usePerson.find(personIds).map(item => item.Fullname)
-
-        this.form.event.participants = names;
-        this.form.event.projects = event.Projects;
-        this.form.event.datetime = event.Date;
+        this.form.event.participants = event.Particpants.map(item => item.Fullname).join(', ')
+        this.form.event.projects = event.Project.map(item => item.Project.Name).join(', ');
+        this.form.event.datetime = new Date( Date.parse(event.Date));
         this.form.event.type = event.Type;
         this.form.event.addressFeedback = event.AddressFeedback;
         this.form.event.stepCompleted = event.StepCompleted;
         this.form.event.comments = event.Comments;
-        }
       },
       addEvent(){
           //basic case of participants chosen from users
           //TODO:useAccount when the Event is a task performed by the user
             const selectedProject = useDisplayStore.projectSelection
-            for(const person of this.form.event.participants){
-                const personProject = usePersonProject.where('StatusId', person.id).where('ProjectId', selectedProject.id).get()
-                if(personProject.length == 1){
-                  if(!this.eventsOriginal.id){
-                    useEvent.save({
-                      PersonProjectId: personProject[0].id,
-                      Type: this.form.event.type,
-                      Datetime: this.form.event.datetime,
-                      AddressFeedback: this.form.event.addressFeedback,
-                      StepCompleted: this.form.event.stepCompleted,
-                      Comments: this.form.event.comments,
-                    })
-                  }else{
-                    useEvent.save({
-                      id: this.eventsOriginal.id,
-                      PersonProjectId: personProject[0].id,
-                      Type: this.form.event.type,
-                      Datetime: this.form.event.datetime,
-                      AddressFeedback: this.form.event.addressFeedback,
-                      StepCompleted: this.form.event.stepCompleted,
-                      Comments: this.form.event.comments,
-                    })
-                  }
-                } else {
-                  console.log(`ERROR: contact ${person} had ${personProject.length} projects`)
-                }
+            const participantNames = this.form.event.participants.split(',').map(item => item.trim())
+            const participantIds = usePerson
+                                  .withAll()
+                                  .where('Fullname', participantNames)
+                                  .get().map(item => item.id)
+            const personProjectIds = usePersonProject
+                                    .where('PersonId', participantIds)
+                                    .where('ProjectId', selectedProject.id)
+                                    .get().map(item => ( 
+                                      {id: item.id} 
+                                      ))
+            if(!this.eventsOriginal){
+              useEvent.save({
+                PersonProject: personProjectIds,
+                Type: this.form.event.type,
+                Datetime: new Date(Date.parse(this.form.event.datetime)),
+                AddressFeedback: this.form.event.addressFeedback,
+                StepCompleted: this.form.event.stepCompleted,
+                Comments: this.form.event.comments,
+              })
+            }else{
+              useEvent.save({
+                id: this.eventsOriginal.id,
+                PersonProject: personProjectIds,
+                Type: this.form.event.type,
+                Datetime: new Date(Date.parse(this.form.event.datetime)),
+                AddressFeedback: this.form.event.addressFeedback,
+                StepCompleted: this.form.event.stepCompleted,
+                Comments: this.form.event.comments,
+              })
             }
-        }
+            this.initializeFormValues();
+            this.$bvModal.hide('event-modal');
+          }
     }
 }
 

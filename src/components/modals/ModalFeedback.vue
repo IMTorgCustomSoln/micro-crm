@@ -15,12 +15,14 @@
             <b-card bg-variant="light">
 
               <b-form-group
-                  label="Source:"
+                  label="Source (choose one):"
                   label-for="nested-street"
                   label-cols-sm="3"
                   label-align-sm="right"
                 >
-                  <b-form-input id="nested-street" v-model="form.feedback.source"></b-form-input>
+                <!-- TODO: warning - only one person can be selected, and selection options come from same Project
+                  <b-form-input id="nested-street" v-model="form.feedback.source"></b-form-input>-->
+                  <b-form-select id="nested-street" v-model="form.feedback.source"  :options="sourceList.map(item=>item.Fullname)"/>
                 </b-form-group>
 
                 <b-form-group
@@ -77,6 +79,7 @@
 
 <script>
 import {toRaw} from 'vue';
+import { isEmpty } from '@/assets/utils';
 import {useFeedback} from '@/main';
 import {useDisplayStore, usePersonProject, usePerson} from '@/main';
 
@@ -89,7 +92,7 @@ export default {
             form:{
                 error:'',
                 feedback: {
-                    source: '',
+                    source: null,
                     type: null,
                     role: null,
                     use: null,
@@ -106,9 +109,9 @@ export default {
         this.form.account.name = account.Fullname*/
         const source = toRaw(this.source)
         const feedback= toRaw(this.feedback)
-        if(source){
-          this.form.feedback.source = this.sourceList.map(item => item.Fullname).join(', ')
-        }else if(feedback){
+        if(!isEmpty(source)){
+          this.form.feedback.source = this.sourceList.map(item => item.Fullname)[0]
+        }else if(!isEmpty(feedback)){
           this.addItem(feedback)
         }
         else{
@@ -118,41 +121,52 @@ export default {
     },
     computed:{
       sourceList: () => {
-       return useDisplayStore.participants
+       const sources = useDisplayStore.participants.length > 0 
+                      ? useDisplayStore.participants 
+                      : usePersonProject
+                          .withAllRecursive()
+                          .where('ProjectId', useDisplayStore.projectSelection.id)
+                          .get()
+                          .map(item => item.Person)
+        return sources
       },
       feedbackTypesList: () => {
         return useDisplayStore.defaults.feedback
       }
     },
     methods:{
+      initializeFormValues(){
+        console.log('TODO: init values')
+      },
       addItem(feedback){
         this.feedbackOriginal = feedback
-        const personId = feedback.Source.StatusId
-        const name = usePerson.find(personId).Fullname
-
-        this.form.feedback.source = name;
+        this.form.feedback.source = feedback.Source.Person.Fullname;
         this.form.feedback.type = feedback.Type;
         this.form.feedback.role = feedback.Role;
         this.form.feedback.use = feedback.Use;
         this.form.feedback.painpoint = feedback.PainPoint;
-        this.form.feedback.datetime = feedback.Date;
+        this.form.feedback.datetime = new Date(feedback.Date);
       },
       addFeedback(){
           //basic case of participants chosen from users
           const selectedProject = useDisplayStore.projectSelection
           const dt = new Date()
-          const dtStr = dt.toString()
-          for(const person of this.sourceList){
-              const personProject = usePersonProject.where('StatusId', person.id).where('ProjectId', selectedProject.id).get()
-              if(personProject.length == 1){
-                if(!this.feedbackOriginal.id){
+          const sourceNames = this.form.feedback.source
+          const sourceIds = usePerson.withAllRecursive().where('Fullname', sourceNames).get().map(item => item.id)
+          //for(const person of sources){
+              const personProject = usePersonProject
+                                      .where('PersonId', sourceIds)
+                                      .where('ProjectId', selectedProject.id)
+                                      .get()
+              //if(personProject.length == 1){      TODO:should this look like events
+                if(!this.feedbackOriginal){
                   useFeedback.save({
                     PersonProjectId: personProject[0].id,
                     Type: this.form.feedback.type,
                     Role: this.form.feedback.role,
                     Use: this.form.feedback.use,
                     PainPoint: this.form.feedback.painpoint,
-                    Datetime: dtStr
+                    Datetime: dt
                   })
                 }else{
                   useFeedback.save({
@@ -162,13 +176,15 @@ export default {
                     Role: this.form.feedback.role,
                     Use: this.form.feedback.use,
                     PainPoint: this.form.feedback.painpoint,
-                    Datetime: dtStr
+                    Datetime: dt
                   })
                 }
-              } else {
+              /*} else {
                 console.log(`ERROR: contact ${person} had ${personProject.length} projects`)
-              }
-          }
+              }*/
+          //}
+          this.initializeFormValues();
+          this.$bvModal.hide('feedback-modal');
       }
     }
 }

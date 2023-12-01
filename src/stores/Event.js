@@ -1,7 +1,8 @@
 import { Model } from 'pinia-orm';
 import { StringCast, DateCast } from 'pinia-orm/casts';
-import { useDisplayStore } from '@/main';
-import { PersonProjectStatus } from '@/stores/PersonProjectStatus';
+import { useDisplayStore, usePerson } from '@/main';
+import { PersonProject } from '@/stores/PersonProject';
+import { isEmpty } from '@/assets/utils';
 
 
 export class Event extends Model {
@@ -9,11 +10,11 @@ export class Event extends Model {
   static fields(){
       return{
           id: this.uid(),
-          PersonProject: this.belongsToMany(PersonProjectStatus, PersonProjectStatusEvent, 'EventId', 'PersonProjectStatusId'),
+          PersonProject: this.belongsToMany(PersonProject, PersonProjectEvent, 'EventId', 'PersonProjectId'),
           Datetime: this.attr(),
           Type: this.string(""),    // Meeting, Building, ...
-          AddressFeedback: this.attr(),
-          StepCompleted: this.attr(),
+          AddressFeedback: this.attr(null),
+          StepCompleted: this.attr(null),
           Comments: this.string(""),
       }
   }
@@ -34,14 +35,32 @@ export class Event extends Model {
         }
       }
     }
+    get eventFull(){
+      if(isEmpty(this.PersonProject)){
+        throw `ERROR: must query using 'useEvent.all()' to 
+                ensure all fields are populated`
+    }
+      const persons = this.PersonProject.map(item => usePerson.find( item.PersonId ) )
+      const event = {
+        id: this.id,
+        Date: new Date( Date.parse(this.Datetime) ),
+        Type: this.Type,
+        Project: this.PersonProject,
+        Particpants: persons,
+        StepCompleted: this.StepCompleted,
+        AddressFeedback: this.AddressFeedback,
+        Comments: this.Comments
+      }
+      return event
+    }
 }
 
-export class PersonProjectStatusEvent extends Model {
-  static entity = 'PersonProjectStatusEvent'
-  static primaryKey = ['PersonProjectStatusId','EventId']
+export class PersonProjectEvent extends Model {
+  static entity = 'PersonProjectEvent'
+  static primaryKey = ['PersonProjectId','EventId']
   static fields(){
     return {
-      PersonProjectStatusId: this.attr(null),
+      PersonProjectId: this.attr(null),
       EventId: this.attr(null)
     }
   }

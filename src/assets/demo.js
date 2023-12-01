@@ -1,232 +1,95 @@
-import {faker} from '@faker-js/faker';
-import {addDays, randomIntFromInverval} from './utils.js';
-import {useDisplayStore, useAccount, useLifecycle, useLifecycleStep, useProject, usePersonProject} from '@/main.js';
-import {defaultSteps, defaultLifecycle} from './defaults.js';
+import { arraysEqual } from './utils';
+
+import {
+    useDisplayStore, 
+    useAccount, 
+    useLifecycle, 
+    useLifecycleStep, 
+    useProject, 
+    usePersonProject
+} from '@/main.js';
 
 
-// set for repeatable results
-faker.seed(123);
+import * as dataAccount from '@/tests/data/account'
+import * as dataProjects from '@/tests/data/projects'
+import * as dataContacts from '@/tests/data/contacts'
+import * as dataEvents from '@/tests/data/events'
+import * as dataFeedbacks from '@/tests/data/feedback'
 
 
-// Account
-const testAccount = {
-    Fullname: faker.person.fullName()
+
+
+export function populateLifecycleTestData(useLifecycle){
+    const check1 = useLifecycle.all()[0].Name == "default"
+    console.log(`check-1 useLifecycle: ${check1}`)
 }
 
+export function populateAccountTestData(useAccount){
+    const {account} = dataAccount
+    useAccount.save(account)
 
-// Projects
-export const testProjects = []
-var i = 0;
-while(i < 2){
-    const dtBegin = faker.date.betweens({from: '2020-01-01T00:00:00.000Z', to:'2023-01-01T00:00:00.000Z', count:1})[0]
-    const dtEnd = addDays(dtBegin, randomIntFromInverval(100, 200, faker))
-    const project = {
-        Name: faker.commerce.productName(),
-        Status: 'active',
-        Category: faker.commerce.product(),
-        Startdate: new Date(dtBegin),
-        Enddate: new Date(dtEnd),
-        Lifecycle: defaultLifecycle.id,
-        Repos: faker.internet.url()
-    }
-    testProjects.push(project)
-    i++
-}
-
-
-// Contacts
-export const testContacts = []
-i = 0;
-while(i < 5){
-    const projects = randomIntFromInverval(0, testProjects.length-1, faker)
-    const contact = {
-        Fullname: faker.person.fullName(),
-        Title: faker.person.jobTitle(),
-        Email: faker.internet.email(),
-        Number: faker.phone.number(),
-        Office: faker.commerce.department(),
-        Firm: faker.company.name(),
-        Projects: [testProjects[projects].Name],
-        Statuses: []
-    }
-    const numberOfEvents = randomIntFromInverval(1,5, faker)
-    const Events = []
-    let j = 0
-    while(j < numberOfEvents){
-        const Event = {
-            LifecycleStep: defaultSteps[randomIntFromInverval(0, 3, faker)].Name,
-            Participants: [contact.Fullname],
-            Datetime: new Date(),
-            Comments: faker.lorem.paragraph(),
-        }
-        Events.push(Event)
-        j++
-    }
-    const numberOfFeedbacks = randomIntFromInverval(2, 3, faker)
-    const Feedbacks = []
-    j = 0
-    while(j < numberOfFeedbacks){
-        const Feedback = {
-            Role: faker.person.jobTitle(),
-            Use: faker.lorem.sentence(),
-            PainPoint: faker.lorem.sentence()
-        }
-        Feedbacks.push(Feedback)
-        j++
-    }
-
-    let referredBy = ''
-    if(testContacts.length > 2){
-        const chooseFromContacts = randomIntFromInverval(0, testContacts.length-1, faker)
-        referredBy = testContacts[chooseFromContacts]
-    } else {
-        referredBy = faker.person.fullName()
-    }
-
-    // Statuses
-    //   i) ~~earlier steps must be completed, ~~
-    //   ii) ~~initialization with step-0, has CompletionDate of begining of project,~~
-    //   iii)~CompletionDate of step-1 implies the start date of step-2
-    const finalStepIdx = randomIntFromInverval(0, defaultSteps.length-1, faker)
-    const arrSteps = Array(finalStepIdx).fill().map((element, index) => index + 1)
-    arrSteps.unshift(0)
-    const dt = new Date()
-    const StepStatuses = []
-    for(const idx of arrSteps){
-        //const step = defaultSteps[idx]
-        const date = addDays(dt, idx*10)
-        const rec = {
-            LifecycleStepId: '',
-            CompletionDate: date
-        }
-        StepStatuses.push(rec)
-    }
-    const status = {
-        Person: contact.Fullname,
-        Project: contact.Projects[0],
-        ReferredBy: '',     //TODO:applying referredBy errors
-        StepStatus: StepStatuses,
-        Events: Events,
-        Feedbacks: Feedbacks
-    }
-    //TODO:get steps earlier in lifecycle
-    contact.Statuses.push(status)
-    testContacts.push(contact)
-    i++
-}
-
-
-
-
-// Populate Data
-export function populateAccountTestData(useProject){
-    // Populate tables with test data
-      useAccount.save({
-        Fullname: testAccount.Fullname,
-        });
+    const check1 = useAccount.all()[0].Fullname == "John Doe"
+    const check2 = arraysEqual( Object.keys(useAccount.all()[0]), Object.keys(account) )
+    console.log(`check-1 useAcccount: ${check1}`)
+    console.log(`check-2 useAcccount: ${check2}`)
 }
 
 export function populateProjectTestData(useProject){
-    const lifecycleId = useLifecycle.all()[0].id
-    // Populate tables with test data
-    for(const project of testProjects){
-      useProject.save({
-          Name: project.Name,
-          Status: project.Status,
-          Category: project.Category,
-          StartDate: project.Startdate,
-          EndDate: project.Enddate,
-          LifecycleId: lifecycleId,
-          Repos: project.Repos
-        });
-    }
+    const {projects} = dataProjects
+    useProject.save(projects)
+
+    const projectList = useProject.withAll().get().map(item => item.projectFull)
+    const check1 = projectList.length == 2
+    const check2 = arraysEqual( Object.keys(useProject.all()[0]).sort(), Object.keys(projects[0]).sort() )
+    console.log(`check-1 useProject: ${check1}`)
+    console.log(`check-2 useProject: ${check2}`)
+    
 }
+export function populateContactTestData(usePerson){
+    const {contacts} = dataContacts
+    usePerson.save(contacts)
 
-export function populateContactTestData(usePerson, useProject){
-    const projects = useProject.all()
-    // Populate tables with test data
-    for(const contact of testContacts){
-        //get random project
-        const randInt = randomIntFromInverval(0, projects.length-1, faker)
-        const project = projects[randInt]
+    const personList = usePerson.all().map(item => item.personLimited)
+    const check1 = personList.length == 5
+    const check2 = arraysEqual( Object.keys(usePerson.all()[0]).sort(), Object.keys(contacts[0]).sort() )
 
-        //get random person for referredby
-        const persons = usePerson.all()
-        let refId = null
-        if( persons.length > 0){
-            const int = randomIntFromInverval(0, persons.length-1, faker)
-            refId = persons[int].id
-        }
-        //get step
-        const lc = useLifecycle.withAll().get()
-        const selected_lc = lc.filter(item => item.id == project.LifecycleId)[0]
-        const selected_step = selected_lc.LifecycleStep[randomIntFromInverval(0, selected_lc.LifecycleStep.length-1, faker)]
-        
-        //save
-        const dt = faker.date.betweens({from: '2020-01-01T00:00:00.000Z', to:'2023-01-01T00:00:00.000Z', count:1})[0]
-        const lcSteps = useLifecycleStep.all()
-        contact.Statuses[0].StepStatus.map((item,idx) => item.LifecycleStepId = lcSteps[idx].id)
-        /*
-        usePersonProject.with('StepStatus').get()
-
-        */
-        usePerson.save({
-            Fullname: contact.Fullname,
-            Title: contact.Title,
-            Email: contact.Email,
-            Number: contact.Number,
-            Office: contact.Office,
-            Firm: contact.Firm,
-            PersonProjectStatus: [{
-                ProjectId: project.id,
-                RefId: refId,
-                StepStatus: contact.Statuses[0].StepStatus,
-            }]
-            // collect with repos
-            //...TODO
-      });
-    }
-  }
-
-  export function populateEventTestData(useEvent, usePersonProjectStatus, usePerson){
-    const Project = useProject.all()[0]
-    const participants = usePerson.all().slice(0,3)
-    const personprojects = []
-    for(const person of participants){
-        const selectedPersonProject = usePersonProjectStatus.where('StatusId', person.id).where('ProjectId', Project.id).get()
-        if(selectedPersonProject.length>1){
-            throw new Error('Project should be unique')
-        }
-        personprojects.push(...selectedPersonProject)
-    }
-    const dt = faker.date.betweens({from: '2020-01-01T00:00:00.000Z', to:'2023-01-01T00:00:00.000Z', count:1})[0]
-    useEvent.save({
-        PersonProject: personprojects,
-        Datetime: new Date(dt),
-        Type: 'Meeting',
-        Comments: faker.lorem.lines(1,3),
-    })
-
-    return true
+    const projectList = useProject.withAll().get().map(item => item.projectFull)
+    const check3 = projectList[0].ContactCount == 2 && projectList[1].ContactCount == 3
+    console.log(`check-1 usePerson: ${check1}`)
+    console.log(`check-2 usePerson: ${check2}`)
+    console.log(`check-3 useProject: ${check3}`)
 }
+export function populateEventTestData(useEvent){
+    const {events} = dataEvents
+    useEvent.save(events)
 
-export function populateFeedbackTestData(useFeedback, usePersonProject, usePerson){
-    const Feedbacks = [0,1,2,3]
-    for(const idea of Feedbacks){
-        const types = useDisplayStore.defaults.feedback
-        const int = randomIntFromInverval(0, 2, faker)
-        const Type = types[int]
-        const Status = usePersonProject.all(int)[0]
-        const person = usePerson.find(Status.StatusId)
-        const dt = faker.date.betweens({from: '2020-01-01T00:00:00.000Z', to:'2023-01-01T00:00:00.000Z', count:1})[0]
-        const datetime = new Date(dt)
-        useFeedback.save({
-            PersonProjectId: Status.id,    //TODO: this should be personProject.id
-            Type: Type,
-            Role: person.Title,
-            Use: faker.lorem.lines(1,3),
-            PainPoint: faker.lorem.lines(1,3),
-            Datetime: datetime.toString()
-        })
-    }
+    const eventList = useEvent.withAllRecursive().get().map(item => item.eventFull)
+    const eventFields = ['AddressFeedback', 'Comments', 'Datetime', 'PersonProject', 'StepCompleted', 'Type', 'id']
+    const check1 = eventList.length == 1
+    const check2 = arraysEqual( Object.keys(useEvent.all()[0]).sort(), eventFields.sort())
+    console.log(`check-1 useEvent: ${check1}`)
+    console.log(`check-2 useEvent: ${check2}`)
+}
+export function populateFeedbackTestData(useFeedback){
+    const {feedbacks} = dataFeedbacks
+    useFeedback.save(feedbacks)
+
+    const feedbackList = useFeedback.withAll().get().map(item => item.feedbackFull)
+    const check1 = feedbackList.length == 2
+    const check2 = arraysEqual( Object.keys(useFeedback.all()[0]).sort(), Object.keys(feedbacks[0]).sort() )
+    console.log(`check-1 useFeedback: ${check1}`)
+    console.log(`check-2 useFeedback: ${check2}`)
+}
+export function populatePersonProject(usePersonProject, usePerson, useDisplayStore){
+    const personProjectList = usePersonProject.withAll().get()//.map(item => item.personProjectFull)
+    useDisplayStore.projectSelection = personProjectList[0].Project
+    const personSelectedProjectList = usePerson.withAll().get().map(item => item.personWithSelectedProject).filter(item => item != undefined)
+    const personAllProjectList = usePerson.withAll().get().map(item => item.personWithProjectFull)
+    
+    const check1 = personProjectList.length == 5
+    const check2 = personSelectedProjectList.length == 2
+    const check3 = personAllProjectList.length == 5
+    console.log(`check-1 usePersonProject: ${check1}`)
+    console.log(`check-2 usePerson: ${check2}`)
+    console.log(`check-3 usePerson: ${check3}`)
 }

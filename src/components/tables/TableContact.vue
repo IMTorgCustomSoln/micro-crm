@@ -58,11 +58,12 @@
   
 <script>
 import {toRaw} from 'vue';
+import {isEmpty} from '@/assets/utils'
 import {useDisplayStore, usePerson, usePersonProject, useEvent, useFeedback, useLifecycleStep} from '@/main.js';
 import ModalContact from '@/components/modals/ModalContact.vue';
 import ModalEvent from '@/components/modals/ModalEvent.vue'
 import ModalFeedback from '@/components/modals/ModalFeedback.vue'
-import ExportToCsv from '../ExportToCsv.vue';
+import ExportToCsv from '@/components/ExportToCsv.vue';
 
 export default{
   name: 'TableContact',
@@ -93,78 +94,14 @@ export default{
     },
     setViewSelection: () => useDisplayStore.viewSelection,
     contactList: () => {
-      const contacts = []
-      const prjGroups = usePersonProject.withAll().groupBy('StatusId').get()
-      if(!isEmpty(prjGroups)){
-        for(const personPrjId in prjGroups){
-          let person = JSON.parse(JSON.stringify( usePerson.find(personPrjId) ))
-          if(person){
-            let referredBy = null
-            const referralGiven = []
-            const projects = []
-            let statuses = ''
-            let prjs_cnt = 0
-            let event_cnt = 0
-            let feedback_cnt = 0
-            for(const item of prjGroups[personPrjId]){
-              //references given
-              const peopleIdsReferredByThisPerson = usePersonProject.withAll().where('RefId', item.StatusId).get().map(item => item.StatusId)
-              const names = usePerson.where('id', peopleIdsReferredByThisPerson).get().map(item => item.Fullname)
-              referralGiven.push(...names)
-
-              //checks
-              const checkSelection = !isEmpty(useDisplayStore.projectSelection)
-              const checkPrj = checkSelection ? item.ProjectId == useDisplayStore.projectSelection.id : true
-              if(checkPrj){
-                if(checkSelection){
-                  //referred by
-                  referredBy = item.ReferredBy
-
-                  //references given
-                  const peopleIdsReferredByThisPerson = usePersonProject.withAll().where('ProjectId', item.ProjectId).where('RefId', item.StatusId).get().map(item => item.StatusId)
-                  const names = usePerson.where('id', peopleIdsReferredByThisPerson).get().map(item => item.Fullname)
-                  referralGiven.length = 0
-                  referralGiven.push(...names)
-
-                  //current status
-                  const mxDate = new Date(Math.max(...item.StepStatus.map(e => new Date(e.CompletionDate) )))
-                  const currentStatus = item.StepStatus.filter(e => +new Date(e.CompletionDate) == +mxDate)[0]
-                  const lcStepName = useLifecycleStep.find(currentStatus.LifecycleStepId).Name
-                  /*use to keep status of all projects
-                  const prjName = item.Project.Name.toString()
-                  const rec = {}
-                  rec[prjName] = lcStepName
-                  statuses.push(rec)*/
-                  statuses = lcStepName
-                }
-                //projects
-                /*const rec = {}
-                rec['id'] = item.Project.id
-                rec['Name'] = item.Project.Name*/
-                projects.push(item.Project.Name)
-
-                //attrs
-                prjs_cnt = prjs_cnt + 1
-                event_cnt = item.pivot ? event_cnt + useEvent.withAll().where('id', item.pivot.EventId).get().length: event_cnt
-                feedback_cnt = item ? feedback_cnt + useFeedback.withAll().where('PersonProjectId', item.id).get().length: feedback_cnt
-              }
-            }
-            person['id']
-            person['PersonProjectStatus']
-            person['ReferredBy'] = referredBy ?  referredBy.Fullname : null
-            person['Statuses'] = statuses
-            person['Projects'] = projects
-            person['ProjectCnt'] = prjs_cnt
-            person['References'] = referralGiven.length
-            person['Events'] = event_cnt
-            person['Feedback'] = feedback_cnt
-            if(person['ProjectCnt']>0){
-              contacts.push(person)
-            }
-          }
-        }
+      const isEmptyProject = isEmpty(useDisplayStore.projectSelection)
+      if(!isEmptyProject){
+        const projects = usePerson.withAll().get().map(item => item.personWithSelectedProject).filter(item => item != undefined)
+        return projects
+      }else{
+        const projects = usePerson.withAll().get().map(item => item.personWithProjectFull)
+        return projects
       }
-      return contacts
     },
   },
   data() {
@@ -234,21 +171,17 @@ export default{
     deleteContact(row){
       const contact = JSON.parse(JSON.stringify(row)).item
       usePerson.where('id', contact.id).delete()
-    }
-  },
-};
-
-
-
-
-function isEmpty(obj) {
-  for (const prop in obj) {
-    if (Object.hasOwn(obj, prop)) {
-      return false;
+    },
+    formatReferredBy(val){
+      if(!isEmpty(useDisplayStore.projectSelection)){
+        return val ? val.Fullname : ''
+      }else{
+        return val
+      }
     }
   }
-  return true;
-}
+};
+
 
 
 // Table data items
@@ -263,7 +196,8 @@ const fieldsWithProject = [{
     }, {
         key: 'ReferredBy',
         label: 'Referred By',
-        sortable: true
+        sortable: true,
+        formatter: 'formatReferredBy'
     }, {
         key: 'Email',
         label: 'Email',
@@ -281,20 +215,16 @@ const fieldsWithProject = [{
         label: 'Firm',
         sortable: true,
     }, {
-        key: 'ProjectCnt',
-        label: 'Projects',
-        sortable: true,
-    }, {
         key: 'Statuses',
         label: 'Status',
         sortable: true,
     }, {
-        key: 'Events',
-        label: 'Events',
+        key: 'ReferencesGiven',
+        label: 'References Given',
         sortable: true,
     }, {
-        key: 'References',
-        label: 'References',
+        key: 'Events',
+        label: 'Events',
         sortable: true,
     }, {
         key: 'Feedback',
@@ -315,6 +245,11 @@ const fieldsWithOutProject = [{
         label: 'Title',
         sortable: true
     }, {
+        key: 'ReferredBy',
+        label: 'Referred By',
+        sortable: true,
+        formatter: 'formatReferredBy'
+    }, {
         key: 'Email',
         label: 'Email',
         sortable: true,
@@ -335,12 +270,12 @@ const fieldsWithOutProject = [{
         label: 'Projects',
         sortable: true,
     }, {
-        key: 'Events',
-        label: 'Events',
+        key: 'ReferencesGiven',
+        label: 'References Given',
         sortable: true,
     }, {
-        key: 'References',
-        label: 'References',
+        key: 'Events',
+        label: 'Events',
         sortable: true,
     }, {
         key: 'Feedback',

@@ -33,7 +33,7 @@ export default {
     ModalLifecycle
   },
   computed: {
-    lifecycleList: () => {
+    lifecycleList: () => {//TODO: implement with `get lifecycleFull`
       // match lifecylce plans with projects 
       const lifecycles = JSON.parse(JSON.stringify( useLifecycle.withAll().get() ))
       const grpPrjs = useProject.withAll().groupBy('LifecycleId').get()

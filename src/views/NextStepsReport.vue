@@ -90,7 +90,7 @@ export default {
       const personWithProjects = JSON.parse(JSON.stringify( usePerson.withAllRecursive(2).get() ))
       const account = useAccount.all()[0]
       for(const person of personWithProjects){
-        for(const personProject of person.PersonProjectStatus){
+        for(const personProject of person.PersonProject){
 
           if( !isEmpty(toRaw(useDisplayStore.projectSelection)) ){
             if(personProject.ProjectId != useDisplayStore.projectSelection.id){
@@ -123,7 +123,7 @@ export default {
               const eventsWithLogs = []
               //const rec = {Date:null, Category:null, Type:null, StepOrder:null, StepCompleted:null, AddressFeedback:null, Comments:null}
               const events = personProject.Events.map(item => {
-                const event = useEvent.find(item.EventId)
+                const event = useEvent.find(item.id)
                 const rec = {
                   Date: this.getFormattedDate(event.Datetime),
                   Category: 'Event',
