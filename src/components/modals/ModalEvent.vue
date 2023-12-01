@@ -116,9 +116,9 @@ export default {
         //this.form.account.name = account.Fullname
         const contact = toRaw(this.contact)
         const event = toRaw(this.event)
-        if(contact){
+        if(!isEmpty(contact)){
           this.form.event.participants = this.sourceList.map(item => item.Fullname).join(', ')
-        }else if(event){
+        }else if(!isEmpty(event)){
           this.addItem(event)
         }
         else{

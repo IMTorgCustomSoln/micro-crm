@@ -11,7 +11,7 @@ export class Feedback extends Model {
         return{
             id: this.uid(),
             PersonProjectId: this.attr(null),
-            PersonProject: this.belongsTo(PersonProject, 'PersonProjectId'),
+            PersonProject: this.belongsTo(PersonProject, 'PersonProjectId'),    //TODO:note that this is different from Events - only one Source per Feedback
             Type: this.string(""),
             Role: this.string(""),
             Use: this.string(""),

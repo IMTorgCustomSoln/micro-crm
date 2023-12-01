@@ -46,6 +46,14 @@
                     <li><label for="fileSize">Size: &nbsp</label><output id="fileSize">{{ preview.fileSize }}</output></li>
                 </ul>
                 Then, press <code>Load</code> to populate the Workspace.
+                <b-button 
+                  id=''
+                  size="md" 
+                  class="my-2 my-sm-0" 
+                  type="button"
+                  @click="uploadAppDataInput"
+                  >Load
+                </b-button>
             </b-form>
             </b-form-group>
             </b-card>
@@ -83,14 +91,7 @@
                   @click="saveWorkStream"
                   >Save
                 </b-button>
-                <b-button 
-                  id=''
-                  size="md" 
-                  class="my-2 my-sm-0" 
-                  type="button"
-                  @click="uploadAppDataInput"
-                  >Load
-                </b-button>
+                
             </div>
         </template>
 
