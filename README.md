@@ -74,9 +74,9 @@ TypeError: Cannot read properties of undefined (reading 'newRawInstance')
      24|           ReferredBy: this.belongsTo(Person, 'RefId'),
 ```
 
-### ~~Run E2E Cypress~~ Fails
+### Run E2E Cypress
 
-Error in dev container
+Run cypres locally because dev container networking causes problems.  You may also have to disable firewalls, such LuLu.
 
 ```sh
 npm run cypress:open

@@ -1,0 +1,20 @@
+describe('My First Test', () => {
+  it('Visits the Kitchen Sink', () => {
+    cy.visit('https://example.cypress.io')
+
+    cy.contains('type').click()
+    cy.url().should('include', '/commands/actions')
+    cy.get('.action-email').type('fake@email.com')
+    cy.get('.action-email').should('have.value', 'fake@email.com')
+  })
+
+  /* ==== Test Created with Cypress Studio ==== */
+  it('try studio', function() {
+    /* ==== Generated with Cypress Studio ==== */
+    cy.visit('www.google.com');
+    cy.get(':nth-child(2) > .gb_E').should('have.text', 'Images');
+    cy.get(':nth-child(2) > .gb_E').click();
+    cy.get('#APjFqb').should('be.visible');
+    /* ==== End Cypress Studio ==== */
+  });
+})
