@@ -3,7 +3,8 @@
     People showing: {{peopleCount}}
   </div>
 
-  <b-table 
+  <b-table
+    id="tbl-next-steps" 
     striped hover small
     :items="getNextSteps"
     :fields="fields"
