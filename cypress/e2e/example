@@ -17,4 +17,11 @@ describe('My First Test', () => {
     cy.get('#APjFqb').should('be.visible');
     /* ==== End Cypress Studio ==== */
   });
+
+  /* ==== Test Created with Cypress Studio ==== */
+  it('Site Running', function() {
+    /* ==== Generated with Cypress Studio ==== */
+    cy.visit('localhost:5173');
+    /* ==== End Cypress Studio ==== */
+  });
 })

@@ -82,6 +82,14 @@ export function workingDaysBetweenDates(useMoment=true, start, end) {
 }
 
 
+Date.prototype.addDays = function(days){
+  //ref: https://stackoverflow.com/questions/563406/how-to-add-days-to-date
+  const date = new Date(this.valueOf());
+  date.setDate(date.getDate() + days);
+  return date
+}
+
+
 export function randomIntFromInverval(min, max, faker){
   //Get random integer between two integers
   //provide faker if a seed is needed for pseudo-random number generator

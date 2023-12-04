@@ -11,6 +11,7 @@ const DisplayStore = defineStore('display',{
             populateDefault: true,
             populateTestData: true,
             exportAppStateFileName: 'WorkSession.gz',
+            todaysDate: null,
 
             //Display
             viewCount: 0,
@@ -40,7 +41,7 @@ const DisplayStore = defineStore('display',{
             project: {
                 initialCategory: 'Software',
                 initialStatus: statuses[1],
-                initialStartDate: new Date(), 
+                initialStartDate: null, 
                 initialLifecycle: 'default',
                 availableCategory: ['Software', 'Hardware'],
                 availableStatus: statuses
@@ -53,6 +54,9 @@ const DisplayStore = defineStore('display',{
             }
         }
     },
+    getters:{
+        getTodaysDate: (state) => state.todaysDate
+    },
     actions:{
         setIsNavOpen(yesno) {
             this.isNavOpen = yesno;
@@ -60,7 +64,18 @@ const DisplayStore = defineStore('display',{
         toggleNav() {
             this.isNavOpen = !this.isNavOpen;
             console.log('toggled!')
-          }
+          },
+        initialize(){
+            this.setDate()
+        },
+        setDate(datetime=''){
+            let dt = new Date()
+            if(datetime!=''){
+                dt = new Date( Date.parse(datetime) )
+            }
+            this.todaysDate = dt
+            this.project.initialStartDate = dt
+        }
     }
 })
 

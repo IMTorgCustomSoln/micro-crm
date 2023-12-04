@@ -5,8 +5,8 @@
       "Name": "Handmade Metal Shoes",
       "Status": "active",
       "Category": "Table",
-      "StartDate": "2022-01-27T05:02:06.471Z",
-      "EndDate": "2022-08-15T04:02:06.471Z",
+      "StartDate": "2020-01-27T05:02:06.471Z",
+      "EndDate": "2020-08-15T04:02:06.471Z",
       "Repos": "https://wordy-handle.net",
       "LifecycleId": "TJBQwoU9w3tOmYmEF_7cy"
     },
@@ -15,8 +15,8 @@
       "Name": "Rustic Plastic Shirt",
       "Status": "active",
       "Category": "Pants",
-      "StartDate": "2021-09-27T08:16:43.676Z",
-      "EndDate": "2022-01-05T09:16:43.676Z",
+      "StartDate": "2020-01-27T08:16:43.676Z",
+      "EndDate": "2021-11-05T09:16:43.676Z",
       "Repos": "https://secret-expense.info",
       "LifecycleId": "TJBQwoU9w3tOmYmEF_7cy"
     }

@@ -4,7 +4,7 @@
       <main>
         <SideBar/>
         <b-container class="bv-example-row">
-          <div><b>Selected Project:</b> {{ selectedProjects }}</div>
+          <div id="selected-project"><b>Selected Project:</b> {{ selectedProjects }}</div>
             <b-row>
                 <component :is="selectedPath"/>
             </b-row>

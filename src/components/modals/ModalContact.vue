@@ -203,7 +203,7 @@ export default {
                               .LifecycleStep[0].id
         const initialStep = {
           LifecycleStepId: initialStepId,
-          CompletionDate: new Date()
+          CompletionDate: useDisplayStore.todaysDate
         }
         const personProject = {
           ProjectId: project.id,

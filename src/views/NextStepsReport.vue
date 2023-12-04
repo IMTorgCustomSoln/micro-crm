@@ -7,9 +7,12 @@
     striped hover small
     :items="getNextSteps"
     :fields="fields"
+    :sort-by.sync="table.sortBy"
+    :sort-desc.sync="table.sortDesc"
 
     primary-key='id'
-    responsive="sm" sticky-header="1000px"
+    responsive="sm"
+    sticky-header="1000px"
     bordered
     thead-class="tableHead bg-dark text-white"
     @row-clicked="expandAdditionalInfo"   
@@ -40,16 +43,26 @@
 
         <template #row-details="row">
               <b-card>
+                <b-row>
+                  <b-col sm="4">
+                    <b>Next Step Due Date: </b>{{ row.item.StepDueDate.toDateString() }}
+                  </b-col>
+                </b-row>
+                <b-row>
+                  <b-col sm="4">
+                    <b>Project Completion Date: </b>{{  row.item.ProjectEndDate.toDateString() }}
+                  </b-col>
+                </b-row>
                 <b-row class="mb-2">
                   <b-col sm="12" class="text-sm-left">
                     <b-table 
                       striped hover small
                       :items="row.item.EventLog"
                       :fields="detailsFields"
-                      :sort-by.sync="sortBy"
-                      :sort-desc.sync="sortDesc"
+                      :sort-by.sync="timeline.sortBy"
+                      :sort-desc.sync="timeline.sortDesc"
 
-                      responsive="sm" sticky-header="1000px"
+                      responsive="sm" 
                       bordered
                       thead-class="tableHead bg-dark text-white"
                       >
@@ -74,8 +87,14 @@ export default {
   name:'EventReport',
   data(){
     return {
-      sortBy: 'Order',
-      sortDesc: true,
+      table:{
+        sortBy: 'DaysUntilDue',
+        sortDesc: false,
+      },
+      timeline:{
+        sortBy: 'Order',
+        sortDesc: true,
+      },
       fields: fields,
       detailsFields: detailsFields,
       peopleCount: 0
@@ -99,21 +118,37 @@ export default {
           }   
               //
               const completed = personProject.StepStatus.filter(step => step.CompletionDate!=null)
-              const mxIdx = completed.length > 0 ? completed.length - 1 : 0
+              const mxIdx = completed.length > 0 
+                              ? completed.length - 1 
+                              : 0
               const lastCompletedStep = personProject.StepStatus[mxIdx]
-              const daysFromLastCompletedStepStart = workingDaysBetweenDates(true, toRaw(lastCompletedStep.CompletionDate) )
+              const daysFromLastCompletedStepStart = workingDaysBetweenDates(
+                                                        true, 
+                                                        toRaw(lastCompletedStep.CompletionDate),
+                                                        useDisplayStore.getTodaysDate 
+                                                        )
 
               //
               const lifecycleSteps = useLifecycle.withAllRecursive().find(personProject.Project.LifecycleId)
-              const currentStep = lifecycleSteps.LifecycleStep.length < mxIdx ? lifecycleSteps.LifecycleStep[mxIdx+1] : lifecycleSteps.LifecycleStep[mxIdx]
-              const daysUntilDue = daysFromLastCompletedStepStart - currentStep.DurationBizDays
+              const currentStep = lifecycleSteps.LifecycleStep.length > mxIdx + 1
+                                    ? lifecycleSteps.LifecycleStep[mxIdx+1] 
+                                    : lifecycleSteps.LifecycleStep[mxIdx]
+              const daysUntilDue = currentStep.DurationBizDays - daysFromLastCompletedStepStart
+              const dt = new Date(lastCompletedStep.CompletionDate)
+              const currentStepDueDate = dt.addDays(currentStep.DurationBizDays)
+              const daysUntilProjectEndDate = workingDaysBetweenDates(
+                                                  true,
+                                                  useDisplayStore.getTodaysDate,  
+                                                  personProject.Project.EndDate
+                                                  )
 
               //
               const record = {}
               record.DaysUntilDue = daysUntilDue
+              record.StepDueDate = currentStepDueDate
               record.DaysInCurrentStep = daysFromLastCompletedStepStart
-              record.DaysUntilProjectEndDate = workingDaysBetweenDates(true, personProject.Project.EndDate)
-              record.ProjectEndDate = (new Date(personProject.Project.EndDate)).toDateString()
+              record.DaysUntilProjectEndDate = daysUntilProjectEndDate
+              record.ProjectEndDate = (new Date(personProject.Project.EndDate))
               record.Person = person.Fullname
               record.Project = personProject.Project.Name
               record.personProject = [personProject]
@@ -182,7 +217,7 @@ export default {
         const comment = `Provisioned email with the following:'\n\n${msgInfo}`
         useEvent.save({
           PersonProject: toRaw(row.item.personProject),
-          Datetime: new Date(),
+          Datetime: useDisplayStore.todaysDate,
           Type: 'Message',
           Comments: comment,
         })
@@ -214,10 +249,6 @@ const fields = [{
 }, {
   key: 'DaysUntilProjectEndDate',
   label: 'Days Until Project End Date',
-  sortable: true
-}, {
-  key: 'ProjectEndDate',
-  label: 'Project End Date',
   sortable: true
 }, {
   key: 'Person',

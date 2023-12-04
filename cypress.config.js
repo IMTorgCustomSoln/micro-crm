@@ -1,5 +1,6 @@
 module.exports = {
   e2e: {
-    experimentalStudio: true
+    experimentalStudio: true,
+    baseUrl: 'http://localhost:5173/'
   },
 };

@@ -90,7 +90,8 @@ while(i < 5){
     const finalStepIdx = randomIntFromInverval(0, defaultSteps.length-1, faker)
     const arrSteps = Array(finalStepIdx).fill().map((element, index) => index + 1)
     arrSteps.unshift(0)
-    const dt = new Date()
+    const testDate = 'Jan 01 2020'
+    const dt = new Date( Date.parse(testDate))
     const StepStatuses = []
     for(const idx of arrSteps){
         //const step = defaultSteps[idx]

@@ -70,8 +70,8 @@
                 <p>
                     For learning purposes, demo data can be loaded.  This allows the user to try features that are available, otherwise.
                     <ul class="no-li-dot">
-                        <li>To load the app with demo data: <b-button @click="populateDemoData" size="sm" class="my-2 my-sm-0" >Load Demo</b-button></li>
-                        <li>To clear the app of all data: <b-button @click="clearDemoData" size="sm" class="my-2 my-sm-0" >Clear All Data</b-button></li>
+                        <li class="load-demo-data">To load the app with demo data: <b-button @click="populateDemoData" size="sm" class="my-2 my-sm-0" >Load Demo</b-button></li>
+                        <li>To clear the app of all data: <b-button @click="clearDemoData" size="sm" class="clear-data my-2 my-sm-0" >Clear All Data</b-button></li>
                     </ul>
                 </p>
             </div>
@@ -157,23 +157,36 @@ export default {
     methods:{
         populateDemoData(){
             //load test data
+            const testDate = 'May 01 2020'
+            const dt = new Date( Date.parse(testDate))
+            useDisplayStore.setDate(dt)
+            console.log(`Today's date set to: ${useDisplayStore.getTodaysDate}`)
+            
             if(useDisplayStore.populateTestData){
                 populateLifecycleTestData(useLifecycle)
                 populateAccountTestData(useAccount)
                 populateProjectTestData(useProject)
-                populateContactTestData(usePerson)    //, useProject)
-                populateEventTestData(useEvent)    //, usePersonProject, usePerson)
-                populateFeedbackTestData(useFeedback)   //, usePersonProject, usePerson)
+                populateContactTestData(usePerson)
+                populateEventTestData(useEvent)
+                populateFeedbackTestData(useFeedback)
                 populatePersonProject(usePersonProject, usePerson, useDisplayStore)
             }
+            this.resetModal();
         },
         clearDemoData(){
+            useAccount.flush()
+            useProject.flush()
+            usePerson.flush()
+            useEvent.flush()
+            useFeedback.flush()
+
             const keys = Object.keys(localStorage)
             for(let key of keys){
-                if( ['Lifecycle', 'LifecycleStep'].indexOf(key) == -1 ){
+                if( ['Lifecycle', 'LifecycleStep'].indexOf(key) == -1 ){    //don't delete default lifecycle
                     localStorage.removeItem(key)
                 }
             }
+            this.resetModal()
         },
         async saveWorkStream(e){
             const create = e.target
@@ -201,7 +214,7 @@ export default {
               } catch (err) {
                 console.error(err.name, err.message);
               }
-              this.$bvModal.hide("save-continue-modal")
+              this.resetModal()
         },
         async uploadAppDataInput(){
             let buffer = ''

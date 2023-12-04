@@ -15,31 +15,34 @@
             <b-card bg-variant="light">
                 <b-form-group
                   label="Name:"
-                  label-for="nested-street"
+                  label-for="account-name"
                   label-cols-sm="3"
                   label-align-sm="right"
                 >
-                  <b-form-input id="nested-street" v-model="form.account.name"></b-form-input>
+                  <b-form-input id="account-name" v-model="form.account.name"></b-form-input>
                 </b-form-group>
             </b-card>
 
             <div>
                 <em>Admin Mode enables the user to make changes not typically available.</em>
                 <b-button 
-                    @click="toggleAdminState" 
+                    @click="toggleAdminState"
+                    id="admin-state" 
                     size="sm" 
                     variant="danger"
                     :pressed.sync="adminMode"
                     >
                      Admin Mode is {{ adminDisplay }}
                 </b-button>
+                <br>
+                Date set for calculations as 'today' (may change for demos): {{store.getTodaysDate.toLocaleDateString("en-US")}}
             </div>
 
 
         </b-form>
         </div>
         <template #modal-footer>
-            <b-button @click="addAccount" v-b-modal.modal-close_visit class="btn-sm m-1" >Add / Update</b-button>
+            <b-button @click="addAccount" v-b-modal.modal-close_visit class="account-save btn-sm m-1" >Add / Update</b-button>
         </template>
     </b-modal>
 
@@ -56,6 +59,7 @@ export default {
         return{
             adminMode: true,
             adminDisplay: 'On',
+            store: useDisplayStore,
             form:{
                 error:'',
                 account: {
@@ -75,12 +79,15 @@ export default {
     },
     methods:{
         addAccount(){
-            return true
+            useAccount.save({
+                Fullname: this.form.account.name
+            })
+            useDisplayStore.enableAdmin = this.adminMode;
+            this.$bvModal.hide('account-modal');
         },
         toggleAdminState(){
-            this.adminMode = !useDisplayStore.enableAdmin;
+            this.adminMode = !this.adminMode;
             this.adminDisplay = this.adminMode ? 'On' : 'Off';
-            useDisplayStore.enableAdmin = this.adminMode;
         }
     }
 }

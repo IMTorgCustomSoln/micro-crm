@@ -54,6 +54,12 @@ This project builds into a single file: ./dist/index.html using the plugin with 
 npm run build
 ```
 
+Check the build to ensure everything runs correctly:
+
+```sh
+npm run preview
+```
+
 ### ~~Run Unit Tests with [Vitest](https://vitest.dev/)~~ Fails
 
 ```sh
@@ -76,7 +82,9 @@ TypeError: Cannot read properties of undefined (reading 'newRawInstance')
 
 ### Run E2E Cypress
 
-Run cypres locally because dev container networking causes problems.  You may also have to disable firewalls, such LuLu.
+Run cypres locally because dev container networking causes problems.  You may also have to disable firewalls, such as LuLu.
+
+CypressStudio can be convenient.  Prevent browser policy issues by following [these instructions](https://stackoverflow.com/questions/70237963/cant-run-cypress-tests-in-chrome-edge-browsersbeing-manageed-by-organization#:~:text=You%20can%20try%20doing%20this%3A%201%20Open%20the,4%20Close%20cypress%20and%20open%20it%20up%20again).
 
 ```sh
 npm run cypress:open

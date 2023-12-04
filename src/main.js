@@ -25,6 +25,7 @@ app.use(pinia)
 import DisplayStore from '@/stores/DisplayStore';
 
 export const useDisplayStore = DisplayStore()
+useDisplayStore.initialize()
 
 
 
@@ -52,7 +53,6 @@ export const useFeedback = useRepo(Feedback, pinia);
 //set defaults
 import { defaultSteps, defaultLifecycle } from '@/assets/defaults.js';
 
-//test data
 for(let step of defaultSteps){
     defaultLifecycle.LifecycleStep.push(step)
   }
@@ -65,24 +65,7 @@ if(useDisplayStore.populateDefault){
           LifecycleStep: plan.LifecycleStep
         });
       }
-}/*
-const lifecycleSteps = []
-for(const step of defaultSteps){
-    const newStep = new LifecycleStep({
-        id: step.id,
-        Name: step.Name,
-        DurationBizDays: step.DurationBizDays,
-        Order: step.Order,
-        Placeholder: step.Placeholder, 
-        EmailForm: step.EmailForm
-    })
-    lifecycleSteps.push(newStep)
-  }
-useLifecycle.save({
-    id: "TJBQwoU9w3tOmYmEF_7cy",
-    Name: "default",
-    LifecycleStep: lifecycleSteps
-})*/
+}
 
 
 app.mount('#app')
