@@ -27,7 +27,7 @@ const DisplayStore = defineStore('display',{
                 {value: '5', text: 'Feedback', path:'FeedbackPage'},
 
                 //Sidebar.vue / reports
-                {value: '6', text: 'Event Summary', path:'EventReport'},
+                {value: '6', text: 'Event Summary', path:'EventSummaryReport'},
                 {value: '7', text: 'Next Steps', path:'NextStepsReport'}
 
               ],

@@ -116,8 +116,9 @@ export default {
             if(personProject.ProjectId != useDisplayStore.projectSelection.id){
               continue
             }
-          }   
-              //
+          }
+              //TODO:move to action on PersonProject  
+              //last completed step
               const completed = personProject.StepStatus.filter(step => step.CompletionDate!=null)
               const mxIdx = completed.length > 0 
                               ? completed.length - 1 
@@ -129,7 +130,7 @@ export default {
                                                         useDisplayStore.getTodaysDate 
                                                         )
 
-              //
+              //current step
               const lifecycleSteps = useLifecycle.withAllRecursive().find(personProject.Project.LifecycleId)
               const currentStep = lifecycleSteps.LifecycleStep.length > mxIdx + 1
                                     ? lifecycleSteps.LifecycleStep[mxIdx+1] 
@@ -137,13 +138,15 @@ export default {
               const daysUntilDue = currentStep.DurationBizDays - daysFromLastCompletedStepStart
               const dt = new Date(lastCompletedStep.CompletionDate)
               const currentStepDueDate = dt.addDays(currentStep.DurationBizDays)
+
+              //project
               const daysUntilProjectEndDate = workingDaysBetweenDates(
                                                   true,
                                                   useDisplayStore.getTodaysDate,  
                                                   personProject.Project.EndDate
                                                   )
 
-              //
+              //record
               const record = {}
               record.DaysUntilDue = daysUntilDue
               record.StepDueDate = currentStepDueDate
@@ -155,7 +158,7 @@ export default {
               record.personProject = [personProject]
               record.CurrentStep = currentStep.Name
 
-              //
+              //related events
               const eventsWithLogs = []
               //const rec = {Date:null, Category:null, Type:null, StepOrder:null, StepCompleted:null, AddressFeedback:null, Comments:null}
               const events = personProject.Events.map(item => {
