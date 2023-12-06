@@ -39,7 +39,7 @@ import { getMethod } from '@/assets/utils';
 import {useDisplayStore} from '@/main.js';
 import {usePerson, useProject} from '@/main.js';
 import ModalProject from '@/components/modals/ModalProject.vue';
-import ExportToCsv from '../ExportToCsv.vue';
+import ExportToCsv from '@/components/shared/ExportToCsv.vue';
 
 
 export default {

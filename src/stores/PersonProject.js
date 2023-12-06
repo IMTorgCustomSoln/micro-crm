@@ -50,10 +50,13 @@ export class PersonProject extends Model {
         }
       }
     }
-  }/*
-  get personProjectFull(){
-
-  }*/
+  }
+  get contactProjectFull(){
+    if(this.Person.IsContact==false){
+      return null
+    }
+    return this
+  }
 }
 
 

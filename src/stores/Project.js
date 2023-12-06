@@ -1,6 +1,6 @@
 import { Model } from 'pinia-orm';
 import { StringCast, DateCast } from 'pinia-orm/casts';
-import { useDisplayStore, usePersonProject } from '@/main';
+import { useDisplayStore, usePersonProject, usePerson } from '@/main';
 import { Lifecycle } from './Lifecycle';
 import { PersonProject } from './PersonProject';
 
@@ -30,6 +30,31 @@ export class Project extends Model {
       EndDate: DateCast
     }
   }
+  static saved (model) {
+    //initialize non-contact Person for Events without contacts
+    const personList = usePerson.all().filter(item => item.IsContact==false)
+    if(personList.length==1){
+      const newProject = {
+        ProjectId: model.id,
+        StepStatus:[]
+      }
+      const person = JSON.parse(JSON.stringify( personList[0] ))
+      person.PersonProject.push(newProject)
+      usePerson.save(person)
+    } else if(personList.length==0){
+      usePerson.save({
+        id: 'user-account',
+        Fullname: 'USER ACCOUNT',
+        IsContact: false,
+        PersonProject: [{
+          ProjectId: model.id,
+          StepStatus:[]
+        }]
+      })
+    } else {
+      throw new Error("personList with id: 'user-account'is greater than 1")
+    }
+  }
   get projectFull () {
     const project = {
       id: this.id,
@@ -41,7 +66,16 @@ export class Project extends Model {
       Lifecycle: this.Lifecycle,
       Repos: this.Repos
     }
-    const peoplePerProject = usePersonProject.withAll().groupBy('ProjectId').get()
+    const contacts = usePerson.all()
+                      .map(item => item.contactLimited)
+                      .filter(item => item!=null)
+                      .map(item => item.id)
+    const peoplePerProject = usePersonProject
+                              .where('PersonId', contacts)
+                              .withAll()
+                              .groupBy('ProjectId')
+                              .get()
+    //const peoplePerProject = usePersonProject.withAll().groupBy('ProjectId').get()
     project.Contacts = peoplePerProject[project.id]
     project.ContactCount = project.Contacts ? project.Contacts.length : 0
     project.StartDate = new Date(project.StartDate)

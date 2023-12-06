@@ -33,7 +33,8 @@ import FeedbackPage from '@/views/FeedbackPage.vue';
 
 //Sidebar:Reports
 import EventSummaryReport from '@/views/EventSummaryReport.vue';
-import NextStepsReport from './views/NextStepsReport.vue';
+import NextStepsReport from '@/views/NextStepsReport.vue';
+import TimesheetReport from '@/views/TimesheetReport.vue';
 
 
 export default {
@@ -55,7 +56,8 @@ export default {
 
     //
     EventSummaryReport,
-    NextStepsReport
+    NextStepsReport,
+    TimesheetReport
   },
   data() {
     return {

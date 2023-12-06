@@ -97,7 +97,7 @@
 import {toRaw} from 'vue';
 import {isEmpty} from '@/assets/utils.js';
 import {useDisplayStore} from '@/main.js';
-import WorkSessionIO from './WorkSessionIO.vue';
+import WorkSessionIO from '@/components/modals/WorkSessionIO.vue';
 
 import ModalAccount from '@/components/modals/ModalAccount.vue'
 //import ModalContact from '@/components/ModalContact.vue';

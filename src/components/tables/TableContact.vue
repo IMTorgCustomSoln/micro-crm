@@ -63,7 +63,7 @@ import {useDisplayStore, usePerson, usePersonProject, useEvent, useFeedback, use
 import ModalContact from '@/components/modals/ModalContact.vue';
 import ModalEvent from '@/components/modals/ModalEvent.vue'
 import ModalFeedback from '@/components/modals/ModalFeedback.vue'
-import ExportToCsv from '@/components/ExportToCsv.vue';
+import ExportToCsv from '@/components/shared/ExportToCsv.vue';
 
 export default{
   name: 'TableContact',
@@ -96,10 +96,10 @@ export default{
     contactList: () => {
       const isEmptyProject = isEmpty(useDisplayStore.projectSelection)
       if(!isEmptyProject){
-        const projects = usePerson.withAll().get().map(item => item.personWithSelectedProject).filter(item => item != undefined)
+        const projects = usePerson.withAll().get().map(item => item.contactWithSelectedProject).filter(item => item != undefined)
         return projects
       }else{
-        const projects = usePerson.withAll().get().map(item => item.personWithProjectFull)
+        const projects = usePerson.withAll().get().map(item => item.contactWithProjectFull).filter(item => item != undefined)
         return projects
       }
     },

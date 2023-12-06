@@ -99,6 +99,9 @@ npm run lint
 
 ## Workflows
 
+
+### Usage
+
 * Select Project
   - Select View > Project
   - Click on project row
@@ -135,6 +138,14 @@ npm run lint
   - project accomplishmnents
   - ...
 
+
+### Build
+
+To create a new report:
+
+* add record to `src/stores/DisplayStore.js` in the `options` array
+* create component `src/views/*Report.vue`
+* then add to the `components` property in `src/App.vue`  
 
 
 

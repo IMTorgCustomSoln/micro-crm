@@ -218,6 +218,7 @@ export default {
                                 .where('ProjectId', currenProjectIds)
                                 .get()
       personProjects.push(...existingProjects)
+      //TODO:different for new or updated Person???
       //save
       usePerson.save({
         id: this.form.contact.id,

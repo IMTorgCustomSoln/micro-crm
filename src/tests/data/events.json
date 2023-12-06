@@ -7,10 +7,44 @@
                 {"id":"tec5KPZx1SAasAfSMqR-y"}
             ],
             "Type": "Meeting",
-            "Datetime": "2020-03-28T16:51:37.219Z",
+            "StartDatetime": "2020-03-28T09:00:00.219Z",
+            "EndDatetime": "2020-03-28T10:00:00.219Z",
             "AddressFeedback": null,
             "StepCompleted": null,
             "Comments": "Architecto mollitia eaque."
+        },
+        {
+            "id":"11RNFrt7C03SnG33uqfJO",
+            "PersonProject": [],
+            "Type": "Planning",
+            "StartDatetime": "2020-04-01T09:00:00.219Z",
+            "EndDatetime": "2020-04-03T10:00:00.219Z",
+            "AddressFeedback": null,
+            "StepCompleted": null,
+            "Comments": "Planning good stuff."
+        },
+        {
+            "id":"21RNFrt7C03SnG33uqfJO",
+            "PersonProject": [],
+            "Type": "Developing",
+            "StartDatetime": "2020-04-04T09:00:00.219Z",
+            "EndDatetime": "2020-04-15T10:00:00.219Z",
+            "AddressFeedback": null,
+            "StepCompleted": null,
+            "Comments": "Building something amazing."
+        },
+        {
+            "id":"31RNFrt7C03SnG33uqfJO",
+            "PersonProject": [
+                {"id":"YV5nqUk5uixzoXH8cNekt"},
+                {"id":"tec5KPZx1SAasAfSMqR-y"}
+            ],
+            "Type": "Presenting",
+            "StartDatetime": "2020-04-11T09:00:00.219Z",
+            "EndDatetime": "2020-04-13T10:00:00.219Z",
+            "AddressFeedback": null,
+            "StepCompleted": null,
+            "Comments": "Show it to the customer."
         }
     ]
 }

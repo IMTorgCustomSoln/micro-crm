@@ -1,5 +1,5 @@
 import { Model } from 'pinia-orm'
-import { StringCast } from 'pinia-orm/casts'
+import { StringCast, BooleanCast, ArrayCast } from 'pinia-orm/casts'
 import { PersonProject } from '@/stores/PersonProject'
 
 import { isEmpty } from '@/assets/utils'
@@ -19,6 +19,7 @@ export class Person extends Model {
     return {
       id: this.uid(),
       Fullname: this.string(""),
+      IsContact: this.boolean(true),    //should person be used as contact?
       Title: this.string(""),
       Email: this.string(""),
       Number: this.string(""),
@@ -35,15 +36,20 @@ export class Person extends Model {
   static casts(){
     return {
       Fullname: StringCast,
+      IsContact: BooleanCast,
       Title: StringCast,
       Email: StringCast,
       Number: StringCast,
       Office: StringCast,
-      Firm: StringCast
+      Firm: StringCast,
+      PersonProject: ArrayCast
     }
   }
-  get personLimited(){
-    const person = {
+  get contactLimited(){
+    if(this.IsContact==false){
+      return null
+    }
+    const contact = {
       id: this.id,
       Fullname: this.Fullname,
       Title: this.Title,
@@ -51,7 +57,7 @@ export class Person extends Model {
       Number: this.Number,
       Office: this.Office
     }
-    return person
+    return contact
   }
   get referredBy(){
     let prjGroups = []
@@ -76,7 +82,10 @@ export class Person extends Model {
       return prjGroups.length
     }
   }
-  get personWithSelectedProject(){
+  get contactWithSelectedProject(){
+    if(this.IsContact==false){
+      return null
+    }
     //record
     const person = {
       id: this.id,
@@ -134,7 +143,10 @@ export class Person extends Model {
     person['Feedback'] = prjGroups.map(function (item) { return this.acc += item.Feedback.length; }, { acc: 0 })[prjGroups.length - 1]
     return person
   }
-  get personWithProjectFull(){
+  get contactWithProjectFull(){
+    if(this.IsContact==false){
+      return null
+    }
     //record
     const person = {
       id: this.id,

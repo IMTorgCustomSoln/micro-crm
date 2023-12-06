@@ -164,7 +164,8 @@ export default {
               const events = personProject.Events.map(item => {
                 const event = useEvent.find(item.id)
                 const rec = {
-                  Date: this.getFormattedDate(event.Datetime),
+                  EndDate: this.getFormattedDate(event.EndDatetime),
+                  TimeLength: event.TimeLength,
                   Category: 'Event',
                   Type: event.Type, 
                   StepOrder: null, 
@@ -176,7 +177,8 @@ export default {
               });
               const steps = personProject.StepStatus.map(item => {
                 const rec = {
-                  Date: this.getFormattedDate(item.CompletionDate),
+                  EndDate: this.getFormattedDate(item.CompletionDate),
+                  TimeLength: '',    //TODO
                   Category: 'Lifecycle',
                   Type: item.LifecycleStep.Name, 
                   StepOrder: item.LifecycleStep.Order, 
@@ -274,10 +276,14 @@ const fields = [{
 
 const detailsFields = [
   {
-    key: 'Date',
+    key: 'EndDate',
     label: 'Date',
     sortable: true,
     //formatter: "getFormattedDate"
+  },{
+    key: 'TimeLength',
+    label: 'Time Length (days)',
+    sortable: true
   },{
     key: 'Category',
     label: 'Category',

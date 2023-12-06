@@ -72,15 +72,23 @@ export default{
         const participanttNames = personProjects.map(item => item.Fullname)
         const participantList = getUniqueArrValues(participanttNames)
         return `(${participantList.length}) - ${participantList.join(', ')}`
+      },
+      formatTimeLength(val){
+        return val
       }
     }
 }
 
 const tableFields = [{
-        key: 'Date',
+        key: 'StartDate',
         label: 'Date',
         sortable: true,
         formatter: "getDateString"
+    }, {
+        key: 'TimeLength',
+        label: 'Time Length (days)',
+        sortable: true,
+        formatter: "formatTimeLength"
     }, {
         key: 'Type',
         label: 'Type',

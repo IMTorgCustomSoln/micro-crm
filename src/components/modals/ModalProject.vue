@@ -196,7 +196,7 @@ export default {
         });
       } else {
         //create new
-        useProject.save({
+        const newProject = useProject.save({
           Name: this.form.project.name,
           Status: this.form.project.status,
           Category: this.form.project.category,

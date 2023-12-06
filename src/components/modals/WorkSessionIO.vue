@@ -108,7 +108,7 @@ import { useDisplayStore,
             useEvent,
             useFeedback
         } from '@/main';
-import { getFormattedFileSize, getSetDifferenceOfArrays } from '../assets/utils.js';
+import { getFormattedFileSize, getSetDifferenceOfArrays } from '@/assets/utils.js';
 
 // fixed values
 import {populateLifecycleTestData,
@@ -165,9 +165,9 @@ export default {
             if(useDisplayStore.populateTestData){
                 populateLifecycleTestData(useLifecycle)
                 populateAccountTestData(useAccount)
-                populateProjectTestData(useProject)
+                populateProjectTestData(useProject, usePerson)
                 populateContactTestData(usePerson)
-                populateEventTestData(useEvent)
+                populateEventTestData(useEvent, usePerson)
                 populateFeedbackTestData(useFeedback)
                 populatePersonProject(usePersonProject, usePerson, useDisplayStore)
             }

@@ -15,6 +15,29 @@ export function getMethod(obj, methodName){
   return res;
 }
 
+
+export function removeItemOnce(arr, value) {
+  var index = arr.indexOf(value);
+  if (index > -1) {
+    arr.splice(index, 1);
+  }
+  return arr;
+}
+
+
+export function removeItemAll(arr, value) {
+  var i = 0;
+  while (i < arr.length) {
+    if (arr[i] === value) {
+      arr.splice(i, 1);
+    } else {
+      ++i;
+    }
+  }
+  return arr;
+}
+
+
 export function arraysEqual(a, b) {
   //Test equality of two arrays
   //ref: https://stackoverflow.com/questions/3115982/how-to-check-if-two-arrays-are-equal-with-javascript?noredirect=1&lq=1
@@ -79,6 +102,43 @@ export function workingDaysBetweenDates(useMoment=true, start, end) {
     //console.log(diffDays + " days");
    return diffDays
   }
+}
+
+
+export function totalTimeBetweenDates(units='days', start, end) {
+  //Calculate total time (not business days) between two dates, or today, if `end` not provided.
+  // start < end: start occurs before end
+  //TODO: use `moment.js`
+  //ref: https://stackoverflow.com/questions/28425132/how-to-calculate-number-of-working-days-between-two-dates-in-javascript-using
+   let diff = 0.0
+   if(Object.prototype.toString.call(start)!='[object Date]'){
+    start = new Date(start)
+    }
+    if(end){
+      if(Object.prototype.toString.call(end)!='[object Date]'){
+        end = new Date(end)
+      }
+      diff = end - start
+    } else {
+      const today = new Date()
+      diff = today - start
+    }
+    const diffTime = diff;
+    //const diffTime = Math.abs(diff);
+    //console.log(diffTime + " milliseconds");
+    let result = 0
+    switch(units){
+      case 'hours':
+        const diffHours = diffTime / (1000 * 60 * 60);
+        result = diffHours;
+        //console.log(diffDays + " hours");
+      case 'days':
+        const diffDays = diffTime / (1000 * 60 * 60 * 24);
+        result = diffDays;
+        //console.log(diffDays + " days");
+    }
+    const rnd = Math.round((result + Number.EPSILON) * 100) / 100;
+   return rnd
 }
 
 

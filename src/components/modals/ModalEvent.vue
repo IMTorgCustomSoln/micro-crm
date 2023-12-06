@@ -55,12 +55,81 @@
                 </b-form-group>
 
                 <b-form-group
-                  label="Date:"
+                  label="Start Datetime:"
                   label-for="nested-street"
                   label-cols-sm="3"
                   label-align-sm="right"
                 >
-                  <b-form-datepicker id="project-startdate" v-model="form.event.datetime" class="mb-2"></b-form-datepicker>
+                <b-input-group class="mb-3">
+                    <b-form-input
+                        id="example-input"
+                        v-model="form.event.datetimeStart"
+                        type="text"
+                        placeholder="YYYY-MM-DD HH:mm"
+                        autocomplete="off"
+                        >
+                      </b-form-input>
+
+                      <b-input-group-append>
+                        <b-form-datepicker
+                          button-only
+                          right
+                          locale="en-US"
+                          aria-controls="example-input"
+                          @context="onStartContext"
+                          >
+                        </b-form-datepicker>
+                        <b-form-timepicker
+                          value="08:30:00"
+                          button-only
+                          right
+                          locale="en"
+                          aria-controls="example-input"
+                          @context="onStartContext"
+                          >
+                        </b-form-timepicker>
+                      </b-input-group-append>
+
+                    </b-input-group>
+                </b-form-group>
+
+                <b-form-group
+                  label="End Datetime:"
+                  label-for="nested-street"
+                  label-cols-sm="3"
+                  label-align-sm="right"
+                >
+                <b-input-group class="mb-3">
+                    <b-form-input
+                        id="example-input"
+                        v-model="form.event.datetimeEnd"
+                        type="text"
+                        placeholder="YYYY-MM-DD HH:mm"
+                        autocomplete="off"
+                        >
+                      </b-form-input>
+
+                      <b-input-group-append>
+                        <b-form-datepicker
+                          button-only
+                          right
+                          locale="en-US"
+                          aria-controls="example-input"
+                          @context="onEndContext"
+                          >
+                        </b-form-datepicker>
+                        <b-form-timepicker
+                          value="17:00:00"
+                          button-only
+                          right
+                          locale="en"
+                          aria-controls="example-input"
+                          @context="onEndContext"
+                          >
+                        </b-form-timepicker>
+                      </b-input-group-append>
+
+                    </b-input-group>
                 </b-form-group>
 
                 <b-form-group
@@ -88,19 +157,31 @@ import {toRaw} from 'vue';
 import {useEvent, useFeedback} from '@/main';
 import {useDisplayStore, usePersonProject, usePerson} from '@/main';
 import { isEmpty } from '@/assets/utils';
+//import DateTimePicker from '@/components/shared/DateTimePicker.vue';
+
 
 export default {
     name: 'ModalEvent',
     props:['event','contact'],
+    //components:{DateTimePicker},
     data(){
         return{
             eventsOriginal:null,
             form:{
                 error:'',
+                start:{
+                  date: null,
+                  time: null
+                },
+                end:{
+                  date: null,
+                  time: null
+                },
                 event: {
                   participants: null,
                   projects:null,
-                  datetime: null,
+                  datetimeStart: null,
+                  datetimeEnd: null,
                   type: null,
                   addressFeedback: null,
                   stepCompleted: null,
@@ -143,6 +224,38 @@ export default {
       }
     },
     methods:{
+      onStartContext(ctx) {
+        if(Object.keys(ctx).indexOf( 'activeDate' ) != -1){
+          this.form.start.date = ctx.activeYMD
+          console.log(`ctx.activeYMD ${ctx.activeYMD}` )
+
+        } else if (Object.keys(ctx).indexOf( 'formatted' ) != -1){
+          this.form.start.time = ctx.value
+          console.log(`ctx.formatted ${ctx.value}` )
+
+        }else{
+          throw TypeError
+        }
+        const dtStr = this.form.start.date + ' ' + this.form.start.time 
+        this.form.event.datetimeStart = new Date(dtStr)
+        console.log(this.form.event.datetimeStart)
+      },
+      onEndContext(ctx) {
+        if(Object.keys(ctx).indexOf( 'activeDate' ) != -1){
+          this.form.end.date = ctx.activeYMD
+          console.log(`ctx.activeYMD ${ctx.activeYMD}` )
+
+        } else if (Object.keys(ctx).indexOf( 'formatted' ) != -1){
+          this.form.end.time = ctx.value
+          console.log(`ctx.formatted ${ctx.value}` )
+
+        }else{
+          throw TypeError
+        }
+        const dtStr = this.form.end.date + ' ' + this.form.end.time 
+        this.form.event.datetimeEnd = new Date(dtStr)
+        console.log(this.form.event.datetimeEnd)
+      },
       initializeFormValues(){
         console.log('TODO: init values')
       },
@@ -150,7 +263,8 @@ export default {
         this.eventsOriginal = event
         this.form.event.participants = event.Particpants.map(item => item.Fullname).join(', ')
         this.form.event.projects = event.Project.map(item => item.Project.Name).join(', ');
-        this.form.event.datetime = new Date( Date.parse(event.Date));
+        this.form.event.datetimeStart = new Date( Date.parse(event.StartDate));
+        this.form.event.datetimeEnd = new Date( Date.parse(event.EndDate));
         this.form.event.type = event.Type;
         this.form.event.addressFeedback = event.AddressFeedback;
         this.form.event.stepCompleted = event.StepCompleted;
@@ -175,7 +289,8 @@ export default {
               useEvent.save({
                 PersonProject: personProjectIds,
                 Type: this.form.event.type,
-                Datetime: new Date(Date.parse(this.form.event.datetime)),
+                StartDatetime: new Date(Date.parse(this.form.event.datetimeStart)),
+                EndDatetime: new Date(Date.parse(this.form.event.datetimeEnd)),
                 AddressFeedback: this.form.event.addressFeedback,
                 StepCompleted: this.form.event.stepCompleted,
                 Comments: this.form.event.comments,
@@ -185,7 +300,8 @@ export default {
                 id: this.eventsOriginal.id,
                 PersonProject: personProjectIds,
                 Type: this.form.event.type,
-                Datetime: new Date(Date.parse(this.form.event.datetime)),
+                StartDatetime: new Date(Date.parse(this.form.event.datetimeStart)),
+                EndDatetime: new Date(Date.parse(this.form.event.datetimeEnd)),
                 AddressFeedback: this.form.event.addressFeedback,
                 StepCompleted: this.form.event.stepCompleted,
                 Comments: this.form.event.comments,
