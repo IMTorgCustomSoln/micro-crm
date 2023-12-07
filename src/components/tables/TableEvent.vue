@@ -25,7 +25,7 @@
 
 <script>
 import { getUniqueArrValues } from '@/assets/utils';
-import { useEvent, usePerson } from '@/main';
+import { useEvent, usePerson, useProject } from '@/main';
 import ModalEvent from '@/components/modals/ModalEvent.vue'
 
 export default{
@@ -43,10 +43,18 @@ export default{
     },
     computed:{
         eventList(){
+          //TODO: how to use recursion?, previously: const events = useEvent.withAllRecursive().get().map(item => item.eventFull)
           const events = useEvent
-                          .withAllRecursive()
+                          .withAll()
                           .get()
                           .map(item => item.eventFull)
+          const projects = useProject.all()
+          for(const event of events){
+            event.Project.map(personProject => {
+              const project = projects.filter(project => project.id == personProject.ProjectId)[0]
+              personProject.Project = project
+            })
+          }
           return events
         }
     },

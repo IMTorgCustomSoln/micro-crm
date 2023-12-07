@@ -103,16 +103,16 @@ export function populatePersonProject(usePersonProject, usePerson, useDisplaySto
                                 .map(item => item.contactProjectFull)
                                 .filter(item => item!=null)
     useDisplayStore.projectSelection = contactProjectList[0].Project
-    const personSelectedProjectList = usePerson.withAll().get()
-                                        .map(item => item.personWithSelectedProject)
+    const contactSelectedProjectList = usePerson.withAll().get()
+                                        .map(item => item.contactWithSelectedProject)
                                         .filter(item => item != undefined)
-    const personAllProjectList = usePerson.withAll().get()
+    const contactAllProjectList = usePerson.withAll().get()
                                     .map(item => item.contactWithProjectFull)
                                     .filter(item => item!=null)
     
     const check1 = contactProjectList.length == 5
-    const check2 = personSelectedProjectList.length == 2
-    const check3 = personAllProjectList.length == 5
+    const check2 = contactSelectedProjectList.length == 2
+    const check3 = contactAllProjectList.length == 5
     console.log(`check-1 usePersonProject: ${check1}`)
     console.log(`check-2 usePerson: ${check2}`)
     console.log(`check-3 usePerson: ${check3}`)

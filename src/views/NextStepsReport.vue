@@ -107,7 +107,7 @@ export default {
       //click for expansion of event log history
       //email send: Person.Email, body(filled)
       const results = []
-      const personWithProjects = JSON.parse(JSON.stringify( usePerson.withAllRecursive(2).get() ))
+      const personWithProjects = JSON.parse(JSON.stringify( usePerson.withAllRecursive(2).get().filter(item => item.IsContact == true) ))
       const account = useAccount.all()[0]
       for(const person of personWithProjects){
         for(const personProject of person.PersonProject){

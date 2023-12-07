@@ -39,10 +39,24 @@ export default {
   },
   computed:{
     getProjects:()=>useProject.all(),
+    getEvents(){
+      const events = useEvent
+                          .withAll()
+                          .get()
+                          .map(item => item.eventFull)
+          const projects = useProject.all()
+          for(const event of events){
+            event.Project.map(personProject => {
+              const project = projects.filter(project => project.id == personProject.ProjectId)[0]
+              personProject.Project = project
+            })
+          }
+          return events
+    }
   },
   methods:{
     getEventsByProject(project){ 
-      const events = useEvent.withAllRecursive().get().map(item => item.eventFull)
+      const events = this.getEvents//.map(item => item.eventFull)
       const records = []
       for(const event of events){
         const projectsIdsLinkedToEvent = events.flatMap(item => getUniqueArrValues( item.Project.map(prj => prj.ProjectId )) )

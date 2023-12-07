@@ -26,7 +26,7 @@
 
 
 <script>
-import { useFeedback, usePerson } from '@/main';
+import { useFeedback, usePerson, useProject } from '@/main';
 import ModalFeedback from '../modals/ModalFeedback.vue';
 
 export default{
@@ -44,7 +44,22 @@ export default{
     },
     computed:{
         feedbackList(){
-          return useFeedback.withAllRecursive().get().map(item => item.feedbackFull)
+          //TODO:fix rercusion: return useFeedback.withAll().get().map(item => item.feedbackFull)
+          const feedbacks = useFeedback
+                          .withAll()
+                          .get()
+                          .map(item => item.feedbackFull)
+          const projects = useProject.all()
+          for(const feedback of feedbacks){
+              const projectRec = projects.filter(project => project.id == feedback.Project.ProjectId)[0]
+              feedback.Project.Project = projectRec
+          }
+          const persons = usePerson.all()
+          for(const feedback of feedbacks){
+              const personRec = persons.filter(person => person.id == feedback.Source.PersonId)[0]
+              feedback.Source.Person = personRec
+          }
+          return feedbacks
         }
     },
     methods:{
