@@ -98,7 +98,7 @@
 <script>
 import { toRaw } from 'vue';
 import {useDisplayStore} from '@/main.js';
-import {useProject, useLifecycle, usePerson} from '@/main.js';
+import {useProject, useLifecycle, usePerson, usePersonProject} from '@/main.js';
 import { useCollect } from 'pinia-orm/dist/helpers';
 
 
@@ -147,7 +147,6 @@ export default {
   },
   mounted(){
     this.$root.$on('bv::modal::hidden', (bvEvent, modalId) => {
-      //console.log('Modal is about to be closed', bvEvent, modalId)
       this.initializeFormValues()
     })
   },
@@ -179,8 +178,8 @@ export default {
       this.form.error = ''
     },
     addProject() {
+      const lifecycle = useLifecycle.where('Name', this.form.project.lifecycle).get()[0]
       const projectIds = useCollect(useProject.all()).sortBy('id').map(item => item.id)
-      const lifecycleId = useLifecycle.where('Name', this.form.project.lifecycle).get()[0]
       const checkId = projectIds.includes(this.form.project.id)
       if(checkId){
         //update existing
@@ -191,7 +190,7 @@ export default {
           Category: this.form.project.category,
           StartDate: this.form.project.startdate,
           EndDate: this.form.project.enddate,
-          LifecycleId: lifecycleId,
+          Lifecycle: lifecycle,
           Repos: this.form.project.repos
         });
       } else {
@@ -202,29 +201,34 @@ export default {
           Category: this.form.project.category,
           StartDate: this.form.project.startdate,
           EndDate: this.form.project.enddate,
-          Lifecycle: lifecycleId,
+          Lifecycle: lifecycle,
           Repos: this.form.project.repos
           });
         }
         Object.keys(this.form.project).forEach( k => {
           this.form.project[k] = ''
         })
-        console.log(useProject.all());
         this.$bvModal.hide('new-project-modal');
         this.initializeFormValues();
     },
     cloneProject(){
-      this.form.error = ''
-      const contacts = useCollect(usePerson.all()).sortBy('Fullname')
-      const tgtContacts = contacts.filter(item => toRaw(item.Projects).includes(this.originalProjectName) )
-
+      /*Create new project with contacts and attributes (modified) from another project.
+      */
+     //collect contacts associated with the project that is to be cloned
+     this.form.error = ''
+     const originalProject = JSON.parse(JSON.stringify(this.$props.item))
+     useDisplayStore.projectSelection = originalProject
+     const tgtContacts = usePerson.withAll().get().map(item => item.contactWithSelectedProject).filter(item => item != undefined)
+     useDisplayStore.projectSelection = {}
+     //can't clone project if name is already used
       const checkProjectNameExists = useProject.where('Name', this.form.project.name).get()
       if(checkProjectNameExists.length > 0){
-        this.form.error = 'ERROR: Change project name'
+        this.form.error = 'ERROR: Project name currently exists.  Change project name to clone.'
         return false
       }
+      //prepare for save
       this.form.project.id = ''
-      const lifecycleId = useLifecycle.where('Name', this.form.project.lifecycle).get()[0]
+      const lifecycle = useLifecycle.where('Name', this.form.project.lifecycle).get()[0]
       //create new project
       useProject.save({
         Name: this.form.project.name,
@@ -232,16 +236,36 @@ export default {
         Category: this.form.project.category,
         StartDate: this.form.project.startdate,
         EndDate: this.form.project.enddate,
-        LifecycleId: lifecycleId,
+        Lifecycle: lifecycle,
         Repos: this.form.project.repos
         });
       //update contacts with new project
+      const getCurrentSavedProject = useProject.withAll().where('Name', this.form.project.name).get()[0]
       for(const contact of tgtContacts){
-        const projects = JSON.parse(JSON.stringify(contact.Projects))
-        projects.push(this.form.project.name)
+        const projects = usePersonProject.withAll()
+                                .where('PersonId', contact.id)
+                                .where('ProjectId', originalProject.id)
+                                .get()
+        //
+        //const project = useProject.find(newProjectId)
+        const initialStepId = useLifecycle.withAll()
+                              .find(getCurrentSavedProject.LifecycleId)
+                              .lifecycleFull
+                              .LifecycleStep[0].id
+        const initialStep = {
+          LifecycleStepId: initialStepId,
+          CompletionDate: useDisplayStore.todaysDate
+        }
+        //
+        const personProject = {
+          ProjectId: getCurrentSavedProject.id,
+          RefId: projects[0].RefId,
+          StepStatus: [initialStep]    //[projects[0].StepStatus]
+        }
+        projects.push(personProject)
         usePerson.save({
           id: contact.id,
-          Projects: projects
+          PersonProject: projects
         })
       }
       Object.keys(this.form.project).forEach( k => {

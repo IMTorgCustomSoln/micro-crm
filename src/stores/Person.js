@@ -82,6 +82,15 @@ export class Person extends Model {
       return prjGroups.length
     }
   }
+  get referredByObjects(){
+    let prjGroups = []
+    prjGroups = usePersonProject.withAll()
+                          .where('PersonId', this.id)
+                          //.where('ProjectId', useDisplayStore.projectSelection.id)
+                          .get()
+    const referredBys = prjGroups.map(item => item.ReferredBy)
+    return referredBys
+  }
   get contactWithSelectedProject(){
     if(this.IsContact==false){
       return null
@@ -159,6 +168,7 @@ export class Person extends Model {
 
       //PersonProjectStatus: null,
       ReferredBy: this.referredBy,
+      ReferredByList: this.referredByObjects,
       Statuses: null,
 
       Projects: null,

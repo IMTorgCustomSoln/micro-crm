@@ -203,7 +203,7 @@ export default {
           this.addItem(event)
         }
         else{
-          console.log('ERROR: ModalEvent')
+          console.log('ERROR: ModalEvent not clicked, but initiated.')
         }
       })
     },

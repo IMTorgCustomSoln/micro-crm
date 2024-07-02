@@ -115,7 +115,7 @@ export default {
           this.addItem(feedback)
         }
         else{
-          console.log('ERROR: ModalEvent')
+          console.log('ERROR: ModalFeedback not clicked, but initiated.')
         }
       })
     },

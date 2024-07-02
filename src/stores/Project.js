@@ -31,7 +31,11 @@ export class Project extends Model {
     }
   }
   static saved (model) {
-    //initialize non-contact Person for Events without contacts
+    /*Initialize non-contact Person, such as 'user-account' for: 
+        - Events without contacts
+        - ReferredBy the user, only
+        - ...
+    */
     const personList = usePerson.all().filter(item => item.IsContact==false)
     if(personList.length==1){
       const newProject = {
@@ -39,7 +43,8 @@ export class Project extends Model {
         StepStatus:[]
       }
       const person = JSON.parse(JSON.stringify( personList[0] ))
-      person.PersonProject.push(newProject)
+      person.PersonProject = []
+      person.PersonProject.push( newProject )
       usePerson.save(person)
     } else if(personList.length==0){
       usePerson.save({

@@ -36,7 +36,7 @@
                   label-cols-sm="3"
                   label-align-sm="right"
                 >
-                  <b-form-select id="nested-state" v-model="form.contact.referredBy" :options="availablePersonList"/>
+                  <b-form-select id="nested-state" v-model="form.contact.referredBy" :options="availableRefByList"/>
                   <!-- // TODO:original stopped working, either use -select or -input
                     // ref-input: https://bootstrap-vue.org/docs/components/form#datalist-helper
                     // ref-select: https://bootstrap-vue.org/docs/components/form-select/
@@ -122,15 +122,26 @@ export default {
             const contact = JSON.parse(JSON.stringify(this.$props.item));
             this.form.contact.id = contact.id;
             this.form.contact.fullname = contact.Fullname;
-            this.form.contact.referredBy = contact.ReferredBy;
+            //TODO: how to assign a different reference to each project???
+            if(contact.ReferredByList){
+              if(contact.ReferredByList.length==1){
+                this.form.contact.referredBy = contact.ReferredByList[0].Fullname;
+              }else{
+                this.error.multipleRefBys.display = true
+                this.form.contact.referredBy = this.error.multipleRefBys.text
+              }
+            }
             this.form.contact.title = contact.Title;
             this.form.contact.email = contact.Email;
             this.form.contact.number = contact.Number;
             this.form.contact.office = contact.Office;
             this.form.contact.firm = contact.Firm;
-            const projects = contact.Projects.map(item => item.Project.Name)
-            this.form.contact = {...this.form.contact, projects: projects};
-
+            if(contact.Projects){
+              const projects = contact.Projects.map(item => item.Project.Name)
+              if(projects){
+                this.form.contact = {...this.form.contact, projects: projects};
+              }
+            }
             this.$bvModal.show('new-lifecycle-modal');
             },
             deep: true
@@ -139,6 +150,12 @@ export default {
   data(){
     return{
       selectedItem: useDisplayStore.viewSelection,
+      error:{
+        multipleRefBys: {
+          'display':false, 
+          'text':'cannot display bc multiple names'
+        }
+      },
       form:{
         contact:{
           id: '',
@@ -161,11 +178,18 @@ export default {
     })
   },
   computed:{
+    selectedProjects(){
+      return useDisplayStore.projectSelection
+    },
     projectList(){
       return useProject.all().map(item=>item.Name)
     },
-    availablePersonList(){
-      return usePerson.all().map(item => item.Fullname)
+    availableRefByList(){
+      if(this.error.multipleRefBys.display){
+        return this.error.multipleRefBys.text
+      }else{
+        return usePerson.all().map(item => item.Fullname)
+      }
     },
   },
   methods:{
@@ -179,21 +203,27 @@ export default {
       this.form.contact.office = '';
       this.form.contact.firm = '';
       this.form.contact = {...this.form.contact, projects: []};
+      this.error.multipleRefBys.display = false
     },
     addOrUpdateContact() {
-      //check if new user
-      //const contactIds = useCollect(usePerson.all()).sortBy('id').map(item => item.id)
-      //const checkNewUser = contactIds.includes(this.form.contact.id)
+      /* Add or update Contact (tbl Person)
 
-      //check for new projects
-      const requestedProjectIds = useProject.withAll()
+      note: Person table has dependency
+          PersonProject: this.hasMany(PersonProject, 'PersonId'),   //insert with `ReferredBy` for selected Project
+        so it must be saved with its PersonProjectId(s)
+      */
+      const editedRow = JSON.parse(JSON.stringify(this.$props.item))
+      const personProjects = []
+      //check for new projects by removing previous (from edited row) projects
+      let currenProjectIds = []
+      if(editedRow.Projects != undefined){
+        currenProjectIds = editedRow.Projects.map(item => item.Project.id)
+      }
+      const newlyAddedProjectIds = useProject.withAll()
                                     .where('Name', this.form.contact.projects)
                                     .get()
                                     .map(item => item.id)
-      const currenProjectIds = JSON.parse(JSON.stringify(this.$props.item)).Projects.map(item => item.Project.id)
-      const newProjectIds = getRightSetDifferenceOfArrays(requestedProjectIds, currenProjectIds)
-      //add projects
-      const personProjects = []
+      const newProjectIds = getRightSetDifferenceOfArrays(newlyAddedProjectIds, currenProjectIds)
       //new projects
       for(const newProjectId of newProjectIds){
         const project = useProject.find(newProjectId)
@@ -205,9 +235,10 @@ export default {
           LifecycleStepId: initialStepId,
           CompletionDate: useDisplayStore.todaysDate
         }
+        const refId = usePerson.withAll().get().filter(item => item.Fullname == this.form.contact.referredBy)[0]
         const personProject = {
           ProjectId: project.id,
-          RefId: this.form.contact.referredBy,
+          RefId: refId.id,
           StepStatus: [initialStep]
         }
         personProjects.push(personProject)
@@ -218,12 +249,15 @@ export default {
                                 .where('ProjectId', currenProjectIds)
                                 .get()
       personProjects.push(...existingProjects)
-      //TODO:different for new or updated Person???
+      //check if new user
+      const personIds = useCollect(usePerson.all()).sortBy('id').map(item => item.id)
+      const checkId = personIds.includes(this.form.contact.id)
       //save
-      usePerson.save({
-        id: this.form.contact.id,
+      if(checkId){
+        usePerson.save({
+          id: this.form.contact.id,
           Fullname: this.form.contact.fullname,
-          ReferredBy: this.form.contact.referredBy,
+          //ReferredBy: this.form.contact.referredBy,
           Title: this.form.contact.title,
           Email: this.form.contact.email,
           Number: this.form.contact.number,
@@ -231,6 +265,18 @@ export default {
           Firm: this.form.contact.firm,
           PersonProject: personProjects
         })
+      }else{
+        usePerson.save({
+          Fullname: this.form.contact.fullname,
+          //ReferredBy: this.form.contact.referredBy,
+          Title: this.form.contact.title,
+          Email: this.form.contact.email,
+          Number: this.form.contact.number,
+          Office: this.form.contact.office,
+          Firm: this.form.contact.firm,
+          PersonProject: personProjects
+        })
+      }
       //clean-up
       this.initializeFormValues();
       this.$bvModal.hide('new-contact-modal');

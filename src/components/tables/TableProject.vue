@@ -109,11 +109,10 @@ export default {
       usePerson.destroy(ids)
     },
     formatDateAssigned(value) {
-      const dt = value.toDateString()
-      return dt
+      return value ? value.toDateString() : value
     },
     formatLifecycle(value){
-      return value.Name
+        return value ? value.Name : value
     }
   },
 };
