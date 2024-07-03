@@ -11,9 +11,9 @@
     <b-row>
       <b-col>
       <div v-if="this.contactsSelected.length > 0">
-        <span>Contacts: {{ this.contactsSelected.length }}</span>
+        <span id="contacts">Contacts: {{ this.contactsSelected.length }}</span>
         <br>
-        <b-button size="sm" @click="clearSelected">Clear Row Selections</b-button>
+        <b-button id="clearSelections" size="sm" @click="clearSelected">Clear Row Selections</b-button>
         <span><em>Note: only contact selections from the same project can be used to Log something.</em></span>
       </div>
       </b-col>

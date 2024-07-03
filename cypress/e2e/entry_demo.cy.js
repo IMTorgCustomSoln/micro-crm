@@ -1,8 +1,8 @@
-describe('Entry Point', () => {
-    it('successfully loads', () => {
+describe('Entry using demo data', () => {
+    it('Site: successfully loads', () => {
       cy.visit('/')
     })
-    it('enter account info', () => {
+    it('Account: enter account info', () => {
       cy.visit('/')
       cy.get('.btn-outline-light').click();
       cy.get('#account-name').type('Test User');
@@ -10,7 +10,7 @@ describe('Entry Point', () => {
       cy.get('.btn-outline-light').click();
       cy.get('#account-name').click();
     })
-    it.only('load test data', () => {
+    it.only('Demo data: load test data', () => {
       cy.visit('/')
       cy.get('.btn-outline-light').click();
       cy.get('#admin-state').should('have.value', '')          //TODO: '' should be 'Admin Mode is On'

@@ -87,6 +87,7 @@ Run cypres locally because dev container networking causes problems.  You may al
 CypressStudio can be convenient.  Prevent browser policy issues by following [these instructions](https://stackoverflow.com/questions/70237963/cant-run-cypress-tests-in-chrome-edge-browsersbeing-manageed-by-organization#:~:text=You%20can%20try%20doing%20this%3A%201%20Open%20the,4%20Close%20cypress%20and%20open%20it%20up%20again).
 
 ```sh
+npm run dev
 npm run cypress:open
 ```
 
