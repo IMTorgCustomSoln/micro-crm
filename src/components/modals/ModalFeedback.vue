@@ -22,7 +22,7 @@
                 >
                 <!-- TODO: warning - only one person can be selected, and selection options come from same Project
                   <b-form-input id="nested-street" v-model="form.feedback.source"></b-form-input>-->
-                  <b-form-select id="nested-street" v-model="form.feedback.source"  :options="sourceList.map(item=>item.Fullname)"/>
+                  <b-form-select id="nested-street" v-model="form.feedback.source"  :options="this.sourceList.map(item=>item.Fullname)"/>
                 </b-form-group>
 
                 <b-form-group
@@ -102,32 +102,37 @@ export default {
         }
     },
     mounted(){
-      this.$root.$on('bv::modal::show', (bvEvent, modalId) => {
-        //console.log('Modal is about to be closed', bvEvent, modalId)
-        /*
-        let account = useCollect(useAccount.all()).sortBy('Fullname')[0]
-        this.form.account.name = account.Fullname*/
+      this.$root.$on('bv::modal::show', (bvFeedback, modalId) => {
+        /*this logic determines whether modal should be populated as:
+            - new Feedback
+            - edit Feedback
+        */
         const source = toRaw(this.source)
         const feedback= toRaw(this.feedback)
-        if(!isEmpty(source)){
-          this.form.feedback.source = this.sourceList.map(item => item.Fullname)[0]
-        }else if(!isEmpty(feedback)){
+        if(!isEmpty(feedback)){
           this.addItem(feedback)
-        }
-        else{
+        } else if(!isEmpty(source)){
+          this.form.feedback.source = this.sourceList.map(item => item.Fullname)[0]
+        } else {
           console.log('ERROR: ModalFeedback not clicked, but initiated.')
         }
       })
     },
     computed:{
       sourceList: () => {
+        let sources = []
+        if(useDisplayStore.participants.length > 0){
+          sources = useDisplayStore.participants
+        } else {
+          sources = usePerson.withAll().where('id','user-account').get()
+        }/*TODO:the recursive query doesn't work, but I don't know what its for, anyway
        const sources = useDisplayStore.participants.length > 0 
                       ? useDisplayStore.participants 
                       : usePersonProject
                           .withAllRecursive()
                           .where('ProjectId', useDisplayStore.projectSelection.id)
                           .get()
-                          .map(item => item.Person)
+                          .map(item => item.Person)*/
         return sources
       },
       feedbackTypesList: () => {
@@ -136,7 +141,15 @@ export default {
     },
     methods:{
       initializeFormValues(){
-        console.log('TODO: init values')
+        this.feedbackOriginal = null
+        this.form.error = '',
+        this.form.feedback = {
+                    source: null,
+                    type: null,
+                    role: null,
+                    use: null,
+                    painpoint: null
+                }
       },
       addItem(feedback){
         this.feedbackOriginal = feedback
@@ -152,7 +165,7 @@ export default {
           const selectedProject = useDisplayStore.projectSelection
           const dt = new Date()
           const sourceNames = this.form.feedback.source
-          const sourceIds = usePerson.withAllRecursive().where('Fullname', sourceNames).get().map(item => item.id)
+          const sourceIds = usePerson.withAll().where('Fullname', sourceNames).get().map(item => item.id)    //TODO: query usePerson.withAllRecursive() does not work
           //for(const person of sources){
               const personProject = usePersonProject
                                       .where('PersonId', sourceIds)

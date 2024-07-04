@@ -3,8 +3,8 @@
     <b-row>
       <b-col cols="12">
       <div v-if="selectedProjects">
-        <b-button size="sm" @click="logEvent">Log Event</b-button>
-        <b-button size="sm" @click="logFeedback">Log Feedback</b-button>
+        <b-button id="eventBtn" size="sm" @click="logEvent">Log Event</b-button>
+        <b-button id="feedbackBtn" size="sm" @click="logFeedback">Log Feedback</b-button>
       </div>
       </b-col>
     </b-row>

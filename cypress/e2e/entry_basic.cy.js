@@ -11,6 +11,7 @@ describe('Entry entering data', () => {
         //console.log($el[0].innerText)
       })
     })
+    //TODO: it('Lifecycle: add, edit, delete, clone', {includeShadowDom: true}, () => {
     //it.only(
     it('Project: add, edit, delete, clone', {includeShadowDom: true}, () => {
       cy.visit('/')

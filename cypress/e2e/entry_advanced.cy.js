@@ -75,8 +75,6 @@ describe('Entry entering data and performing advanced operations', () => {
       })
       cy.get('#clearSelections').click()
       cy.get('#contacts').should('not.exist')
-      //select contacts and add logging
-      //select contacts and add feedback
     })
 
 })

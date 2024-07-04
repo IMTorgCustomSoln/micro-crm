@@ -26,7 +26,7 @@
 
 
 <script>
-import { useFeedback, usePerson, useProject } from '@/main';
+import { useDisplayStore, useFeedback, usePerson, useProject } from '@/main';
 import ModalFeedback from '../modals/ModalFeedback.vue';
 
 export default{
@@ -66,6 +66,7 @@ export default{
       editFeedback(row){
         const feedback = JSON.parse(JSON.stringify(row)).item
         Object.assign(this.form.feedback, feedback)
+        useDisplayStore.participants = [feedback.Source.Person]
         this.$bvModal.show('feedback-modal')
         console.log(row)
       },

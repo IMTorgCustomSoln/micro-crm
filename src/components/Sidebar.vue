@@ -11,7 +11,9 @@
       class="sidebar-toggle"
       @click="toggleHandler" 
       >
-          <img class="icon"
+          <img 
+            id="sidebar-icon"
+            class="icon"
             src="https://pic.onlinewebfonts.com/thumbnails/icons_477656.svg" 
             alt="Recipes Report Annual Document Summary Chart"
             >
@@ -90,7 +92,7 @@ export default {
 <style lang="scss">
 
 $color: white;
-$icon_size: 80px;
+$icon_size: 40px;
 $width__sidebar: 0;
 
 .hdr{

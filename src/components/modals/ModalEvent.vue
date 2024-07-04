@@ -192,17 +192,17 @@ export default {
     },
     mounted(){
       this.$root.$on('bv::modal::show', (bvEvent, modalId) => {
-        //console.log('Modal is about to be closed', bvEvent, modalId)
-        //let account = useCollect(useAccount.all()).sortBy('Fullname')[0]
-        //this.form.account.name = account.Fullname
-        const contact = toRaw(this.contact)
+        /*this logic determines whether modal should be populated as:
+            - new Event
+            - edit Event
+        */
+        const contact = this.participantList
         const event = toRaw(this.event)
-        if(!isEmpty(contact)){
-          this.form.event.participants = this.sourceList.map(item => item.Fullname).join(', ')
-        }else if(!isEmpty(event)){
+        if(!isEmpty(event)){
           this.addItem(event)
-        }
-        else{
+        } else if(contact) {
+          this.form.event.participants = this.participantList.map(item => item.Fullname).join(', ')
+        } else {
           console.log('ERROR: ModalEvent not clicked, but initiated.')
         }
       })
@@ -211,8 +211,14 @@ export default {
       getCurrentStep: () => {
         return 1
       },
-      sourceList: () => {
-       return useDisplayStore.participants
+      participantList: () => {
+        //use selected contacts or the user-account
+        if(useDisplayStore.participants.length > 0){
+          return useDisplayStore.participants
+        }else{
+          const user_account = usePerson.withAll().where('id','user-account').get()
+          return user_account
+        }
       },
       eventTypesList: ()=> {
         return useDisplayStore.defaults.event
@@ -257,7 +263,19 @@ export default {
         console.log(this.form.event.datetimeEnd)
       },
       initializeFormValues(){
-        console.log('TODO: init values')
+        this.eventsOriginal = null
+        this.form.error = null
+        this.form.start.date = null
+        this.form.start.time = null
+        this.form.end.date = null
+        this.form.end.time = null
+        this.form.event.participants = null
+        this.form.event.projects = null
+        this.form.event.datetimeStart = null
+        this.form.event.datetimeEnd = null
+        this.form.event.addressFeedback = null
+        this.form.event.stepCompleted = null
+        this.form.event.comments = null
       },
       addItem(event){
         this.eventsOriginal = event
