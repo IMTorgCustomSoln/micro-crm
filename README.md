@@ -2,7 +2,9 @@
 
 # Micro CRM
 
-What it is and what it supports.
+A lite Customer Relationship Management (CRM) tool that enables tracking Customer (stakeholder) engagement with Projects that are aligned to a Lifecycle.  The tool is built and distributed as a single HTML file (`./dist/index.html`)
+
+![tool screenshot](./docs/Screenshot.png "Tool Screenshot")
 
 
 ## Use Case
@@ -58,6 +60,12 @@ Check the build to ensure everything runs correctly:
 
 ```sh
 npm run preview
+```
+
+or
+
+```
+python3 -m http.server --d ./dist
 ```
 
 ### ~~Run Unit Tests with [Vitest](https://vitest.dev/)~~ Fails
